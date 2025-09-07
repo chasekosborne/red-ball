@@ -5,9 +5,17 @@ world.gravity.y = 10;
 
 let jumpSound;
 
+function respawn(){ 
+	ball.x = halfWidth - 200;  
+    ball.y = halfHeight - 200; 
+    ball.vel.x = 0;           
+    ball.vel.y = 0;  
+};
+
 function preload() {
   jumpSound = loadSound('jump.mp3'); 
   springSound = loadSound('spring.mp3');
+
 }
 
 let ball = new Sprite();
@@ -27,10 +35,7 @@ function update() {
 
 	background('skyblue'); 
 	if (ball.y > height + 50) {  
-    ball.x = halfWidth - 200;  
-    ball.y = halfHeight - 200; 
-    ball.vel.x = 0;           
-    ball.vel.y = 0;            
+    respawn()        
 }
 	textAlign(CENTER);
 	textSize(20);
