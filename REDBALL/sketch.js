@@ -16,7 +16,12 @@ spring.physics = STATIC;
 
 function update() {
 	background('skyblue');
-
+	if (ball.y > height + 50) {  
+    ball.x = halfWidth - 200;  
+    ball.y = halfHeight - 200; 
+    ball.vel.x = 0;           
+    ball.vel.y = 0;            
+}
 	textAlign(CENTER);
 	textSize(20);
 	text('space to jump!', halfWidth, halfHeight - 100);
