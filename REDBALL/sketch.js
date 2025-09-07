@@ -17,7 +17,7 @@ function update() {
 
 	textAlign(CENTER);
 	textSize(20);
-	text('click to jump!', halfWidth, halfHeight - 100);
+	text('space to jump!', halfWidth, halfHeight - 100);
 
 	if (kb.pressing('space') && ball.colliding(ground)) ball.vel.y = -5;
 	if (kb.pressing('left')) { ball.vel.x -= 0.5;        
