@@ -4,7 +4,10 @@ new Canvas();
 world.gravity.y = 10;
 let ball;
 let jumpSound;
+let spikes; 
 let platform;
+
+
 let spring;
 function respawn(){ 
 	ball.x = halfWidth - 200;  
@@ -28,6 +31,8 @@ function preload() {
 ball = new Sprite();
 ball.x = halfWidth - 200;
 ball.drag = 0.4;  
+ball.textSize = 40;
+ball.text = ":)";
 ball.y = halfHeight - 200;
 ball.diameter = 50;
 ball.color = 'red';
@@ -37,7 +42,16 @@ groundA.physics = STATIC;
 spring = new Sprite(1100,350,200,40)
 spring.physics = STATIC;
 
-    
+spikes = new Sprite([
+  [780 + 0, 290 + 40],  
+  [780 + 20, 290 + 0],  
+  [780 + 40, 290 + 40],  
+  [780 + 0, 290 + 40]    
+]); 
+
+spikes.color = 'red';
+spikes.physics = STATIC;
+
 
 
 }
@@ -49,7 +63,7 @@ function update() {
 
 	background('skyblue'); 
 	if (ball.y > height + 50) {  
-    respawn()        
+    respawn();      
 }
 	textAlign(CENTER);
 	textSize(20);
@@ -82,5 +96,16 @@ platform.vel.y = 0;
 if (ball.colliding(platform) && ball.vel.y >= 0) {
   ball.x += platform.vel.x
 }
+
+if (ball.colliding(spikes)){
+	respawn(); 
+}
+let worldMouseX = mouseX + camera.x - halfWidth;
+let worldMouseY = mouseY + camera.y - halfHeight;
+fill('black');
+  textSize(16);
+  textAlign(LEFT, TOP);
+  text(`Mouse: ${worldMouseX}, ${worldMouseY}`, 10, 10);
+
 
 }
