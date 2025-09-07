@@ -2,9 +2,10 @@ new Q5();
 
 new Canvas();
 world.gravity.y = 10;
-
+let ball;
 let jumpSound;
-
+let platform;
+let spring;
 function respawn(){ 
 	ball.x = halfWidth - 200;  
     ball.y = halfHeight - 200; 
@@ -17,8 +18,14 @@ function preload() {
   springSound = loadSound('spring.mp3');
 
 }
+	function setup() {
+	platform = new Sprite(600, 250, 120, 20);
+  platform.color = 'orange';
+  platform.physics = KINEMATIC;  
+  platform.speed = 2;        
+  platform.direction = 1; 
 
-let ball = new Sprite();
+ball = new Sprite();
 ball.x = halfWidth - 200;
 ball.drag = 0.4;  
 ball.y = halfHeight - 200;
@@ -27,21 +34,14 @@ ball.color = 'red';
 let groundA = ground = new Sprite(500, 350, 800, 40);
 groundA.physics = STATIC;
 
-let spring = new Sprite(1100,350,200,40)
+spring = new Sprite(1100,350,200,40)
 spring.physics = STATIC;
 
+    
 
 
-let ramp  = new Sprite([
-  [200, 350],[300, 330],[350, 300],[380, 260],[400, 220],[420, 260],[450, 300],[500, 330],[550, 350],[200, 350]   
-]);
+}
 
-ramp.color = 'green';
-ramp.physics = STATIC;
-
-
-ramp.color = 'green';
-ramp.physics = STATIC;
 
 function update() {
 	camera.x += (ball.x - camera.x) * 0.1;
@@ -56,7 +56,7 @@ function update() {
 	text('space to jump!', halfWidth, halfHeight - 100);
 	if(ball.colliding(spring)){ ball.vel.y = -15; springSound.play() }
 
-	if (kb.pressing('space') && ball.colliding(ground)) {ball.vel.y =  -5; jumpSound.play(); }
+	if (kb.pressing('space') && (ball.colliding(ground) || ball.colliding(platform))) { ball.vel.y = -7;  jumpSound.play(); }
 	
 	
 if (kb.pressing('left')) {
@@ -69,6 +69,18 @@ if (kb.pressing('right')) {
   else ball.applyForce(15);
 }
 
+  
+if (platform.x > 1000) {
+  platform.vel.x = '-2'; 
+  platform.vel.y = 0; 
 
+} 
+else if (platform.x < 200) {
+platform.vel.y = 0; 
+  platform.vel.x = '2';  
+}
+if (ball.colliding(platform) && ball.vel.y >= 0) {
+  ball.x += platform.vel.x
+}
 
 }
