@@ -13,6 +13,8 @@ let respawnTimer = 0;
 let jumpCount = 0;
 let maxJumps = 1;
 let spring;
+let gameState = "playing";  // Always starts directly in game (since we use menu.html)
+
 function explodeAndRespawn() {
   for (let i = 0; i < 12; i++) {
     particles.push({
@@ -97,6 +99,7 @@ spikes.physics = STATIC;
 
 
 function update() {
+  if (gameState !== "playing") return; // Skip update if somehow not in game
 	camera.x += (ball.x - camera.x) * 0.1;
 	camera.y += (ball.y - camera.y) * 0.1;
 
