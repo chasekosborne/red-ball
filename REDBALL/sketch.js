@@ -19,6 +19,8 @@ let respawnTimer = 0;
 let jumpCount = 0;
 let maxJumps = 1;
 let spring;
+let pauseKey = false;
+let pausePosition = [0, 0];
 
 let checkpoints = [];
 
@@ -124,8 +126,47 @@ function setup() {
     spikes.physics = STATIC;
 }
 
+function pauseMenu() {
+    fill(173, 216, 230, 50);   //setting rectangular box for menu
+    rectMode(CENTER);  //starts drawing from the center 
+    rect(850, 450, 1500, 700); //setting dimensions
+
+    fill(0); 
+    textAlign(CENTER, CENTER);
+    textSize(25);
+    text('Press ESC to resume',850, 350); //text appears slightly above center of rectangle
+}
+
 
 function update() {
+    if (kb.pressed('escape')) {
+        pauseKey = !pauseKey;   // changes false to true to ensure game is paused
+}
+
+// if paused == true, skips game logic and switches to pause menu
+if (pauseKey==true) {
+    pauseMenu();
+    pausePosition = [ball.x, ball.y];
+    //setting ball velocity, resetting ball position, and setting platform and ball physics to 0 to prevent further movement when game is paused, stopping update function
+    platform.physics = STATIC;
+    ball.physics = NONE;
+    ball.vel.x = 0;
+    ball.vel.y = 0;
+    ball.x = pausePosition[0];
+    ball.y = pausePosition[1];
+    return;
+}
+
+if(pauseKey == false){ //if pause key is not pressed, resume game 
+  platform.physics = KINEMATIC;  //resetting platform physics
+  ball.physics = DYNAMIC; //resetting ball physics
+  platform.speed = 2;
+  if (platform.x > 1000) { //ensuring that platform moves to the left when reaching >1000 to avoid conflict with update code 
+  platform.vel.x = '-2'; 
+}  else if (platform.x < 200) { 
+  platform.vel.x = '2';  
+}
+
     camera.x += (ball.x - camera.x) * 0.1;
     camera.y += (ball.y - camera.y) * 0.1;
 
@@ -199,8 +240,10 @@ function update() {
             ball.collider = 'dynamic';
         }
     }
-    
-    updateCheckpoints();
+     updateCheckpoints();
+}
+   
+
 }
 
 // When called the function assigns ballColor to a random color
