@@ -3,7 +3,12 @@ new Canvas();
 
 world.gravity.y = 10;
 
+// collection of images
+let unclaimedFlagImage;
+let claimedFlagImage;
+
 let ball;
+let respawnPosition = [500, 150];
 let jumpSound;
 let spikes;
 let platform;
@@ -14,6 +19,26 @@ let respawnTimer = 0;
 let jumpCount = 0;
 let maxJumps = 1;
 let spring;
+
+let checkpoints = [];
+
+function spawnCheckpoints() {
+    checkpoints.push(new CheckPoint(200, 305, ball));
+}
+
+function updateCheckpoints() {
+    console.log(`current respawn: ${respawnPosition}`);
+
+    for (let checkpoint of checkpoints) {
+        checkpoint.update();
+    }
+}
+
+function respawn() {
+    if (respawnTimer === 0) {
+        explodeAndRespawn();
+    }
+}
 
 function explodeAndRespawn() {
     for (let i = 0; i < 12; i++) {
@@ -30,8 +55,8 @@ function explodeAndRespawn() {
     ball.vel.x = 0;
     ball.vel.y = 0;
     jumpCount = 0;
-    ball.x = halfWidth - 200;
-    ball.y = halfHeight - 200;
+    ball.x = respawnPosition[0];
+    ball.y = respawnPosition[1];
     respawnTimer = 40;
 }
 
@@ -50,15 +75,18 @@ function updateParticles() {
     }
 }
 
-function respawn() {
-    if (respawnTimer === 0) {
-        explodeAndRespawn();
-    }
-}
-
 function preload() {
     jumpSound = loadSound('soundeffects/jump.mp3');
     springSound = loadSound('soundeffects/spring.mp3');
+
+    unclaimedFlagImage = loadImage("art/unclaimed_checkpoint.png", img => {
+        // force the image to be at a certain scale
+        img.resize(100, 100);
+    });
+
+    claimedFlagImage = loadImage("art/claimed_checkpoint.png", img => {
+        img.resize(100, 100);
+    });
 }
 
 function setup() {
@@ -69,13 +97,15 @@ function setup() {
     platform.direction = 1;
 
     ball = new Sprite();
-    ball.x = halfWidth - 200;
     ball.drag = 0.4;
     ball.textSize = 40;
     ball.text = ":)";
-    ball.y = halfHeight - 200;
+    ball.x = respawnPosition[0];
+    ball.y = respawnPosition[1];
     ball.diameter = 50;
     ball.color = 'red';
+
+    spawnCheckpoints();
 
     let groundA = ground = new Sprite(500, 350, 800, 40);
     groundA.physics = STATIC;
@@ -136,7 +166,6 @@ function update() {
         }
     }
 
-
     if (platform.x > 1000) {
         platform.vel.x = '-2';
         platform.vel.y = 0;
@@ -164,14 +193,14 @@ function update() {
     if (respawnTimer > 0) {
         respawnTimer--;
         if (respawnTimer === 0) {
-            ball.x = halfWidth - 200;
-            ball.y = halfHeight - 200;
             ball.vel.x = 0;
             ball.vel.y = 0;
             ball.visible = true;
             ball.collider = 'dynamic';
         }
     }
+    
+    updateCheckpoints();
 }
 
 // When called the function assigns ballColor to a random color
