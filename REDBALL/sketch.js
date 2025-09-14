@@ -19,8 +19,8 @@ function respawn(){
 };
 
 function preload() {
-  jumpSound = loadSound('jump.mp3'); 
-  springSound = loadSound('spring.mp3');
+  jumpSound = loadSound('soundeffect/jump.mp3'); 
+  springSound = loadSound('soundeffect/spring.mp3');
 
 }
 
