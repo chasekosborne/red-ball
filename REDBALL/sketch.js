@@ -14,7 +14,6 @@ let respawnTimer = 0;
 
 let spring;
 function explodeAndRespawn() {
- 
   for (let i = 0; i < 12; i++) {
     particles.push({
       x: ball.x,
@@ -24,14 +23,14 @@ function explodeAndRespawn() {
       life: 40
     });
   }
-  ball.visible = false;  
-  ball.collider = 'none';   
-	ball.vel.x = 0;           
-	ball.vel.y = 0;
-
-  respawnTimer = 40;    
+  ball.visible = false;
+  ball.collider = 'none';
+  ball.vel.x = 0;
+  ball.vel.y = 0;
+  ball.x = halfWidth - 200;
+  ball.y = halfHeight - 200;
+  respawnTimer = 40;
 }
-
 function updateParticles() {
   for (let i = particles.length - 1; i >= 0; i--) {
     let p = particles[i];
@@ -49,7 +48,9 @@ function updateParticles() {
 
 
 function respawn() {
-  explodeAndRespawn();
+  if (respawnTimer === 0) {
+    explodeAndRespawn();
+  }
 }
 
 
