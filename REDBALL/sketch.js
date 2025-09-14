@@ -10,8 +10,8 @@ let button;
 let ballColor;
 let particles = [];
 let respawnTimer = 0;
-
-
+let jumpCount = 0;
+let maxJumps = 1;
 let spring;
 function explodeAndRespawn() {
   for (let i = 0; i < 12; i++) {
@@ -27,6 +27,7 @@ function explodeAndRespawn() {
   ball.collider = 'none';
   ball.vel.x = 0;
   ball.vel.y = 0;
+  jumpCount = 0;
   ball.x = halfWidth - 200;
   ball.y = halfHeight - 200;
   respawnTimer = 40;
@@ -108,7 +109,16 @@ function update() {
 	text('space to jump!', halfWidth, halfHeight - 100);
 	if(ball.colliding(spring)){ ball.vel.y = -15; springSound.play() }
 
-	if (kb.pressing('space') && (ball.colliding(ground) || ball.colliding(platform))) { ball.vel.y = -7;  jumpSound.play(); }
+  //Resets jump count when on ground or platforms
+  if (ball.colliding(ground) || ball.colliding(platform)) {jumpCount = 0;}
+
+	if (kb.presses('space')) {
+    if (jumpCount < maxJumps) {
+      ball.vel.y = -7;
+      jumpSound.play();
+      jumpCount++;
+    }
+  }
 	
 	
 if (kb.pressing('left')) {
