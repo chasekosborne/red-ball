@@ -8,15 +8,50 @@ let spikes;
 let platform;
 let button;
 let ballColor;
+let particles = [];
+let respawnTimer = 0;
 
 
 let spring;
-function respawn(){ 
-	ball.x = halfWidth - 200;  
-    ball.y = halfHeight - 200; 
-    ball.vel.x = 0;           
-    ball.vel.y = 0;  
-};
+function explodeAndRespawn() {
+ 
+  for (let i = 0; i < 12; i++) {
+    particles.push({
+      x: ball.x,
+      y: ball.y,
+      vx: random(-8, 8),
+      vy: random(-12, -4),
+      life: 40
+    });
+  }
+  ball.visible = false;  
+  ball.collider = 'none';   
+	ball.vel.x = 0;           
+	ball.vel.y = 0;
+
+  respawnTimer = 40;    
+}
+
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.2;   
+    p.life--;
+
+    fill('orange');
+    rect(p.x, p.y, 6, 6);
+
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+}
+
+
+function respawn() {
+  explodeAndRespawn();
+}
+
 
 function preload() {
   jumpSound = loadSound('jump.mp3'); 
@@ -119,9 +154,26 @@ fill('black');
   textSize(16);
   textAlign(LEFT, TOP);
   text(`Mouse: ${worldMouseX}, ${worldMouseY}`, 10, 10);
+
+    updateParticles();
+
+  if (respawnTimer > 0) {
+    respawnTimer--;
+if (respawnTimer === 0) {
+  ball.x = halfWidth - 200;
+  ball.y = halfHeight - 200;
+  ball.vel.x = 0;
+  ball.vel.y = 0;
+  ball.visible = true;
+  ball.collider = 'dynamic';   
+	}
+  }
 }
 
 //when called the function assigns ballColor to a random color
 function randomColor(){
   ballColor = random(['red', 'black', 'purple', 'pink', 'yellow', 'green', 'blue'])
+
+
+
 }
