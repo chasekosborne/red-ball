@@ -54,14 +54,12 @@ function respawn() {
 
 
 function preload() {
-  jumpSound = loadSound('jump.mp3'); 
-  springSound = loadSound('spring.mp3');
+  jumpSound = loadSound('soundeffects/jump.mp3'); 
+  springSound = loadSound('soundeffects/spring.mp3');
 
 }
-
-function setup() {
-	
-  platform = new Sprite(600, 250, 120, 20);
+	function setup() {
+	platform = new Sprite(600, 250, 120, 20);
   platform.color = 'orange';
   platform.physics = KINEMATIC;  
   platform.speed = 2;        
@@ -74,7 +72,7 @@ ball.textSize = 40;
 ball.text = ":)";
 ball.y = halfHeight - 200;
 ball.diameter = 50;
-ballColor = 'red';
+ball.color = 'red';
 let groundA = ground = new Sprite(500, 350, 800, 40);
 groundA.physics = STATIC;
 
@@ -91,19 +89,12 @@ spikes = new Sprite([
 spikes.color = 'red';
 spikes.physics = STATIC;
 
-//creating button and changing the position
- button = createButton('click to change color');
- button.position(600,200);
 
- //when the button is pressed call the func randomColor
-button.mousePressed(randomColor);
 
 }
 
 
-
-function draw() {
-
+function update() {
 	camera.x += (ball.x - camera.x) * 0.1;
 	camera.y += (ball.y - camera.y) * 0.1;
 
@@ -111,8 +102,6 @@ function draw() {
 	if (ball.y > height + 50) {  
     respawn();      
 }
-//changing ball.color to the random ballColor picked
-  ball.color = ballColor;
 	textAlign(CENTER);
 	textSize(20);
 	text('space to jump!', halfWidth, halfHeight - 100);
