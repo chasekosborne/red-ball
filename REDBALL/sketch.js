@@ -130,7 +130,7 @@ function update() {
     camera.y += (ball.y - camera.y) * 0.1;
 
     background('skyblue');
-    if (ball.y > height + 50) {
+    if (ball.y > 700) {
         respawn();
     }
 
