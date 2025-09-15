@@ -329,7 +329,6 @@ if(pauseKey == false){ //if pause key is not pressed, resume game
   camera.on();
   // ----- END BACKGROUND -----
 	
-    background('skyblue');
     if (ball.y > 700) {
         respawn();
     }
