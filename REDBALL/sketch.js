@@ -23,6 +23,67 @@ let pauseKey = false;
 let pausePosition = [0, 0];
 let gameState = "playing";  // Always starts directly in game (since we use menu.html)
 
+/ --- Cloud settings + state ---
+const PARALLAX_X = 0.08;   // smaller = moves less with camera (x)
+const PARALLAX_Y = 0.015;  // smaller = moves less with camera (y)
+const CLOUD_MARGIN = 160;  // how far off-screen before wrapping
+
+// Each cloud tracks: base x/y, scale s, drift speed vx, and accumulated drift dx
+const CLOUDS = [
+  { x: 110, y:  80, s: 0.7, vx: 0.15, dx: 0 },
+  { x: 220, y: 110, s: 1.0, vx: 0.20, dx: 0 },
+  { x: 320, y: 140, s: 1.3, vx: 0.10, dx: 0 },
+
+  { x: 1090, y:  270, s: 0.7, vx: 0.15, dx: 0 },
+  { x: 1200, y: 300, s: 1.0, vx: 0.20, dx: 0 },
+  { x: 1310, y: 330, s: 1.3, vx: 0.10, dx: 0 },
+];
+
+// Background: gradient sky + clouds (screen-space)
+function drawSkyGradient(top = color(0,150,255), bottom = color(135,206,235)) {
+  noFill();
+  for (let y = 0; y < height; y++) {
+    const t = y / height;
+    stroke(lerpColor(top, bottom, t));
+    line(0, y, width, y);
+  }
+  noStroke();
+}
+
+function drawCloud(x, y, s = 1) {
+  push();
+  noStroke();
+
+  // back layer
+  fill(255, 255, 255, 80);
+  ellipse(x,       y,        140*s, 80*s);
+  ellipse(x-40*s,  y+8*s,     90*s, 60*s);
+  ellipse(x+45*s,  y+5*s,    100*s, 65*s);
+
+  // middle layer
+  fill(255, 255, 255, 140);
+  ellipse(x-25*s,  y-10*s,    70*s, 55*s);
+  ellipse(x+20*s,  y-14*s,    74*s, 58*s);
+  ellipse(x+60*s,  y+2*s,     62*s, 48*s);
+
+  // front puffs
+  fill(255, 255, 255, 210);
+  ellipse(x-5*s,   y-18*s,    56*s, 46*s);
+  ellipse(x+28*s,  y-16*s,    52*s, 42*s);
+
+  // base shading + second pass (richer bottom)
+  fill(220, 228, 240, 120);
+  ellipse(x+5*s,   y+18*s,   120*s, 38*s);
+
+  fill(205, 214, 230, 110);
+  ellipse(x+10*s,  y+20*s,   100*s, 28*s);
+
+  fill(190, 200, 220, 80);
+  ellipse(x+18*s,  y+22*s,    78*s, 22*s);
+
+  pop();
+}
+
 function explodeAndRespawn() {
   for (let i = 0; i < 12; i++) {
     particles.push({
@@ -229,7 +290,45 @@ if(pauseKey == false){ //if pause key is not pressed, resume game
 
     camera.x += (ball.x - camera.x) * 0.1;
     camera.y += (ball.y - camera.y) * 0.1;
+    // ----- BACKGROUND: gradient + gentle parallax + drifting clouds (screen-space) -----
+  camera.off();
+  push();
 
+  // paint sky
+  drawSkyGradient(color(0,150,255), color(135,206,235));
+
+  // parallax offsets from camera
+  const px = -camera.x * PARALLAX_X;
+  const py = -camera.y * PARALLAX_Y;
+
+  // time scale so drift looks similar even if fps varies
+  const dt = (typeof deltaTime === 'number' ? deltaTime : 16.666) / 16.666;
+
+  // update + draw each cloud
+  for (const c of CLOUDS) {
+    // accumulate horizontal drift
+    c.dx += c.vx * dt;
+
+    // screen-space position = base + parallax + drift
+    let sx = c.x + px + c.dx;
+    let sy = c.y + py;
+
+    // horizontal wrap so clouds recycle across the sky
+    if (sx > width + CLOUD_MARGIN) {
+      c.dx -= (width + 2 * CLOUD_MARGIN);
+      sx   -= (width + 2 * CLOUD_MARGIN);
+    } else if (sx < -CLOUD_MARGIN) {
+      c.dx += (width + 2 * CLOUD_MARGIN);
+      sx   += (width + 2 * CLOUD_MARGIN);
+    }
+
+    drawCloud(sx, sy, c.s);
+  }
+
+  pop();
+  camera.on();
+  // ----- END BACKGROUND -----
+	
     background('skyblue');
     if (ball.y > 700) {
         respawn();
