@@ -23,7 +23,7 @@ let pauseKey = false;
 let pausePosition = [0, 0];
 let gameState = "playing";  // Always starts directly in game (since we use menu.html)
 
-/ --- Cloud settings + state ---
+// --- Cloud settings + state ---
 const PARALLAX_X = 0.08;   // smaller = moves less with camera (x)
 const PARALLAX_Y = 0.015;  // smaller = moves less with camera (y)
 const CLOUD_MARGIN = 160;  // how far off-screen before wrapping
