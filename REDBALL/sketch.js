@@ -10,6 +10,7 @@ let claimedFlagImage;
 let ball;
 let respawnPosition = [500, 150];
 let jumpSound;
+let deathSound;
 let spikes;
 let platform;
 let button;
@@ -129,11 +130,12 @@ function updateCheckpoints() {
 function respawn() {
     if (respawnTimer === 0) {
         explodeAndRespawn();
+		deathSound.play();
     }
 }
 
 function explodeAndRespawn() {
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 20; i++) {
         particles.push({
             x: ball.x,
             y: ball.y,
@@ -160,7 +162,7 @@ function updateParticles() {
         p.vy += 0.2;
         p.life--;
 
-        fill('orange');
+        fill(ball.color);
         rect(p.x, p.y, 6, 6);
 
         if (p.life <= 0) particles.splice(i, 1);
@@ -170,6 +172,7 @@ function updateParticles() {
 function preload() {
     jumpSound = loadSound('soundeffects/jump.mp3');
     springSound = loadSound('soundeffects/spring.mp3');
+	deathSound = loadSound('soundeffects/dead.mp3');
 
     unclaimedFlagImage = loadImage("art/unclaimed_checkpoint.png", img => {
         // force the image to be at a certain scale
