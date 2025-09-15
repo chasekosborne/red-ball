@@ -214,6 +214,13 @@ function setup() {
 
     spikes.color = 'red';
     spikes.physics = STATIC;
+
+    //creating button and changing the position
+    button = createButton('click to change color');
+    button.position(600,200);
+
+    //when the button is pressed call the func randomColor
+    button.mousePressed(randomColor);
 }
 
 function pauseMenu() {
@@ -241,7 +248,9 @@ function update() {
 }
     }
 
-
+  //changing ball.color to the random ballColor picked
+  ball.color = ballColor;
+  
 	textAlign(CENTER);
 	textSize(20);
 	text('space to jump!', halfWidth, halfHeight - 100);
