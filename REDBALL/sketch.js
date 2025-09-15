@@ -21,7 +21,36 @@ let maxJumps = 1;
 let spring;
 let pauseKey = false;
 let pausePosition = [0, 0];
+let gameState = "playing";  // Always starts directly in game (since we use menu.html)
 
+function explodeAndRespawn() {
+  for (let i = 0; i < 12; i++) {
+    particles.push({
+      x: ball.x,
+      y: ball.y,
+      vx: random(-8, 8),
+      vy: random(-12, -4),
+      life: 40
+    });
+  }
+  ball.visible = false;
+  ball.collider = 'none';
+  ball.vel.x = 0;
+  ball.vel.y = 0;
+  jumpCount = 0;
+  ball.x = halfWidth - 200;
+  ball.y = halfHeight - 200;
+  respawnTimer = 40;
+}
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.2;   
+    p.life--;
+  }
+}
 let checkpoints = [];
 
 function spawnCheckpoints() {
@@ -141,6 +170,37 @@ function pauseMenu() {
 function update() {
     if (kb.pressed('escape')) {
         pauseKey = !pauseKey;   // changes false to true to ensure game is paused
+  if (gameState !== "playing") return; // Skip update if somehow not in game
+	camera.x += (ball.x - camera.x) * 0.1;
+	camera.y += (ball.y - camera.y) * 0.1;
+
+	background('skyblue'); 
+	if (ball.y > height + 50) {  
+    respawn();      
+}
+    }
+
+
+	textAlign(CENTER);
+	textSize(20);
+	text('space to jump!', halfWidth, halfHeight - 100);
+	if(ball.colliding(spring)){ ball.vel.y = -15; springSound.play() }
+
+  //Resets jump count when on ground or platforms
+  if (ball.colliding(ground) || ball.colliding(platform)) {jumpCount = 0;}
+
+	if (kb.presses('space')) {
+    if (jumpCount < maxJumps) {
+      ball.vel.y = -7;
+      jumpSound.play();
+      jumpCount++;
+    }
+  }
+	
+	
+if (kb.pressing('left')) {
+  if (ball.vel.x > 0) ball.applyForce(-30);  
+  else ball.applyForce(-15);
 }
 
 // if paused == true, skips game logic and switches to pause menu
