@@ -17,6 +17,7 @@ let button;
 let ballColor;
 let particles = [];
 let respawnTimer = 0;
+let hasJumped = false;
 let jumpCount = 0;
 let maxJumps = 1;
 let spring;
@@ -103,8 +104,6 @@ function spawnCheckpoints() {
 }
 
 function updateCheckpoints() {
-    console.log(`current respawn: ${respawnPosition}`);
-
     for (let checkpoint of checkpoints) {
         checkpoint.update();
     }
@@ -130,7 +129,6 @@ function explodeAndRespawn() {
     ball.visible = false;
     ball.collider = 'none';
 
-    console.log("I DIED")
     ball.vel.x = 0;
     ball.vel.y = 0;
     jumpCount = 0;
@@ -245,22 +243,22 @@ function update() {
     //changing ball.color to the random ballColor picked
     ball.color = ballColor;
 
-    textAlign(CENTER);
-    textSize(20);
-    text('space to jump!', halfWidth, halfHeight - 100);
     if (ball.colliding(spring)) { ball.vel.y = -15; springSound.play() }
 
     //Resets jump count when on ground or platforms
     if (ball.colliding(ground) || ball.colliding(platform)) { jumpCount = 0; }
 
     if (kb.presses('space')) {
+        if (!hasJumped) {
+            hasJumped = true;
+        }
+
         if (jumpCount < maxJumps) {
             ball.vel.y = -7;
             jumpSound.play();
             jumpCount++;
         }
     }
-
 
     if (kb.pressing('left')) {
         if (ball.vel.x > 0) ball.applyForce(-30);
@@ -274,18 +272,16 @@ function update() {
         platform.physics = STATIC;
 
         if (!applyPrevVel) {
+            // capture data before settings physics to STATIC resets velocity to zero
             lastVelocity[0] = ball.vel.x;
             lastVelocity[1] = ball.vel.y;
-            
+
             pausePosition = [ball.x, ball.y];
             
             ball.x = pausePosition[0];
             ball.y = pausePosition[1];
 
             ball.physics = STATIC;
-
-            console.log("LAST ACTIVE VELOCITY")
-            console.log(`${lastVelocity[0]} : ${lastVelocity[1]}`)
 
             applyPrevVel = true;
         }
@@ -298,8 +294,6 @@ function update() {
         ball.physics = DYNAMIC; //resetting ball physics
 
         if (applyPrevVel) {
-            console.log("REAPPLY VELOCITY")
-            console.log(`${lastVelocity[0]} : ${lastVelocity[1]}`)
             ball.vel.x = lastVelocity[0];
             ball.vel.y = lastVelocity[1];
             applyPrevVel = false;
@@ -357,9 +351,13 @@ function update() {
             respawn();
         }
 
-        textAlign(CENTER);
-        textSize(20);
-        text('space to jump!', halfWidth, halfHeight - 100);
+        // only draw this text when the player hasnt jumped at least once
+        if (!hasJumped) {
+            textAlign(CENTER);
+            textSize(20);
+            text('space to jump!', 800, 175);
+        }
+
         if (ball.colliding(spring)) { ball.vel.y = -15; springSound.play() }
 
         // Resets jump count when on ground or platforms
@@ -416,7 +414,6 @@ function update() {
         if (respawnTimer > 0) {
             respawnTimer--;
             if (respawnTimer === 0) {
-                console.log("RESPAWN TIMER IS 0")
                 ball.vel.x = 0;
                 ball.vel.y = 0;
                 ball.visible = true;
