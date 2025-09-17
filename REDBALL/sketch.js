@@ -31,87 +31,87 @@ const CLOUD_MARGIN = 160;  // how far off-screen before wrapping
 
 // Each cloud tracks: base x/y, scale s, drift speed vx, and accumulated drift dx
 const CLOUDS = [
-  { x: 110, y:  80, s: 0.7, vx: 0.15, dx: 0 },
-  { x: 220, y: 110, s: 1.0, vx: 0.20, dx: 0 },
-  { x: 320, y: 140, s: 1.3, vx: 0.10, dx: 0 },
+    { x: 110, y: 80, s: 0.7, vx: 0.15, dx: 0 },
+    { x: 220, y: 110, s: 1.0, vx: 0.20, dx: 0 },
+    { x: 320, y: 140, s: 1.3, vx: 0.10, dx: 0 },
 
-  { x: 1090, y:  270, s: 0.7, vx: 0.15, dx: 0 },
-  { x: 1200, y: 300, s: 1.0, vx: 0.20, dx: 0 },
-  { x: 1310, y: 330, s: 1.3, vx: 0.10, dx: 0 },
+    { x: 1090, y: 270, s: 0.7, vx: 0.15, dx: 0 },
+    { x: 1200, y: 300, s: 1.0, vx: 0.20, dx: 0 },
+    { x: 1310, y: 330, s: 1.3, vx: 0.10, dx: 0 },
 ];
 
 // Background: gradient sky + clouds (screen-space)
-function drawSkyGradient(top = color(0,150,255), bottom = color(135,206,235)) {
-  noFill();
-  for (let y = 0; y < height; y++) {
-    const t = y / height;
-    stroke(lerpColor(top, bottom, t));
-    line(0, y, width, y);
-  }
-  noStroke();
+function drawSkyGradient(top = color(0, 150, 255), bottom = color(135, 206, 235)) {
+    noFill();
+    for (let y = 0; y < height; y++) {
+        const t = y / height;
+        stroke(lerpColor(top, bottom, t));
+        line(0, y, width, y);
+    }
+    noStroke();
 }
 
 function drawCloud(x, y, s = 1) {
-  push();
-  noStroke();
+    push();
+    noStroke();
 
-  // back layer
-  fill(255, 255, 255, 80);
-  ellipse(x,       y,        140*s, 80*s);
-  ellipse(x-40*s,  y+8*s,     90*s, 60*s);
-  ellipse(x+45*s,  y+5*s,    100*s, 65*s);
+    // back layer
+    fill(255, 255, 255, 80);
+    ellipse(x, y, 140 * s, 80 * s);
+    ellipse(x - 40 * s, y + 8 * s, 90 * s, 60 * s);
+    ellipse(x + 45 * s, y + 5 * s, 100 * s, 65 * s);
 
-  // middle layer
-  fill(255, 255, 255, 140);
-  ellipse(x-25*s,  y-10*s,    70*s, 55*s);
-  ellipse(x+20*s,  y-14*s,    74*s, 58*s);
-  ellipse(x+60*s,  y+2*s,     62*s, 48*s);
+    // middle layer
+    fill(255, 255, 255, 140);
+    ellipse(x - 25 * s, y - 10 * s, 70 * s, 55 * s);
+    ellipse(x + 20 * s, y - 14 * s, 74 * s, 58 * s);
+    ellipse(x + 60 * s, y + 2 * s, 62 * s, 48 * s);
 
-  // front puffs
-  fill(255, 255, 255, 210);
-  ellipse(x-5*s,   y-18*s,    56*s, 46*s);
-  ellipse(x+28*s,  y-16*s,    52*s, 42*s);
+    // front puffs
+    fill(255, 255, 255, 210);
+    ellipse(x - 5 * s, y - 18 * s, 56 * s, 46 * s);
+    ellipse(x + 28 * s, y - 16 * s, 52 * s, 42 * s);
 
-  // base shading + second pass (richer bottom)
-  fill(220, 228, 240, 120);
-  ellipse(x+5*s,   y+18*s,   120*s, 38*s);
+    // base shading + second pass (richer bottom)
+    fill(220, 228, 240, 120);
+    ellipse(x + 5 * s, y + 18 * s, 120 * s, 38 * s);
 
-  fill(205, 214, 230, 110);
-  ellipse(x+10*s,  y+20*s,   100*s, 28*s);
+    fill(205, 214, 230, 110);
+    ellipse(x + 10 * s, y + 20 * s, 100 * s, 28 * s);
 
-  fill(190, 200, 220, 80);
-  ellipse(x+18*s,  y+22*s,    78*s, 22*s);
+    fill(190, 200, 220, 80);
+    ellipse(x + 18 * s, y + 22 * s, 78 * s, 22 * s);
 
-  pop();
+    pop();
 }
 
 function explodeAndRespawn() {
-  for (let i = 0; i < 12; i++) {
-    particles.push({
-      x: ball.x,
-      y: ball.y,
-      vx: random(-8, 8),
-      vy: random(-12, -4),
-      life: 40
-    });
-  }
-  ball.visible = false;
-  ball.collider = 'none';
-  ball.vel.x = 0;
-  ball.vel.y = 0;
-  jumpCount = 0;
-  ball.x = halfWidth - 200;
-  ball.y = halfHeight - 200;
-  respawnTimer = 40;
+    for (let i = 0; i < 12; i++) {
+        particles.push({
+            x: ball.x,
+            y: ball.y,
+            vx: random(-8, 8),
+            vy: random(-12, -4),
+            life: 40
+        });
+    }
+    ball.visible = false;
+    ball.collider = 'none';
+    ball.vel.x = 0;
+    ball.vel.y = 0;
+    jumpCount = 0;
+    ball.x = halfWidth - 200;
+    ball.y = halfHeight - 200;
+    respawnTimer = 40;
 }
 function updateParticles() {
-  for (let i = particles.length - 1; i >= 0; i--) {
-    let p = particles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.2;   
-    p.life--;
-  }
+    for (let i = particles.length - 1; i >= 0; i--) {
+        let p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.2;
+        p.life--;
+    }
 }
 let checkpoints = [];
 
@@ -130,7 +130,7 @@ function updateCheckpoints() {
 function respawn() {
     if (respawnTimer === 0) {
         explodeAndRespawn();
-		deathSound.play();
+        deathSound.play();
     }
 }
 
@@ -169,10 +169,11 @@ function updateParticles() {
     }
 }
 
+// executes before setup
 function preload() {
     jumpSound = loadSound('soundeffects/jump.mp3');
     springSound = loadSound('soundeffects/spring.mp3');
-	deathSound = loadSound('soundeffects/dead.mp3');
+    deathSound = loadSound('soundeffects/dead.mp3');
 
     unclaimedFlagImage = loadImage("art/unclaimed_checkpoint.png", img => {
         // force the image to be at a certain scale
@@ -184,6 +185,7 @@ function preload() {
     });
 }
 
+// executes once
 function setup() {
     platform = new Sprite(600, 250, 120, 20);
     platform.color = 'orange';
@@ -220,10 +222,10 @@ function setup() {
 
     //creating button and changing the position
     button = createButton('click to change color');
-    button.position(600,200);
+    button.position(600, 200);
 
-    //when the button is pressed call the func randomColor
-    button.mousePressed(randomColor);
+    // set the color of the player
+    randomColor();
 }
 
 function pauseMenu() {
@@ -231,126 +233,38 @@ function pauseMenu() {
     rectMode(CENTER);  //starts drawing from the center 
     rect(850, 450, 1500, 700); //setting dimensions
 
-    fill(0); 
+    fill(0);
     textAlign(CENTER, CENTER);
     textSize(25);
-    text('Press ESC to resume',850, 350); //text appears slightly above center of rectangle
+    text('Press ESC to resume', 850, 350); //text appears slightly above center of rectangle
 }
 
-
+// executes every frame
 function update() {
+    //when the button is pressed call the func randomColor
+    button.mousePressed(randomColor);
+
     if (kb.pressed('escape')) {
         pauseKey = !pauseKey;   // changes false to true to ensure game is paused
-  if (gameState !== "playing") return; // Skip update if somehow not in game
-	camera.x += (ball.x - camera.x) * 0.1;
-	camera.y += (ball.y - camera.y) * 0.1;
+        if (gameState !== "playing") return; // Skip update if somehow not in game
+        camera.x += (ball.x - camera.x) * 0.1;
+        camera.y += (ball.y - camera.y) * 0.1;
 
-	background('skyblue'); 
-	if (ball.y > height + 50) {  
-    respawn();      
-}
+        background('skyblue');
+        if (ball.y > height + 50) {
+            respawn();
+        }
     }
 
-  //changing ball.color to the random ballColor picked
-  ball.color = ballColor;
-  
-	textAlign(CENTER);
-	textSize(20);
-	text('space to jump!', halfWidth, halfHeight - 100);
-	if(ball.colliding(spring)){ ball.vel.y = -15; springSound.play() }
-
-  //Resets jump count when on ground or platforms
-  if (ball.colliding(ground) || ball.colliding(platform)) {jumpCount = 0;}
-
-	if (kb.presses('space')) {
-    if (jumpCount < maxJumps) {
-      ball.vel.y = -7;
-      jumpSound.play();
-      jumpCount++;
-    }
-  }
-	
-	
-if (kb.pressing('left')) {
-  if (ball.vel.x > 0) ball.applyForce(-30);  
-  else ball.applyForce(-15);
-}
-
-// if paused == true, skips game logic and switches to pause menu
-if (pauseKey==true) {
-    pauseMenu();
-    pausePosition = [ball.x, ball.y];
-    //setting ball velocity, resetting ball position, and setting platform and ball physics to 0 to prevent further movement when game is paused, stopping update function
-    platform.physics = STATIC;
-    ball.physics = NONE;
-    ball.vel.x = 0;
-    ball.vel.y = 0;
-    ball.x = pausePosition[0];
-    ball.y = pausePosition[1];
-    return;
-}
-
-if(pauseKey == false){ //if pause key is not pressed, resume game 
-  platform.physics = KINEMATIC;  //resetting platform physics
-  ball.physics = DYNAMIC; //resetting ball physics
-  platform.speed = 2;
-  if (platform.x > 1000) { //ensuring that platform moves to the left when reaching >1000 to avoid conflict with update code 
-  platform.vel.x = '-2'; 
-}  else if (platform.x < 200) { 
-  platform.vel.x = '2';  
-}
-
-    camera.x += (ball.x - camera.x) * 0.1;
-    camera.y += (ball.y - camera.y) * 0.1;
-    // ----- BACKGROUND: gradient + gentle parallax + drifting clouds (screen-space) -----
-  camera.off();
-  push();
-
-  // paint sky
-  drawSkyGradient(color(0,150,255), color(135,206,235));
-
-  // parallax offsets from camera
-  const px = -camera.x * PARALLAX_X;
-  const py = -camera.y * PARALLAX_Y;
-
-  // time scale so drift looks similar even if fps varies
-  const dt = (typeof deltaTime === 'number' ? deltaTime : 16.666) / 16.666;
-
-  // update + draw each cloud
-  for (const c of CLOUDS) {
-    // accumulate horizontal drift
-    c.dx += c.vx * dt;
-
-    // screen-space position = base + parallax + drift
-    let sx = c.x + px + c.dx;
-    let sy = c.y + py;
-
-    // horizontal wrap so clouds recycle across the sky
-    if (sx > width + CLOUD_MARGIN) {
-      c.dx -= (width + 2 * CLOUD_MARGIN);
-      sx   -= (width + 2 * CLOUD_MARGIN);
-    } else if (sx < -CLOUD_MARGIN) {
-      c.dx += (width + 2 * CLOUD_MARGIN);
-      sx   += (width + 2 * CLOUD_MARGIN);
-    }
-
-    drawCloud(sx, sy, c.s);
-  }
-
-  pop();
-  camera.on();
-  // ----- END BACKGROUND -----
-	
-    if (ball.y > 700) {
-        respawn();
-    }
+    //changing ball.color to the random ballColor picked
+    ball.color = ballColor;
 
     textAlign(CENTER);
     textSize(20);
     text('space to jump!', halfWidth, halfHeight - 100);
     if (ball.colliding(spring)) { ball.vel.y = -15; springSound.play() }
 
-    // Resets jump count when on ground or platforms
+    //Resets jump count when on ground or platforms
     if (ball.colliding(ground) || ball.colliding(platform)) { jumpCount = 0; }
 
     if (kb.presses('space')) {
@@ -361,59 +275,148 @@ if(pauseKey == false){ //if pause key is not pressed, resume game
         }
     }
 
+
     if (kb.pressing('left')) {
-        if (ball.vel.x > 0) {
-            ball.applyForce(-30);
-        } else {
-            ball.applyForce(-15);
+        if (ball.vel.x > 0) ball.applyForce(-30);
+        else ball.applyForce(-15);
+    }
+
+    // if paused == true, skips game logic and switches to pause menu
+    if (pauseKey == true) {
+        pauseMenu();
+        pausePosition = [ball.x, ball.y];
+        //setting ball velocity, resetting ball position, and setting platform and ball physics to 0 to prevent further movement when game is paused, stopping update function
+        platform.physics = STATIC;
+        ball.physics = NONE;
+        ball.vel.x = 0;
+        ball.vel.y = 0;
+        ball.x = pausePosition[0];
+        ball.y = pausePosition[1];
+        return;
+    }
+
+    if (pauseKey == false) { //if pause key is not pressed, resume game 
+        platform.physics = KINEMATIC;  //resetting platform physics
+        ball.physics = DYNAMIC; //resetting ball physics
+        platform.speed = 2;
+        if (platform.x > 1000) { //ensuring that platform moves to the left when reaching >1000 to avoid conflict with update code 
+            platform.vel.x = '-2';
+        } else if (platform.x < 200) {
+            platform.vel.x = '2';
         }
-    }
 
-    if (kb.pressing('right')) {
-        if (ball.vel.x < 0) {
-            ball.applyForce(30);
-        } else {
-            ball.applyForce(15);
+        camera.x += (ball.x - camera.x) * 0.1;
+        camera.y += (ball.y - camera.y) * 0.1;
+        // ----- BACKGROUND: gradient + gentle parallax + drifting clouds (screen-space) -----
+        camera.off();
+        push();
+
+        // paint sky
+        drawSkyGradient(color(0, 150, 255), color(135, 206, 235));
+
+        // parallax offsets from camera
+        const px = -camera.x * PARALLAX_X;
+        const py = -camera.y * PARALLAX_Y;
+
+        // time scale so drift looks similar even if fps varies
+        const dt = (typeof deltaTime === 'number' ? deltaTime : 16.666) / 16.666;
+
+        // update + draw each cloud
+        for (const c of CLOUDS) {
+            // accumulate horizontal drift
+            c.dx += c.vx * dt;
+
+            // screen-space position = base + parallax + drift
+            let sx = c.x + px + c.dx;
+            let sy = c.y + py;
+
+            // horizontal wrap so clouds recycle across the sky
+            if (sx > width + CLOUD_MARGIN) {
+                c.dx -= (width + 2 * CLOUD_MARGIN);
+                sx -= (width + 2 * CLOUD_MARGIN);
+            } else if (sx < -CLOUD_MARGIN) {
+                c.dx += (width + 2 * CLOUD_MARGIN);
+                sx += (width + 2 * CLOUD_MARGIN);
+            }
+
+            drawCloud(sx, sy, c.s);
         }
-    }
 
-    if (platform.x > 1000) {
-        platform.vel.x = '-2';
-        platform.vel.y = 0;
-    } else if (platform.x < 200) {
-        platform.vel.y = 0;
-        platform.vel.x = '2';
-    }
-    if (ball.colliding(platform) && ball.vel.y >= 0) {
-        ball.x += platform.vel.x
-    }
+        pop();
+        camera.on();
+        // ----- END BACKGROUND -----
 
-    if (ball.colliding(spikes)) {
-        respawn();
-    }
-
-    let worldMouseX = mouseX + camera.x - halfWidth;
-    let worldMouseY = mouseY + camera.y - halfHeight;
-    fill('black');
-    textSize(16);
-    textAlign(LEFT, TOP);
-    text(`Mouse: ${worldMouseX}, ${worldMouseY}`, 10, 10);
-
-    updateParticles();
-
-    if (respawnTimer > 0) {
-        respawnTimer--;
-        if (respawnTimer === 0) {
-            ball.vel.x = 0;
-            ball.vel.y = 0;
-            ball.visible = true;
-            ball.collider = 'dynamic';
+        if (ball.y > 700) {
+            respawn();
         }
-    }
-     updateCheckpoints();
-}
-   
 
+        textAlign(CENTER);
+        textSize(20);
+        text('space to jump!', halfWidth, halfHeight - 100);
+        if (ball.colliding(spring)) { ball.vel.y = -15; springSound.play() }
+
+        // Resets jump count when on ground or platforms
+        if (ball.colliding(ground) || ball.colliding(platform)) { jumpCount = 0; }
+
+        if (kb.presses('space')) {
+            if (jumpCount < maxJumps) {
+                ball.vel.y = -7;
+                jumpSound.play();
+                jumpCount++;
+            }
+        }
+
+        if (kb.pressing('left')) {
+            if (ball.vel.x > 0) {
+                ball.applyForce(-30);
+            } else {
+                ball.applyForce(-15);
+            }
+        }
+
+        if (kb.pressing('right')) {
+            if (ball.vel.x < 0) {
+                ball.applyForce(30);
+            } else {
+                ball.applyForce(15);
+            }
+        }
+
+        if (platform.x > 1000) {
+            platform.vel.x = '-2';
+            platform.vel.y = 0;
+        } else if (platform.x < 200) {
+            platform.vel.y = 0;
+            platform.vel.x = '2';
+        }
+        if (ball.colliding(platform) && ball.vel.y >= 0) {
+            ball.x += platform.vel.x
+        }
+
+        if (ball.colliding(spikes)) {
+            respawn();
+        }
+
+        let worldMouseX = mouseX + camera.x - halfWidth;
+        let worldMouseY = mouseY + camera.y - halfHeight;
+        fill('black');
+        textSize(16);
+        textAlign(LEFT, TOP);
+        text(`Mouse: ${worldMouseX}, ${worldMouseY}`, 10, 10);
+
+        updateParticles();
+
+        if (respawnTimer > 0) {
+            respawnTimer--;
+            if (respawnTimer === 0) {
+                ball.vel.x = 0;
+                ball.vel.y = 0;
+                ball.visible = true;
+                ball.collider = 'dynamic';
+            }
+        }
+        updateCheckpoints();
+    }
 }
 
 // When called the function assigns ballColor to a random color
