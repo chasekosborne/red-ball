@@ -24,6 +24,10 @@ let pauseKey = false;
 let pausePosition = [0, 0];
 let gameState = "playing";  // Always starts directly in game (since we use menu.html)
 
+let currentLevel = 0; // 0 = dev room
+let levels = [];
+let levelObjects = {}; // Will store level platforms and stuff
+
 // --- Cloud settings + state ---
 const PARALLAX_X = 0.08;   // smaller = moves less with camera (x)
 const PARALLAX_Y = 0.015;  // smaller = moves less with camera (y)
@@ -39,7 +43,82 @@ const CLOUDS = [
   { x: 1200, y: 300, s: 1.0, vx: 0.20, dx: 0 },
   { x: 1310, y: 330, s: 1.3, vx: 0.10, dx: 0 },
 ];
+function initializeLevels() {
+    levels = [
+        {
+            name: "Tutorial",
+            respawnPosition: [500, 150],
+            ballColor: 'red',
+            platforms: [
+                { x: 600, y: 250, w: 120, h: 20, color: 'orange', moving: true, speed: 2, minX: 200, maxX: 1000 }
+                
+            ],
+            ground: [
+                { x: 500, y: 350, w: 800, h: 40 },
+                
 
+            ],
+            springs: [
+                { x: 1100, y: 350, w: 200, h: 40 }
+            ],
+            spikes: [
+                { 
+                    points: [
+                        [780 + 0, 290 + 40],
+                        [780 + 20, 290 + 0],
+                        [780 + 40, 290 + 40],
+                        [780 + 0, 290 + 40]
+                    ]
+                }
+            ],
+            checkpoints: [
+                { x: 200, y: 305 }
+            ],
+            goalPosition: { x: 1200, y: 300 }, 
+            instructions: "Use SPACE to jump and arrow keys to move!"
+        },
+
+        {
+          name: "Humble Beginnings.",
+            respawnPosition: [500, 150],
+            ballColor: 'red',
+            platforms: [
+                { x: 600, y: 250, w: 120, h: 20, color: 'blue', moving: true, speed: 2, minX: 200, maxX: 1000 }
+                
+            ],
+            ground: [
+                { x: 500, y: 350, w: 800, h: 40 },
+                
+
+            ],
+            springs: [
+                { x: 1100, y: 350, w: 200, h: 40 }
+            ],
+            spikes: [
+                { 
+                    points: [
+                        [780 + 0, 290 + 40],
+                        [780 + 20, 290 + 0],
+                        [780 + 40, 290 + 40],
+                        [780 + 0, 290 + 40]
+                    ]
+                }
+            ],
+            checkpoints: [
+                { x: 200, y: 305 }
+            ],
+            goalPosition: { x: 1200, y: 300 }, 
+            instructions: "Use SPACE to jump and arrow keys to move!"
+
+        }
+
+
+
+
+        // Add more levels here  Be sure to use the template as seen above
+      
+    ];
+}
 // Background: gradient sky + clouds (screen-space)
 function drawSkyGradient(top = color(0,150,255), bottom = color(135,206,235)) {
   noFill();
@@ -97,9 +176,12 @@ function explodeAndRespawn() {
   }
   ball.visible = false;
   ball.collider = 'none';
+
   ball.vel.x = 0;
   ball.vel.y = 0;
+
   jumpCount = 0;
+
   ball.x = halfWidth - 200;
   ball.y = halfHeight - 200;
   respawnTimer = 40;
@@ -132,6 +214,136 @@ function respawn() {
         explodeAndRespawn();
 		deathSound.play();
     }
+}
+function loadLevel(levelIndex) {
+    clearLevel();
+    
+    currentLevel = levelIndex;
+    const level = levels[currentLevel];
+    
+    // This is to reset the ball
+    ball.x = level.respawnPosition[0];
+
+    ball.y = level.respawnPosition[1];
+    ball.color = level.ballColor;
+
+    ball.vel.x = 0;
+    ball.vel.y = 0;
+    jumpCount = 0;
+    
+    // Handles ground creation
+    levelObjects.ground = [];
+    for (let groundData of level.ground) {
+        let ground = new Sprite(groundData.x, groundData.y, groundData.w, groundData.h);
+        ground.physics = STATIC;
+        ground.color = 'green';
+
+        levelObjects.ground.push(ground);
+
+    }
+    
+    // Creation of platforms
+    levelObjects.platforms = [];
+    for (let platformData of level.platforms) {
+        let platform = new Sprite(platformData.x, platformData.y, platformData.w, platformData.h);
+        platform.color = platformData.color;
+        platform.physics = KINEMATIC;
+        platform.speed = platformData.speed || 0;
+        platform.direction = 1;
+        platform.minX = platformData.minX || platformData.x - 100;
+        platform.maxX = platformData.maxX || platformData.x + 100;
+        platform.moving = platformData.moving || false;
+        levelObjects.platforms.push(platform);
+    }
+    
+    // Spring creata
+    levelObjects.springs = [];
+    for (let springData of level.springs) {
+        let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
+        spring.physics = STATIC;
+        spring.color = 'cyan';
+        levelObjects.springs.push(spring);
+    }
+    
+    // Spike dreator
+    levelObjects.spikes = [];
+    for (let spikeData of level.spikes) {
+        let spike = new Sprite(spikeData.points);
+        spike.color = 'red';
+        spike.physics = STATIC;
+        levelObjects.spikes.push(spike);
+    }
+    
+    // Creation of checkpoints
+    levelObjects.checkpoints = [];
+    for (let checkpointData of level.checkpoints) {
+
+        let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
+
+        levelObjects.checkpoints.push(checkpoint);
+    }
+}
+
+function clearLevel() {
+    Object.values(levelObjects).forEach(objectArray => {
+
+        if (Array.isArray(objectArray)) {
+
+            objectArray.forEach(obj => {
+                if (obj.sprite) obj.sprite.remove();
+
+
+                else if (obj.remove) obj.remove();
+            });
+        }
+    });
+    levelObjects = {};
+}
+
+
+
+function nextLevel() {
+
+    if (currentLevel < levels.length - 1) {
+
+        loadLevel(currentLevel + 1);
+    } else {
+       
+        console.log("YOU WINNN!!!!!!!!!!!! WOWW!!!!!");
+    }
+}
+
+function checkLevelCompletion() {
+    const level = levels[currentLevel];
+    if (level.goalPosition) {
+        let distance = dist(ball.x, ball.y, level.goalPosition.x, level.goalPosition.y);
+        if (distance < 60) {
+            nextLevel();
+        }
+    }
+}
+function drawUI() {
+    camera.off();
+    
+    // Name of level
+    fill(0);
+    textAlign(LEFT, TOP);
+    textSize(24);
+    text(`Level: ${levels[currentLevel].name}`, 20, 20);
+    
+    // Instructions (if needed)
+    // Can be used to make fun little quips 
+    // Not sure if I wanna use this yet
+    
+   /* textSize(16);
+    text(levels[currentLevel].instructions, 20, 60); */
+    
+    // What level am I on?
+    // I kinda dont like this but Im not gonna remove it yet.
+
+     /* text(`Level ${currentLevel + 1} of ${levels.length}`, 20, height - 40); */
+    
+    camera.on();
 }
 
 function explodeAndRespawn() {
@@ -175,7 +387,7 @@ function preload() {
 	deathSound = loadSound('soundeffects/dead.mp3');
 
     unclaimedFlagImage = loadImage("art/unclaimed_checkpoint.png", img => {
-        // force the image to be at a certain scale
+        
         img.resize(100, 100);
     });
 
@@ -185,222 +397,179 @@ function preload() {
 }
 
 function setup() {
-    platform = new Sprite(600, 250, 120, 20);
-    platform.color = 'orange';
-    platform.physics = KINEMATIC;
-    platform.speed = 2;
-    platform.direction = 1;
-
+    // Initialization pretty cool stuff
+    initializeLevels();
+    
+    // Creation of out fun little ball
     ball = new Sprite();
     ball.drag = 0.4;
     ball.textSize = 40;
     ball.text = ":)";
-    ball.x = respawnPosition[0];
-    ball.y = respawnPosition[1];
     ball.diameter = 50;
-    ball.color = 'red';
-
-    spawnCheckpoints();
-
-    let groundA = ground = new Sprite(500, 350, 800, 40);
-    groundA.physics = STATIC;
-
-    spring = new Sprite(1100, 350, 200, 40)
-    spring.physics = STATIC;
-
-    spikes = new Sprite([
-        [780 + 0, 290 + 40],
-        [780 + 20, 290 + 0],
-        [780 + 40, 290 + 40],
-        [780 + 0, 290 + 40]
-    ]);
-
-    spikes.color = 'red';
-    spikes.physics = STATIC;
-
-    //creating button and changing the position
-    button = createButton('click to change color');
-    button.position(600,200);
-
-    //when the button is pressed call the func randomColor
+    
+    // Load da dev room 
+    loadLevel(0);
+    
+    
+    let button = createButton('Random Color');
+    button.position(20, 100);
     button.mousePressed(randomColor);
 }
 
 function pauseMenu() {
-    fill(173, 216, 230, 50);   //setting rectangular box for menu
-    rectMode(CENTER);  //starts drawing from the center 
-    rect(850, 450, 1500, 700); //setting dimensions
+    fill(173, 216, 230, 50);  
+    rectMode(CENTER);  
+    rect(850, 450, 1500, 700); 
 
     fill(0); 
     textAlign(CENTER, CENTER);
     textSize(25);
-    text('Press ESC to resume',850, 350); //text appears slightly above center of rectangle
+    text('Press ESC to resume',850, 350); 
+    text('Press R to restart level', 850, 400);
 }
 
 
 function update() {
     if (kb.pressed('escape')) {
-        pauseKey = !pauseKey;   // changes false to true to ensure game is paused
-  if (gameState !== "playing") return; // Skip update if somehow not in game
-	camera.x += (ball.x - camera.x) * 0.1;
-	camera.y += (ball.y - camera.y) * 0.1;
+        pauseKey = !pauseKey;
+    }
+    
+    if (kb.pressed('r')) {
+      //level restart
+        loadLevel(currentLevel); 
 
-	background('skyblue'); 
-	if (ball.y > height + 50) {  
-    respawn();      
-}
     }
 
-  //changing ball.color to the random ballColor picked
-  ball.color = ballColor;
-  
-	textAlign(CENTER);
-	textSize(20);
-	text('space to jump!', halfWidth, halfHeight - 100);
-	if(ball.colliding(spring)){ ball.vel.y = -15; springSound.play() }
-
-  //Resets jump count when on ground or platforms
-  if (ball.colliding(ground) || ball.colliding(platform)) {jumpCount = 0;}
-
-	if (kb.presses('space')) {
-    if (jumpCount < maxJumps) {
-      ball.vel.y = -7;
-      jumpSound.play();
-      jumpCount++;
+    if (pauseKey) {
+        pauseMenu();
+        pausePosition = [ball.x, ball.y];
+        // Physics when paused handler
+        levelObjects.platforms?.forEach(platform => {
+            platform.physics = STATIC;
+        });
+        ball.physics = NONE;
+        ball.vel.x = 0;
+        ball.vel.y = 0;
+        ball.x = pausePosition[0];
+        ball.y = pausePosition[1];
+        return;
     }
-  }
-	
-	
-if (kb.pressing('left')) {
-  if (ball.vel.x > 0) ball.applyForce(-30);  
-  else ball.applyForce(-15);
-}
 
-// if paused == true, skips game logic and switches to pause menu
-if (pauseKey==true) {
-    pauseMenu();
-    pausePosition = [ball.x, ball.y];
-    //setting ball velocity, resetting ball position, and setting platform and ball physics to 0 to prevent further movement when game is paused, stopping update function
-    platform.physics = STATIC;
-    ball.physics = NONE;
-    ball.vel.x = 0;
-    ball.vel.y = 0;
-    ball.x = pausePosition[0];
-    ball.y = pausePosition[1];
-    return;
-}
+    // Unpause physiscs
+    if (!pauseKey) {
+        levelObjects.platforms?.forEach(platform => {
+            platform.physics = KINEMATIC;
+        });
+        ball.physics = DYNAMIC;
+    }
 
-if(pauseKey == false){ //if pause key is not pressed, resume game 
-  platform.physics = KINEMATIC;  //resetting platform physics
-  ball.physics = DYNAMIC; //resetting ball physics
-  platform.speed = 2;
-  if (platform.x > 1000) { //ensuring that platform moves to the left when reaching >1000 to avoid conflict with update code 
-  platform.vel.x = '-2'; 
-}  else if (platform.x < 200) { 
-  platform.vel.x = '2';  
-}
-
+    // Camera handeler
     camera.x += (ball.x - camera.x) * 0.1;
     camera.y += (ball.y - camera.y) * 0.1;
-    // ----- BACKGROUND: gradient + gentle parallax + drifting clouds (screen-space) -----
-  camera.off();
-  push();
 
-  // paint sky
-  drawSkyGradient(color(0,150,255), color(135,206,235));
+    // Background creation
+    camera.off();
+    push();
+    drawSkyGradient(color(0,150,255), color(135,206,235));
 
-  // parallax offsets from camera
-  const px = -camera.x * PARALLAX_X;
-  const py = -camera.y * PARALLAX_Y;
+    const px = -camera.x * PARALLAX_X;
+    const py = -camera.y * PARALLAX_Y;
+    const dt = (typeof deltaTime === 'number' ? deltaTime : 16.666) / 16.666;
 
-  // time scale so drift looks similar even if fps varies
-  const dt = (typeof deltaTime === 'number' ? deltaTime : 16.666) / 16.666;
+    for (const c of CLOUDS) {
+        c.dx += c.vx * dt;
+        let sx = c.x + px + c.dx;
+        let sy = c.y + py;
 
-  // update + draw each cloud
-  for (const c of CLOUDS) {
-    // accumulate horizontal drift
-    c.dx += c.vx * dt;
+        if (sx > width + CLOUD_MARGIN) {
+            c.dx -= (width + 2 * CLOUD_MARGIN);
+            sx -= (width + 2 * CLOUD_MARGIN);
+        } else if (sx < -CLOUD_MARGIN) {
+            c.dx += (width + 2 * CLOUD_MARGIN);
+            sx += (width + 2 * CLOUD_MARGIN);
+        }
 
-    // screen-space position = base + parallax + drift
-    let sx = c.x + px + c.dx;
-    let sy = c.y + py;
-
-    // horizontal wrap so clouds recycle across the sky
-    if (sx > width + CLOUD_MARGIN) {
-      c.dx -= (width + 2 * CLOUD_MARGIN);
-      sx   -= (width + 2 * CLOUD_MARGIN);
-    } else if (sx < -CLOUD_MARGIN) {
-      c.dx += (width + 2 * CLOUD_MARGIN);
-      sx   += (width + 2 * CLOUD_MARGIN);
+        drawCloud(sx, sy, c.s);
     }
+    pop();
+    camera.on();
 
-    drawCloud(sx, sy, c.s);
-  }
-
-  pop();
-  camera.on();
-  // ----- END BACKGROUND -----
-	
+    // Ball fall off map respawner
     if (ball.y > 700) {
         respawn();
     }
 
-    textAlign(CENTER);
-    textSize(20);
-    text('space to jump!', halfWidth, halfHeight - 100);
-    if (ball.colliding(spring)) { ball.vel.y = -15; springSound.play() }
+    // Moving Platform handeller
+    levelObjects.platforms?.forEach(platform => {
+        if (platform.moving) {
+            if (platform.x > platform.maxX) {
+                platform.vel.x = -platform.speed;
+                platform.vel.y = 0;
+            } else if (platform.x < platform.minX) {
+                platform.vel.x = platform.speed;
+                platform.vel.y = 0;
+            }
+            
+            // Ball + Platform interaction
+            if (ball.colliding(platform) && ball.vel.y >= 0) {
+                ball.x += platform.vel.x;
+            }
+        }
+    });
 
-    // Resets jump count when on ground or platforms
-    if (ball.colliding(ground) || ball.colliding(platform)) { jumpCount = 0; }
+    // Spring Handeler
+    levelObjects.springs?.forEach(spring => {
+        if (ball.colliding(spring)) {
+            ball.vel.y = -15;
+            if (springSound) springSound.play();
+        }
+    });
 
+    // Jump reset Handeler
+    let onGround = false;
+    levelObjects.ground?.forEach(ground => {
+        if (ball.colliding(ground)) onGround = true;
+    });
+    levelObjects.platforms?.forEach(platform => {
+        if (ball.colliding(platform)) onGround = true;
+    });
+    if (onGround) jumpCount = 0;
+
+    // Controls
     if (kb.presses('space')) {
         if (jumpCount < maxJumps) {
             ball.vel.y = -7;
-            jumpSound.play();
+            if (jumpSound) jumpSound.play();
             jumpCount++;
         }
     }
 
     if (kb.pressing('left')) {
-        if (ball.vel.x > 0) {
-            ball.applyForce(-30);
-        } else {
-            ball.applyForce(-15);
-        }
+        if (ball.vel.x > 0) ball.applyForce(-30);
+        else ball.applyForce(-15);
     }
 
     if (kb.pressing('right')) {
-        if (ball.vel.x < 0) {
-            ball.applyForce(30);
-        } else {
-            ball.applyForce(15);
+        if (ball.vel.x < 0) ball.applyForce(30);
+        else ball.applyForce(15);
+    }
+
+    // Spike collision handeler
+    levelObjects.spikes?.forEach(spike => {
+        if (ball.colliding(spike)) {
+            respawn();
         }
-    }
+    });
 
-    if (platform.x > 1000) {
-        platform.vel.x = '-2';
-        platform.vel.y = 0;
-    } else if (platform.x < 200) {
-        platform.vel.y = 0;
-        platform.vel.x = '2';
-    }
-    if (ball.colliding(platform) && ball.vel.y >= 0) {
-        ball.x += platform.vel.x
-    }
+    // Checkpoint update
+    levelObjects.checkpoints?.forEach(checkpoint => {
+        checkpoint.update();
+    });
 
-    if (ball.colliding(spikes)) {
-        respawn();
-    }
-
-    let worldMouseX = mouseX + camera.x - halfWidth;
-    let worldMouseY = mouseY + camera.y - halfHeight;
-    fill('black');
-    textSize(16);
-    textAlign(LEFT, TOP);
-    text(`Mouse: ${worldMouseX}, ${worldMouseY}`, 10, 10);
-
+    
     updateParticles();
 
+    // Respawn Timer handler
     if (respawnTimer > 0) {
         respawnTimer--;
         if (respawnTimer === 0) {
@@ -410,13 +579,19 @@ if(pauseKey == false){ //if pause key is not pressed, resume game
             ball.collider = 'dynamic';
         }
     }
-     updateCheckpoints();
+
+    // Checking if the level is done
+    checkLevelCompletion();
+    
+    
+    drawUI();
 }
    
 
-}
+
 
 // When called the function assigns ballColor to a random color
 function randomColor() {
-    ballColor = random(['red', 'black', 'purple', 'pink', 'yellow', 'green', 'blue'])
+    levels[currentLevel].ballColor = random(['red', 'black', 'purple', 'pink', 'yellow', 'green', 'blue']);
+    ball.color = levels[currentLevel].ballColor;
 }
