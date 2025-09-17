@@ -22,6 +22,8 @@ let maxJumps = 1;
 let spring;
 let pauseKey = false;
 let pausePosition = [0, 0];
+let applyPrevVel = false;
+let lastVelocity = [0, 0];
 let gameState = "playing";  // Always starts directly in game (since we use menu.html)
 
 // --- Cloud settings + state ---
@@ -85,25 +87,6 @@ function drawCloud(x, y, s = 1) {
     pop();
 }
 
-function explodeAndRespawn() {
-    for (let i = 0; i < 12; i++) {
-        particles.push({
-            x: ball.x,
-            y: ball.y,
-            vx: random(-8, 8),
-            vy: random(-12, -4),
-            life: 40
-        });
-    }
-    ball.visible = false;
-    ball.collider = 'none';
-    ball.vel.x = 0;
-    ball.vel.y = 0;
-    jumpCount = 0;
-    ball.x = halfWidth - 200;
-    ball.y = halfHeight - 200;
-    respawnTimer = 40;
-}
 function updateParticles() {
     for (let i = particles.length - 1; i >= 0; i--) {
         let p = particles[i];
@@ -146,9 +129,12 @@ function explodeAndRespawn() {
     }
     ball.visible = false;
     ball.collider = 'none';
+
+    console.log("I DIED")
     ball.vel.x = 0;
     ball.vel.y = 0;
     jumpCount = 0;
+
     ball.x = respawnPosition[0];
     ball.y = respawnPosition[1];
     respawnTimer = 40;
@@ -284,20 +270,41 @@ function update() {
     // if paused == true, skips game logic and switches to pause menu
     if (pauseKey == true) {
         pauseMenu();
-        pausePosition = [ball.x, ball.y];
         //setting ball velocity, resetting ball position, and setting platform and ball physics to 0 to prevent further movement when game is paused, stopping update function
         platform.physics = STATIC;
-        ball.physics = NONE;
-        ball.vel.x = 0;
-        ball.vel.y = 0;
-        ball.x = pausePosition[0];
-        ball.y = pausePosition[1];
+
+        if (!applyPrevVel) {
+            lastVelocity[0] = ball.vel.x;
+            lastVelocity[1] = ball.vel.y;
+            
+            pausePosition = [ball.x, ball.y];
+            
+            ball.x = pausePosition[0];
+            ball.y = pausePosition[1];
+
+            ball.physics = STATIC;
+
+            console.log("LAST ACTIVE VELOCITY")
+            console.log(`${lastVelocity[0]} : ${lastVelocity[1]}`)
+
+            applyPrevVel = true;
+        }
+
         return;
     }
 
     if (pauseKey == false) { //if pause key is not pressed, resume game 
         platform.physics = KINEMATIC;  //resetting platform physics
         ball.physics = DYNAMIC; //resetting ball physics
+
+        if (applyPrevVel) {
+            console.log("REAPPLY VELOCITY")
+            console.log(`${lastVelocity[0]} : ${lastVelocity[1]}`)
+            ball.vel.x = lastVelocity[0];
+            ball.vel.y = lastVelocity[1];
+            applyPrevVel = false;
+        }
+
         platform.speed = 2;
         if (platform.x > 1000) { //ensuring that platform moves to the left when reaching >1000 to avoid conflict with update code 
             platform.vel.x = '-2';
@@ -409,6 +416,7 @@ function update() {
         if (respawnTimer > 0) {
             respawnTimer--;
             if (respawnTimer === 0) {
+                console.log("RESPAWN TIMER IS 0")
                 ball.vel.x = 0;
                 ball.vel.y = 0;
                 ball.visible = true;
