@@ -344,6 +344,23 @@ function drawUI() {
      /* text(`Level ${currentLevel + 1} of ${levels.length}`, 20, height - 40); */
     
     camera.on();
+    const level = levels[currentLevel];
+
+    // this makes the goal indicator someone pls make this not look garbage
+    if (level.goalPosition) {
+        push();
+        fill(255, 215, 0, 150); 
+        stroke(255, 165, 0); 
+        strokeWeight(3);
+        ellipse(level.goalPosition.x, level.goalPosition.y, 120, 120);
+        
+        // Add "GOAL" text
+        fill(255, 255, 255);
+        textAlign(CENTER, CENTER);
+        textSize(16);
+        text("GOAL", level.goalPosition.x, level.goalPosition.y);
+        pop();
+    }
 }
 
 function explodeAndRespawn() {
