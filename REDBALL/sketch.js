@@ -7,7 +7,7 @@ world.gravity.y = 10;
 let unclaimedFlagImage;
 let claimedFlagImage;
 let spikeImage;
-
+let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
 let ball;
 let respawnPosition = [500, 150];
 let jumpSound;
@@ -326,6 +326,18 @@ function drawUI() {
     textAlign(LEFT, TOP);
     textSize(24);
     text(`Level: ${levels[currentLevel].name}`, 20, 20);
+
+        fill(100, 150, 255);
+    stroke(0);
+    strokeWeight(2);
+    rect(colorButtonBounds.x, colorButtonBounds.y, colorButtonBounds.w, colorButtonBounds.h);
+    
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(12);
+    text('Random Color', colorButtonBounds.x + colorButtonBounds.w/2, colorButtonBounds.y + colorButtonBounds.h/2);
+    
+    
     
     // Instructions (if needed)
     // Can be used to make fun little quips 
@@ -356,9 +368,19 @@ function drawUI() {
         textSize(16);
         text("GOAL", level.goalPosition.x, level.goalPosition.y);
         pop();
+
+        
     }
 }
-
+function mousePressed() {
+    //check when not paused and camera is off 
+    if (!pauseKey && 
+        mouseX >= colorButtonBounds.x && mouseX <= colorButtonBounds.x + colorButtonBounds.w &&
+        mouseY >= colorButtonBounds.y && mouseY <= colorButtonBounds.y + colorButtonBounds.h) {
+        randomColor();
+        return false; // makes it not handle other mouse
+    }
+}
 function explodeAndRespawn() {
     for (let i = 0; i < 20; i++) {
         particles.push({
@@ -428,9 +450,7 @@ function setup() {
     loadLevel(0);
     
     
-    let button = createButton('Random Color');
-    button.position(20, 100);
-    button.mousePressed(randomColor);
+
 }
 
 function pauseMenu() {
