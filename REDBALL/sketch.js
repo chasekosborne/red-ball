@@ -467,6 +467,11 @@ function update() {
         ball.physics = NONE;
         ball.vel.x = 0;
         ball.vel.y = 0;
+		
+		ball.rotationSpeed = 0;
+    	ball.angularVelocity = 0;
+    	ball.rotation = ball.rotation;
+
         ball.x = pausePosition[0];
         ball.y = pausePosition[1];
         return;
