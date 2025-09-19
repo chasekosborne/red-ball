@@ -6,6 +6,7 @@ world.gravity.y = 10;
 // collection of images
 let unclaimedFlagImage;
 let claimedFlagImage;
+let spikeImage;
 
 let ball;
 let respawnPosition = [500, 150];
@@ -62,14 +63,7 @@ function initializeLevels() {
                 { x: 1100, y: 350, w: 200, h: 40 }
             ],
             spikes: [
-                { 
-                    points: [
-                        [780 + 0, 290 + 40],
-                        [780 + 20, 290 + 0],
-                        [780 + 40, 290 + 40],
-                        [780 + 0, 290 + 40]
-                    ]
-                }
+                { x: 800, y: 306, orientation: "up" }
             ],
             checkpoints: [
                 { x: 200, y: 305 }
@@ -95,14 +89,7 @@ function initializeLevels() {
                 { x: 1100, y: 350, w: 200, h: 40 }
             ],
             spikes: [
-                { 
-                    points: [
-                        [780 + 0, 290 + 40],
-                        [780 + 20, 290 + 0],
-                        [780 + 40, 290 + 40],
-                        [780 + 0, 290 + 40]
-                    ]
-                }
+                { x: 800, y: 300, orientation: "up" }
             ],
             checkpoints: [
                 { x: 200, y: 305 }
@@ -265,12 +252,21 @@ function loadLevel(levelIndex) {
         levelObjects.springs.push(spring);
     }
     
-    // Spike dreator
+    // Spike creator
     levelObjects.spikes = [];
     for (let spikeData of level.spikes) {
-        let spike = new Sprite(spikeData.points);
-        spike.color = 'red';
+        let spike = new Sprite(spikeData.x, spikeData.y, 50, 50);
+        spike.img = spikeImage;
+        spike.collider = 'static';
         spike.physics = STATIC;
+        spike.rotationLock = true;
+
+        switch (spikeData.orientation || 'up') {
+            case 'up': spike.rotation = 0; break;
+            case 'down': spike.rotation = 180; break;
+            case 'left': spike.rotation = 90; break;
+            case 'right': spike.rotation = -90; break;
+        }
         levelObjects.spikes.push(spike);
     }
     
@@ -409,6 +405,10 @@ function preload() {
     });
 
     claimedFlagImage = loadImage("art/claimed_checkpoint.png", img => {
+        img.resize(100, 100);
+    });
+
+    spikeImage = loadImage("art/spike.png", img => {
         img.resize(100, 100);
     });
 }
