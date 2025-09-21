@@ -1,42 +1,96 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="icon" href="favicon.png">
-	<title>p5play</title>
-	<style>
-		html,
-		body {
-			background-color: black;
-			margin: 0;
-			padding: 0;
-			overflow: hidden;
-			overscroll-behavior: none;
-		}
-	</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Epsilon’s Greatest Ball</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Main menu overlay */
+    #menu {
+  	position: absolute;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+  	height: 100%;
+
+  	/* Cloud background with scrolling animation */
+  	background: url("1c62bb07-3c6a-458b-95aa-b3be4af8ecfc.png") repeat-x;
+  	background-size: cover;
+  	animation: moveClouds 60s linear infinite;
+
+  	/* Add overlay color + blur so game doesn’t distract */
+  	background-color: rgba(0, 0, 0, 0.4); /* dark transparent layer */
+  	backdrop-filter: blur(5px);            /* soft blur behind menu */
+
+  	display: flex;
+  	flex-direction: column;
+  	justify-content: center;
+  	align-items: center;
+  	z-index: 10;
+}
+
+
+    @keyframes moveClouds {
+      from { background-position: 0 0; }
+      to   { background-position: -1000px 0; }
+    }
+
+    /* Title style */
+    #menu h1 {
+      font-size: 60px;
+      margin-bottom: 40px;
+      color: red;
+      text-shadow: 2px 2px 0 white;
+    }
+
+    /* Button style */
+    #menu button {
+      padding: 15px 30px;
+      font-size: 24px;
+      background-color: white;
+      border: 2px solid red;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #menu button:hover {
+      background-color: red;
+      color: white;
+    }
+  </style>
 </head>
-
 <body>
-	<main></main>
+  <!-- Menu overlay -->
+  <div id="menu">
+    <h1>Epsilon’s Greatest Ball</h1>
+    <button onclick="startGame()">Start Game</button>
+  </div>
 
-	<!-- ONLINE LINKS -->
-	<script src="https://q5js.org/q5.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
-	<script src="https://p5play.org/v3/planck.min.js"></script>
-	<script src="https://p5play.org/v3/p5play.js"></script>
+  <!-- Game canvas -->
+  <main></main>
 
-	<!-- OFFLINE LINKS -->
-	<!--
-	<script src="node_modules/q5/q5.js"></script>
-	<script src="node_modules/p5play/planck.min.js"></script>
-	<script src="node_modules/p5play/p5play.js"></script>
-	-->
+  <!-- Game scripts -->
+  <script src="https://q5js.org/q5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+  <script src="https://p5play.org/v3/planck.min.js"></script>
+  <script src="https://p5play.org/v3/p5play.js"></script>
 
-	<!-- YOUR SKETCH -->
-	<script src="checkpoint.js"></script>
-	<script src="sketch.js"></script>
+  <script src="checkpoint.js"></script>
+  <script src="sketch.js"></script>
+
+  <script>
+    function startGame() {
+      // Hide the menu overlay when Start is clicked
+      document.getElementById("menu").style.display = "none";
+    }
+  </script>
 </body>
-
 </html>

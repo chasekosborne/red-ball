@@ -23,8 +23,7 @@ let maxJumps = 1;
 let spring;
 let pauseKey = false;
 let pausePosition = [0, 0];
-let gameState = "playing";  // Always starts directly in game (since we use menu.html)
-
+let gameState = "playing"; // start in menu
 let currentLevel = 0; // 0 = dev room
 let levels = [];
 let levelObjects = {}; // Will store level platforms and stuff
