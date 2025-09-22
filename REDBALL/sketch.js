@@ -654,7 +654,7 @@ function update() {
     // Background creation
     camera.off();
     push();
-    drawSkyGradient(color(0,150,255), color(135,206,235));
+    
 
     const px = -camera.x * PARALLAX_X;
     const py = -camera.y * PARALLAX_Y;
