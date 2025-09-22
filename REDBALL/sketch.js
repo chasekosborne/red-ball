@@ -8,6 +8,7 @@ let unclaimedFlagImage;
 let claimedFlagImage;
 let spikeImage;
 let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
+let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
 let ball;
 let respawnPosition = [500, 150];
 let jumpSound;
@@ -24,8 +25,7 @@ let spring;
 let pauseKey = false;
 let pausePosition = [0, 0];
 let gameState = "playing"; // start in menu
-var pausebutton;
-var colorbutton;
+
 
 let currentLevel = 0; // 0 = dev room
 let levels = [];
@@ -451,7 +451,22 @@ function drawUI() {
     textSize(12);
     text('Random Color', colorButtonBounds.x + colorButtonBounds.w/2, colorButtonBounds.y + colorButtonBounds.h/2);
     
-    
+    if (!pauseKey) {
+        fill(255, 100, 100);
+        stroke(0);
+        strokeWeight(2);
+        rect(pauseButtonBounds.x, pauseButtonBounds.y, pauseButtonBounds.w, pauseButtonBounds.h);
+        
+        fill(255);
+        textAlign(CENTER, CENTER);
+        textSize(12);
+        text('Pause (P)', pauseButtonBounds.x + pauseButtonBounds.w/2, pauseButtonBounds.y + pauseButtonBounds.h/2);
+    }
+  
+
+
+
+
     
     // Instructions (if needed)
     // Can be used to make fun little quips 
@@ -487,14 +502,24 @@ function drawUI() {
     }
 }
 function mousePressed() {
-    //check when not paused and camera is off 
-    if (!pauseKey && 
-        mouseX >= colorButtonBounds.x && mouseX <= colorButtonBounds.x + colorButtonBounds.w &&
-        mouseY >= colorButtonBounds.y && mouseY <= colorButtonBounds.y + colorButtonBounds.h) {
-        randomColor();
-        return false; // makes it not handle other mouse
+    // Check if not paused and camera is off for anything using the UI stuff (buttons mostly)
+    if (!pauseKey) {
+        // colorButton
+        if (mouseX >= colorButtonBounds.x && mouseX <= colorButtonBounds.x + colorButtonBounds.w &&
+            mouseY >= colorButtonBounds.y && mouseY <= colorButtonBounds.y + colorButtonBounds.h) {
+            randomColor();
+            return false; // makes it not handle other mouse
+        }
+        
+        // PauseButton
+        if (mouseX >= pauseButtonBounds.x && mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
+            mouseY >= pauseButtonBounds.y && mouseY <= pauseButtonBounds.y + pauseButtonBounds.h) {
+            pauseKey = true;
+            return false;
+        }
     }
 }
+
 function explodeAndRespawn() {
     for (let i = 0; i < 20; i++) {
         particles.push({
@@ -564,50 +589,39 @@ function setup() {
     loadLevel(0);
     
     
-    colorbutton = createButton('Change ball color');
-    colorbutton.position(625,300);
-    colorbutton.size(400,50);
-    colorbutton.mousePressed (() => {
-        randomColor();
-    }
-    );
+
+    
     
   
-    pausebutton = createButton('Click to resume/ hit ESC');
-    pausebutton.position(625,350);
-    pausebutton.size(400,50);
-    pausebutton.color = 'red';
-    pausebutton.mouseReleased(() => {
-        pauseKey = !pauseKey;
-    }
-    );
+
 
 }
 
 function pauseMenu() {
-    fill(173, 216, 230, 10);  
+    camera.off();
+    
+    fill(173, 216, 230, 200);  
     rectMode(CENTER);  
-    rect(850, 450, 1500, 700); 
+    rect(width/2, height/2, width * 0.8, height * 0.6); 
 
-    fill(255, 216, 230, 200);  
+    fill(255, 216, 230, 255);  
     textAlign(CENTER, CENTER);
-    textSize(25);
-    text('Game Paused', 825, 200);
+    textSize(32);
+    text('Game Paused', width/2, height/2 - 100);
 
     textAlign(CENTER, CENTER);
-    textSize(25);
-    text('Press R to restart level', 825, 250);
-
-    colorbutton.show();
-    pausebutton.show();
+    textSize(20);
+    text('Press P to resume', width/2, height/2 - 50);
+    text('Press R to restart level', width/2, height/2);
+    
+    camera.on();
 }
 
 
 function update() {
-    colorbutton.hide();
-    pausebutton.hide();
 
-    if (kb.pressed('escape')) {
+
+    if (kb.pressed('P')) {
         pauseKey = !pauseKey;
     }
     
