@@ -556,20 +556,20 @@ function updateParticles() {
 }
 
 function preload() {
-    jumpSound = loadSound('soundeffects/jump.mp3');
-    springSound = loadSound('soundeffects/spring.mp3');
-	deathSound = loadSound('soundeffects/dead.mp3');
+    jumpSound = loadSound('../audio/jump.mp3');
+    springSound = loadSound('../audio/spring.mp3');
+	deathSound = loadSound('../audio/dead.mp3');
 
-    unclaimedFlagImage = loadImage("art/unclaimed_checkpoint.png", img => {
+    unclaimedFlagImage = loadImage("../art/unclaimed_checkpoint.png", img => {
         
         img.resize(100, 100);
     });
 
-    claimedFlagImage = loadImage("art/claimed_checkpoint.png", img => {
+    claimedFlagImage = loadImage("../art/claimed_checkpoint.png", img => {
         img.resize(100, 100);
     });
 
-    spikeImage = loadImage("art/spike.png", img => {
+    spikeImage = loadImage("../art/spike.png", img => {
         img.resize(100, 100);
     });
 }
