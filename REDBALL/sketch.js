@@ -24,6 +24,9 @@ let spring;
 let pauseKey = false;
 let pausePosition = [0, 0];
 let gameState = "playing"; // start in menu
+var pausebutton;
+var colorbutton;
+
 let currentLevel = 0; // 0 = dev room
 let levels = [];
 let levelObjects = {}; // Will store level platforms and stuff
@@ -438,7 +441,7 @@ function drawUI() {
     textSize(24);
     text(`Level: ${levels[currentLevel].name}`, 20, 20);
 
-        fill(100, 150, 255);
+    fill(100, 150, 255);
     stroke(0);
     strokeWeight(2);
     rect(colorButtonBounds.x, colorButtonBounds.y, colorButtonBounds.w, colorButtonBounds.h);
@@ -561,23 +564,49 @@ function setup() {
     loadLevel(0);
     
     
+    colorbutton = createButton('Change ball color');
+    colorbutton.position(625,300);
+    colorbutton.size(400,50);
+    colorbutton.mousePressed (() => {
+        randomColor();
+    }
+    );
+    
+  
+    pausebutton = createButton('Click to resume/ hit ESC');
+    pausebutton.position(625,350);
+    pausebutton.size(400,50);
+    pausebutton.color = 'red';
+    pausebutton.mouseReleased(() => {
+        pauseKey = !pauseKey;
+    }
+    );
 
 }
 
 function pauseMenu() {
-    fill(173, 216, 230, 50);  
+    fill(173, 216, 230, 10);  
     rectMode(CENTER);  
     rect(850, 450, 1500, 700); 
 
-    fill(0); 
+    fill(255, 216, 230, 200);  
     textAlign(CENTER, CENTER);
     textSize(25);
-    text('Press ESC to resume',850, 350); 
-    text('Press R to restart level', 850, 400);
+    text('Game Paused', 825, 200);
+
+    textAlign(CENTER, CENTER);
+    textSize(25);
+    text('Press R to restart level', 825, 250);
+
+    colorbutton.show();
+    pausebutton.show();
 }
 
 
 function update() {
+    colorbutton.hide();
+    pausebutton.hide();
+
     if (kb.pressed('escape')) {
         pauseKey = !pauseKey;
     }
@@ -614,6 +643,8 @@ function update() {
             platform.physics = KINEMATIC;
         });
         ball.physics = DYNAMIC;
+        drawSkyGradient(color(0,150,255), color(135,206,235));
+        
     }
 
     // Camera handeler
@@ -623,7 +654,7 @@ function update() {
     // Background creation
     camera.off();
     push();
-    drawSkyGradient(color(0,150,255), color(135,206,235));
+    
 
     const px = -camera.x * PARALLAX_X;
     const py = -camera.y * PARALLAX_Y;
@@ -740,8 +771,6 @@ function update() {
     drawUI();
 }
    
-
-
 
 // When called the function assigns ballColor to a random color
 function randomColor() {
