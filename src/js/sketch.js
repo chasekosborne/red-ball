@@ -322,10 +322,14 @@ function loadLevel(levelIndex) {
     currentLevel = levelIndex;
     const level = levels[currentLevel];
     
+    // set the player reset spawn point based on the level on level-load
+    respawnPosition[0] = level.respawnPosition[0];
+    respawnPosition[1] = level.respawnPosition[1];
+    
     // This is to reset the ball
-    ball.x = level.respawnPosition[0];
-
-    ball.y = level.respawnPosition[1];
+    ball.x = respawnPosition[0];
+    ball.y = respawnPosition[1];
+    
     ball.color = level.ballColor;
 
     ball.vel.x = 0;
