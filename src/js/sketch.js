@@ -25,7 +25,12 @@ let spring;
 let pauseKey = false;
 let pausePosition = [0, 0];
 let gameState = "playing"; // start in menu
-
+let teleporter;
+let teleporterImage;
+let teleporterActive = true;   
+let beginTime = millis();
+//let blackhole;
+//let blackholeImage;
 
 let currentLevel = 0; // 0 = dev room
 let levels = [];
@@ -70,6 +75,12 @@ function initializeLevels() {
             checkpoints: [
                 { x: 200, y: 305 }
             ],
+
+            teleporter: [
+                { x: 1080, y: 300, w: 50, h: 50 },
+                { x: 420, y: 300, w: 50, h: 50 },
+          ],
+
             goalPosition: { x: 1200, y: 300 }, 
             instructions: "Use SPACE to jump and arrow keys to move!"
         },
@@ -387,7 +398,24 @@ function loadLevel(levelIndex) {
         }
         levelObjects.spikes.push(spike);
     }
-    
+
+    levelObjects.teleporter = [];
+    for (let teleporterData of level.teleporter) {
+        let teleporter = new Sprite(teleporterData.x, teleporterData.y, teleporterData.w, teleporterData.h);
+        teleporter.img = teleporterImage;
+        teleporter.physics = STATIC;
+        teleporter.collider = "none";
+        levelObjects.teleporter.push(teleporter);
+    }
+
+   /*  levelObjects.blackhole = [];
+    for (let blackholeData of level.blackhole) {
+        let blackhole = new Sprite(blackholeData.x, blackholeData.y, blackholeData.w, blackholeData.h);
+       blackhole.physics = STATIC;
+        blackhole.collider = "none";
+        levelObjects.blackhole.push(blackhole);
+    }*/
+
     // Creation of checkpoints
     levelObjects.checkpoints = [];
     for (let checkpointData of level.checkpoints) {
@@ -562,6 +590,29 @@ function updateParticles() {
     }
 }
 
+function teleportation() {
+    levelObjects.teleporter?.forEach(teleporter => {   //for each teleporter 
+        if (dist(ball.x, ball.y, teleporter.x, teleporter.y) < 45 && teleporterActive == true) {    //if ball is 45 pixes from teleporter and the teleporter is activated
+                if (teleporter === levelObjects.teleporter[0]) {
+                    ball.x = levelObjects.teleporter[1].x;  //changes ball position to other teleporter
+                    ball.y = levelObjects.teleporter[1].y;
+                    teleporterActive = false;     //deactivates teleporter temporarily
+                    beginTime = millis();          //logs the milliseconds when teleportation occured
+                } else if (teleporter === levelObjects.teleporter[1] && teleporterActive == true) {
+                    ball.x = levelObjects.teleporter[0].x;        
+                    ball.y = levelObjects.teleporter[0].y;
+                    teleporterActive = false;
+                    beginTime = millis();
+                   
+            } 
+    }
+        if(millis() - beginTime >=3000){  //after a 3 second delay, teleporter can be used again
+            teleporterActive = true;     //activates teleporter
+        }
+
+    }); 
+}
+
 function preload() {
     jumpSound = loadSound('../audio/jump.mp3');
     springSound = loadSound('../audio/spring.mp3');
@@ -578,6 +629,10 @@ function preload() {
 
     spikeImage = loadImage("../art/spike.png", img => {
         img.resize(100, 100);
+    });
+
+    teleporterImage = loadImage("../art/teleportgreener.png", img => {
+        img.resize(150, 150);
     });
 }
 
@@ -648,10 +703,10 @@ function update() {
         ball.physics = NONE;
         ball.vel.x = 0;
         ball.vel.y = 0;
-		
-		ball.rotationSpeed = 0;
-    	ball.angularVelocity = 0;
-    	ball.rotation = ball.rotation;
+        
+        ball.rotationSpeed = 0;
+        ball.angularVelocity = 0;
+        ball.rotation = ball.rotation;
 
         ball.x = pausePosition[0];
         ball.y = pausePosition[1];
@@ -771,7 +826,8 @@ function update() {
         checkpoint.update();
     });
 
-    
+    teleportation (); //teleporter check
+
     updateParticles();
 
     // Respawn Timer handler
