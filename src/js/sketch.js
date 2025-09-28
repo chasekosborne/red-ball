@@ -58,7 +58,8 @@ function initializeLevels() {
             respawnPosition: [500, 150],
             ballColor: 'red',
             platforms: [
-                { x: 600, y: 250, w: 120, h: 20, color: 'orange', moving: true, speed: 2, minX: 200, maxX: 1000 }
+                { x: 600, y: 250, w: 120, h: 20, color: 'orange', moving: true, speed: 2, minX: 200, maxX: 1000 },
+                { x: 850, y: 200, w: 120, h: 20, color: 'orange', fake: 'true'}
                 
             ],
             ground: [
@@ -362,14 +363,22 @@ function loadLevel(levelIndex) {
     levelObjects.platforms = [];
     for (let platformData of level.platforms) {
         let platform = new Sprite(platformData.x, platformData.y, platformData.w, platformData.h);
-        platform.color = platformData.color;
-        platform.physics = KINEMATIC;
-        platform.speed = platformData.speed || 0;
-        platform.direction = 1;
-        platform.minX = platformData.minX || platformData.x - 100;
-        platform.maxX = platformData.maxX || platformData.x + 100;
-        platform.moving = platformData.moving || false;
-        levelObjects.platforms.push(platform);
+        if(platformData.fake == 'true'){
+            platform.physics = 'none';
+            platform.color = platformData.color || 'orange'
+            platform.stroke = 'black'
+            platform.strokeWeight = 2;
+        }
+        else {
+            platform.physics = KINEMATIC;
+            platform.color = platformData.color || 'orange'
+            platform.speed = platformData.speed || 0;
+            platform.direction = 1;
+            platform.minX = platformData.minX || platformData.x - 100;
+            platform.maxX = platformData.maxX || platformData.x + 100;
+            platform.moving = platformData.moving || false;
+            levelObjects.platforms.push(platform);
+        }
     }
     
     // Spring creata
