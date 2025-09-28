@@ -485,15 +485,6 @@ function drawUI() {
     textSize(24);
     text(`Level: ${levels[currentLevel].name}`, 20, 20);
 
-    fill(100, 150, 255);
-    stroke(0);
-    strokeWeight(2);
-    rect(colorButtonBounds.x, colorButtonBounds.y, colorButtonBounds.w, colorButtonBounds.h);
-    
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(12);
-    text('Random Color', colorButtonBounds.x + colorButtonBounds.w/2, colorButtonBounds.y + colorButtonBounds.h/2);
     
     if (!pauseKey) {
         fill(255, 100, 100);
@@ -545,17 +536,19 @@ function drawUI() {
         
     }
 }
+
+
 function mousePressed() {
-    // Check if not paused and camera is off for anything using the UI stuff (buttons mostly)
-    if (!pauseKey) {
-        // colorButton
-        if (mouseX >= colorButtonBounds.x && mouseX <= colorButtonBounds.x + colorButtonBounds.w &&
-            mouseY >= colorButtonBounds.y && mouseY <= colorButtonBounds.y + colorButtonBounds.h) {
+    if (pauseKey) {
+        let btnX = width/2, btnY = height/2 + 100;
+        let btnW = 120, btnH = 40;
+
+        if (mouseX >= btnX - btnW/2 && mouseX <= btnX + btnW/2 &&
+            mouseY >= btnY - btnH/2 && mouseY <= btnY + btnH/2) {
             randomColor();
-            return false; // makes it not handle other mouse
+            return false;
         }
-        
-        // PauseButton
+    } else {
         if (mouseX >= pauseButtonBounds.x && mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
             mouseY >= pauseButtonBounds.y && mouseY <= pauseButtonBounds.y + pauseButtonBounds.h) {
             pauseKey = true;
@@ -563,6 +556,8 @@ function mousePressed() {
         }
     }
 }
+
+
 
 function explodeAndRespawn() {
     for (let i = 0; i < 20; i++) {
@@ -658,14 +653,6 @@ function setup() {
     
     // Load da dev room 
     loadLevel(0);
-    
-    
-
-    
-    
-  
-
-
 }
 
 function pauseMenu() {
@@ -680,11 +667,23 @@ function pauseMenu() {
     textSize(32);
     text('Game Paused', width/2, height/2 - 100);
 
-    textAlign(CENTER, CENTER);
     textSize(20);
     text('Press P to resume', width/2, height/2 - 50);
     text('Press R to restart level', width/2, height/2);
-    
+
+    push();
+    rectMode(CENTER);
+    fill(255);
+    stroke(0);
+    rect(width/2, height/2 + 100, 120, 40, 10);
+
+    fill(0);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(16);
+    text("Random Color", width/2, height/2 + 100);
+    pop();
+
     camera.on();
 }
 
