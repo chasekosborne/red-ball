@@ -347,6 +347,7 @@ function respawn() {
 		deathSound.play();
     }
 }
+
 function loadLevel(levelIndex) {
     clearLevel();
     
@@ -882,11 +883,15 @@ function update() {
     // Unpause physiscs
     if (!pauseKey) {
         levelObjects.platforms?.forEach(platform => {
+
             platform.physics = KINEMATIC;
+            if (!platform.speed) {
+                platform.speed = 2;
+            }
+
         });
         ball.physics = DYNAMIC;
         //drawSkyGradient(color(0,150,255), color(135,206,235));
-        
     }
 
     // Camera handeler
