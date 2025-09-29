@@ -209,6 +209,8 @@ function initializeLevels() {
                 { x: 2960, y: -1045}
             ],
 
+		   	teleporter: [],  
+
             goalPosition: { x: 5400, y: -1050 }, 
 
             instructions: ""
