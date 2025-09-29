@@ -32,6 +32,21 @@ let beginTime = millis();
 //let blackhole;
 //let blackholeImage;
 
+// === Background themes ===
+const BG_SKY   = "sky";
+const BG_SPACE = "space";
+
+// Active theme (set this per level)
+let currentBgTheme = BG_SKY;
+
+// ==== Space assets =====
+let bgStars = [];
+let bgMeteors = [];
+const STAR_COUNT = 280;
+const METEOR_RATE = 0.0009;
+let spaceSeed = 1337;
+// ==== End Space assets =====
+
 let currentLevel = 0; // 0 = dev room
 let levels = [];
 let levelObjects = {}; // Will store level platforms and stuff
@@ -55,6 +70,7 @@ function initializeLevels() {
     levels = [
         {
             name: "Tutorial",
+			theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'red',
             platforms: [
@@ -333,6 +349,7 @@ function loadLevel(levelIndex) {
     
     currentLevel = levelIndex;
     const level = levels[currentLevel];
+	currentBgTheme = levels[currentLevel].theme || BG_SKY;
     
     // set the player reset spawn point based on the level on level-load
     respawnPosition[0] = level.respawnPosition[0];
@@ -617,6 +634,139 @@ function teleportation() {
     }); 
 }
 
+// ============ Space Background =================
+// SPACE: build once (or when canvas size changes)
+function ensureSpaceAssets() {
+  if (!bgStars || bgStars.length === 0 ||
+      ensureSpaceAssets._w !== width || ensureSpaceAssets._h !== height) {
+    buildBgStarfield();     // (re)create stars for current canvas
+    ensureSpaceAssets._w = width;
+    ensureSpaceAssets._h = height;
+  }
+}
+
+function buildBgStarfield(){
+  bgStars = [];
+  for (let i = 0; i < STAR_COUNT; i++){
+    const depth = random(0.2, 1.0);
+    bgStars.push({
+      x: random(width),
+      y: random(height),
+      size: map(depth, 0.2, 1.0, 0.6, 2.2),
+      baseAlpha: map(depth, 0.2, 1.0, 60, 200),
+      twinkleAmp: map(depth, 0.2, 1.0, 30, 90),
+      t: random(TAU),
+      speedX: map(depth, 0.2, 1.0, 0.02, 0.35),
+      depth
+    });
+  }
+}
+
+function drawBgStars(){
+  for (const s of bgStars){
+    s.x -= s.speedX;
+    if (s.x < -5) { s.x = width + 5; s.y = random(height); }
+
+    s.t += 0.02 + s.speedX * 0.05;
+    const a = s.baseAlpha + sin(s.t) * s.twinkleAmp * 0.5;
+
+    noStroke();
+    fill(255, a);
+    circle(s.x, s.y, s.size);
+
+    if (s.depth > 0.8 && random() < 0.002) {
+      drawBgSparkle(s.x, s.y, s.size * 5, a * 0.7);
+    }
+  }
+}
+
+function drawBgSparkle(x, y, len, a){
+  push();
+  stroke(255, a);
+  strokeWeight(1);
+  line(x - len, y, x + len, y);
+  line(x, y - len, x, y + len);
+  pop();
+}
+
+function spawnBgMeteor(){
+  const y = random(-height*0.1, height*0.6);
+  return { x: width + random(40,140), y, vx: -random(8,15), vy: random(2.5,5.5), life: random(40,70), len: random(80,160) };
+}
+
+function updateBgMeteors(){
+  blendMode(ADD);
+  for (let i = bgMeteors.length - 1; i >= 0; i--){
+    const m = bgMeteors[i];
+    m.x += m.vx;
+    m.y += m.vy;
+    m.life--;
+
+    const t = constrain(m.life/70, 0, 1);
+    const a = 180 * t;
+
+    noFill();
+    stroke(170,220,255,a);
+    strokeWeight(2);
+    line(m.x, m.y, m.x - m.vx*(m.len/15)*t, m.y - m.vy*(m.len/15)*t);
+
+    noStroke();
+    fill(255,255,255,a);
+    circle(m.x, m.y, 3 + 2*(1-t));
+
+    if (m.life <= 0 || m.x < -200 || m.y > height + 200) {
+      bgMeteors.splice(i, 1);
+    }
+  }
+  blendMode(BLEND);
+}
+
+function drawDeepSky(g){
+  g.push(); g.noStroke();
+  const cx=g.width*0.55, cy=g.height*0.45;
+  const maxR = dist(0,0, Math.max(cx,g.width-cx), Math.max(cy,g.height-cy));
+  for (let r=maxR; r>0; r--){
+    const t=r/maxR, col=g.lerpColor(g.color(2,6,18), g.color(0,0,0), 1 - (1-(t))*(1-(t)));
+    g.fill(col); g.circle(cx,cy,r*2);
+  }
+  g.fill(255,18);
+  for (let i=0; i<(g.width*g.height)/40000; i++) g.circle(random(g.width), random(g.height), random(0.5,1.2));
+  g.drawingContext.save();
+  g.drawingContext.globalCompositeOperation='multiply';
+  const grd=g.drawingContext.createRadialGradient(g.width/2,g.height/2,Math.min(g.width,g.height)*0.2,g.width/2,g.height/2,Math.max(g.width,g.height)*0.75);
+  grd.addColorStop(0,'rgba(255,255,255,1)'); grd.addColorStop(1,'rgba(0,0,0,0.75)');
+  g.drawingContext.fillStyle=grd; g.rect(0,0,g.width,g.height); g.drawingContext.restore(); g.pop();
+}
+
+function easeOutQuad(x){ return 1 - (1 - x) * (1 - x); }
+
+function smoothstep(e0, e1, x){
+  const t = constrain((x - e0) / (e1 - e0), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+// ============ End Space Background =================
+
+function drawBackgroundForLevel() {
+  camera.off();
+  push();
+
+  if (currentBgTheme === BG_SPACE) {
+    ensureSpaceAssets();
+    background(0);
+
+    drawBgStars();
+
+    if (random() < METEOR_RATE) bgMeteors.push(spawnBgMeteor());
+    updateBgMeteors();
+
+  } else {
+    drawSkyBackgroundAndClouds();
+  }
+
+  pop();
+  camera.on();
+}
+
 function preload() {
     jumpSound = loadSound('../audio/jump.mp3');
     springSound = loadSound('../audio/spring.mp3');
@@ -653,6 +803,11 @@ function setup() {
     
     // Load da dev room 
     loadLevel(0);
+
+	// Space background init
+    randomSeed(spaceSeed);
+    noiseSeed(spaceSeed);
+    buildBgStarfield();
 }
 
 function pauseMenu() {
@@ -735,32 +890,7 @@ function update() {
     camera.x += (ball.x - camera.x) * 0.1;
     camera.y += (ball.y - camera.y) * 0.1;
 
-    // Background creation
-    camera.off();
-    push();
-    
-
-    const px = -camera.x * PARALLAX_X;
-    const py = -camera.y * PARALLAX_Y;
-    const dt = (typeof deltaTime === 'number' ? deltaTime : 16.666) / 16.666;
-
-    for (const c of CLOUDS) {
-        c.dx += c.vx * dt;
-        let sx = c.x + px + c.dx;
-        let sy = c.y + py;
-
-        if (sx > width + CLOUD_MARGIN) {
-            c.dx -= (width + 2 * CLOUD_MARGIN);
-            sx -= (width + 2 * CLOUD_MARGIN);
-        } else if (sx < -CLOUD_MARGIN) {
-            c.dx += (width + 2 * CLOUD_MARGIN);
-            sx += (width + 2 * CLOUD_MARGIN);
-        }
-
-        drawCloud(sx, sy, c.s);
-    }
-    pop();
-    camera.on();
+	drawBackgroundForLevel();
 
     // Ball fall off map respawner
     if (ball.y > 700) {
