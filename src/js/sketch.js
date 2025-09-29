@@ -104,6 +104,7 @@ function initializeLevels() {
 
        {
             name: "Level 1",
+		   	theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'red',
             platforms: [
@@ -884,7 +885,7 @@ function update() {
             platform.physics = KINEMATIC;
         });
         ball.physics = DYNAMIC;
-        drawSkyGradient(color(0,150,255), color(135,206,235));
+        //drawSkyGradient(color(0,150,255), color(135,206,235));
         
     }
 
