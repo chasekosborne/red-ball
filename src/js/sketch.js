@@ -92,7 +92,9 @@ function initializeLevels() {
             checkpoints: [
                 { x: 200, y: 305 }
             ],
-
+            enemies: [
+                { startX: 450, startY: 100, endX: 475, endY: 100, speed: 1 }
+            ],
             teleporter: [
                 { x: 1080, y: 300, w: 50, h: 50 },
                 { x: 420, y: 300, w: 50, h: 50 },
@@ -402,7 +404,7 @@ function loadLevel(levelIndex) {
         }
     }
     
-    // Spring creata
+    // Spring creator
     levelObjects.springs = [];
     for (let springData of level.springs) {
         let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
@@ -453,6 +455,29 @@ function loadLevel(levelIndex) {
         let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
 
         levelObjects.checkpoints.push(checkpoint);
+    }
+
+    //Creation of enemies
+    levelObjects.enemies = [];
+    for (let enemyData of level.enemies || []) {
+        let enemy = new Sprite(enemyData.startX, enemyData.startY, 50);
+        enemy.color = 'gray';
+        enemy.collider = 'kinematic';
+        enemy.posA = { x: enemyData.startX, y: enemyData.startY };
+        enemy.posB = { x: enemyData.endX, y: enemyData.endY };
+        enemy.goingToB = true;
+        let dx = enemy.posB.x - enemy.posA.x;
+        let dy = enemy.posB.y - enemy.posA.y;
+        let distAB = sqrt(dx * dx + dy * dy);
+        if (distAB > 0) {
+            enemy.vel.x = (dx / distAB) * (enemyData.speed || 2);
+            enemy.vel.y = (dy / distAB) * (enemyData.speed || 2);
+        }
+        else {
+            enemy.vel.x = 0;
+            enemy.vel.y = 0;
+        }
+        levelObjects.enemies.push(enemy);
     }
 }
 
@@ -905,7 +930,7 @@ function update() {
         respawn();
     }
 
-    // Moving Platform handeller
+    // Moving Platform handler
     levelObjects.platforms?.forEach(platform => {
         if (platform.moving) {
             if (platform.x > platform.maxX) {
@@ -923,7 +948,20 @@ function update() {
         }
     });
 
-    // Spring Handeler
+    //Enemy Movement Handler
+    levelObjects.enemies?.forEach(enemy => {
+        let target = enemy.goingToB ? enemy.posB : enemy.posA;
+        let dx = target.x - enemy.x;
+        let dy = target.y - enemy.y;
+        let dot = dx * enemy.vel.x + dy * enemy.vel.y;
+        if (dot < 0) {
+            enemy.vel.x = -enemy.vel.x;
+            enemy.vel.y = -enemy.vel.y;
+            enemy.goingToB = !enemy.goingToB;
+        }
+    });
+
+    // Spring Handler
     levelObjects.springs?.forEach(spring => {
         if (ball.colliding(spring)) {
             ball.vel.y = -15;
@@ -931,7 +969,7 @@ function update() {
         }
     });
 
-    // Jump reset Handeler
+    // Jump reset Handler
     let onGround = false;
     levelObjects.ground?.forEach(ground => {
         if (ball.colliding(ground)) onGround = true;
@@ -967,6 +1005,13 @@ function update() {
         }
     });
 
+    //Enemy Collision Handler
+    levelObjects.enemies?.forEach(enemy => {
+        if (ball.colliding(enemy)) {
+            respawn();
+        }
+    });
+    
     // Checkpoint update
     levelObjects.checkpoints?.forEach(checkpoint => {
         checkpoint.update();
