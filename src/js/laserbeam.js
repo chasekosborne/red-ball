@@ -18,9 +18,36 @@ class Laser {
         this.player = playerRef;
         this.dir = dir;
         this.speed = speed;
+
+        this.maxLifeTime = 60 * 5; // 5 seconds
+        this.lifeTime = 0;
+        this.alive = true;
+    }
+
+    disable_bullet() {
+        this.alive = false;
+        this.sprite.remove();
     }
 
     update() {
+        if (this.alive) {
+            if (this.lifeTime < this.maxLifeTime) {
+                this.lifeTime += 1;
+
+                if (this.dir === LEFT) {
+                    this.sprite.vel.x = -this.speed;
+                } else if (this.dir === RIGHT) {
+                    this.sprite.vel.x = this.speed;
+                } else if (this.dir === UP) {
+                    this.sprite.vel.y = -this.speed;
+                } else if (this.dir === DOWN) {
+                    this.sprite.vel.y = this.speed;
+                }
+            } else {
+                // runs after life-time expires
+                this.disable_bullet();
+            }
+        }
     }
 }
 
@@ -83,6 +110,11 @@ class Laserbeam {
 
         this.player = playerRef;
         this.speed = speed;
+
+        // reference to all fired bullets
+        this.bullets = [];
+        this.shootDelay = 60 * 1;
+        this.shootCoolDown = 0;
     }
 
     // keeps the sprite for the laser in a constant position
@@ -140,8 +172,52 @@ class Laserbeam {
         }
     }
 
+    // remove inactive bullets from reference array
+    updateBullets() {
+        // make new array of alive bullets
+        this.bullets = this.bullets.filter(bullet => bullet.alive);
+
+        // run the update on all live bullets
+        for (let i = 0; i < this.bullets.length; ++i) {
+            this.bullets[i].update();
+        }
+    }
+
+    // periodically fires a laser beam
+    fireBullet() {
+        const x = this.laserBlaster.x;
+        const y = this.laserBlaster.y;
+        
+        const offset = 30;
+        
+        if (this.forward === LEFT) {
+            let bullet = new Laser(x - offset, y, 2, LEFT, this.player);
+            this.bullets.push(bullet);
+        } else if (this.forward === RIGHT) {
+            const bullet = new Laser(x + offset,  y, 2, RIGHT, this.player);
+            this.bullets.push(bullet);
+        } else if (this.forward === UP) {
+            const bullet = new Laser(x,y - offset, 2, UP, this.player);
+            this.bullets.push(bullet);
+        } else if (this.forward === DOWN) {
+            const bullet = new Laser(x, y + offset, 2, DOWN, this.player);
+            this.bullets.push(bullet);
+        }
+    }
+
     update() {
         this.drawBlaster();
         this.moveBlaster();
+        this.updateBullets();
+
+        if (this.shootCoolDown === 0) {
+            this.fireBullet();
+            this.shootCoolDown = 1;
+        } else if (this.shootCoolDown < this.shootDelay) {
+            this.shootCoolDown += 1;
+            if (this.shootCoolDown >= this.shootDelay) {
+                this.shootCoolDown = 0;
+            }
+        }
     }
 }

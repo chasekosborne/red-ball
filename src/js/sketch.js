@@ -849,7 +849,7 @@ function setup() {
     buildBgStarfield();
 
     // make test laser rail
-    laserTest = new Laserbeam(100, 150, 250, 1, LEFT, laserBlasterImage, ball);
+    laserTest = new Laserbeam(100, 150, 250, 1, DOWN, laserBlasterImage, ball);
 }
 
 function pauseMenu() {
