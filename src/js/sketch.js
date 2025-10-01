@@ -982,7 +982,9 @@ function update() {
     // Controls
     if (kb.presses('space')) {
         if (jumpCount < maxJumps) {
-            ball.vel.y = -7;
+            // when grounded we can assume vel.y is 0
+            // we can just increment the vel.y by the jump-strength
+            ball.vel.y += -7;
             if (jumpSound) jumpSound.play();
             jumpCount++;
         }
