@@ -7,6 +7,7 @@ world.gravity.y = 10;
 let unclaimedFlagImage;
 let claimedFlagImage;
 let spikeImage;
+let laserBlasterImage;
 let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
 let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
 let ball;
@@ -817,9 +818,18 @@ function preload() {
     teleporterImage = loadImage("../art/teleportgreener.png", img => {
         img.resize(150, 150);
     });
+
+    laserBlasterImage = loadImage('../art/laserMount.png', img => {
+        img.resize(50, 50);
+    })
 }
 
+let laserTest = null;
+
 function setup() {
+    // makes the pixels not blurry
+    noSmooth();
+
     // Initialization pretty cool stuff
     initializeLevels();
     
@@ -837,6 +847,9 @@ function setup() {
     randomSeed(spaceSeed);
     noiseSeed(spaceSeed);
     buildBgStarfield();
+
+    // make test laser rail
+    laserTest = new Laserbeam(100, 150, 250, 1, LEFT, laserBlasterImage, ball);
 }
 
 function pauseMenu() {
@@ -873,7 +886,9 @@ function pauseMenu() {
 
 
 function update() {
-
+    if (laserTest !== null) {
+        laserTest.update();
+    }
 
     if (kb.pressed('P')) {
         pauseKey = !pauseKey;
