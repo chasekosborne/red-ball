@@ -7,6 +7,7 @@ world.gravity.y = 10;
 let unclaimedFlagImage;
 let claimedFlagImage;
 let spikeImage;
+let laserBlasterImage;
 let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
 let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
 let ball;
@@ -98,7 +99,11 @@ function initializeLevels() {
             teleporter: [
                 { x: 1080, y: 300, w: 50, h: 50 },
                 { x: 420, y: 300, w: 50, h: 50 },
-          ],
+            ],
+            lasers: [
+                { x: 100, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
+                { x: 600, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
+            ],
 
             goalPosition: { x: 1200, y: 300 }, 
             instructions: "Use SPACE to jump and arrow keys to move!"
@@ -438,6 +443,14 @@ function loadLevel(levelIndex) {
         teleporter.physics = STATIC;
         teleporter.collider = "none";
         levelObjects.teleporter.push(teleporter);
+    }
+
+    levelObjects.laserBlasters = [];
+    for (let laser of level.lasers) {
+        let laserBlaster = new Laserbeam(laser.x, laser.y,
+                                        laser.range, laser.speedData,
+                                        laser.fwdDir, laserBlasterImage, ball);
+        levelObjects.laserBlasters.push(laserBlaster);
     }
 
    /*  levelObjects.blackhole = [];
@@ -817,9 +830,16 @@ function preload() {
     teleporterImage = loadImage("../art/teleportgreener.png", img => {
         img.resize(150, 150);
     });
+
+    laserBlasterImage = loadImage('../art/laserMount.png', img => {
+        img.resize(50, 50);
+    })
 }
 
 function setup() {
+    // makes the pixels not blurry
+    noSmooth();
+
     // Initialization pretty cool stuff
     initializeLevels();
     
@@ -873,8 +893,6 @@ function pauseMenu() {
 
 
 function update() {
-
-
     if (kb.pressed('P')) {
         pauseKey = !pauseKey;
     }
@@ -929,6 +947,10 @@ function update() {
     if (ball.y > 700) {
         respawn();
     }
+
+    levelObjects.laserBlasters?.forEach(laser => {
+        laser.update();
+    });
 
     // Moving Platform handler
     levelObjects.platforms?.forEach(platform => {
