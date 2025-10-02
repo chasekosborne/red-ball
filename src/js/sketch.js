@@ -99,7 +99,11 @@ function initializeLevels() {
             teleporter: [
                 { x: 1080, y: 300, w: 50, h: 50 },
                 { x: 420, y: 300, w: 50, h: 50 },
-          ],
+            ],
+            lasers: [
+                { x: 100, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
+                { x: 600, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
+            ],
 
             goalPosition: { x: 1200, y: 300 }, 
             instructions: "Use SPACE to jump and arrow keys to move!"
@@ -439,6 +443,14 @@ function loadLevel(levelIndex) {
         teleporter.physics = STATIC;
         teleporter.collider = "none";
         levelObjects.teleporter.push(teleporter);
+    }
+
+    levelObjects.laserBlasters = [];
+    for (let laser of level.lasers) {
+        let laserBlaster = new Laserbeam(laser.x, laser.y,
+                                        laser.range, laser.speedData,
+                                        laser.fwdDir, laserBlasterImage, ball);
+        levelObjects.laserBlasters.push(laserBlaster);
     }
 
    /*  levelObjects.blackhole = [];
@@ -824,8 +836,6 @@ function preload() {
     })
 }
 
-let laserTest = null;
-
 function setup() {
     // makes the pixels not blurry
     noSmooth();
@@ -847,9 +857,6 @@ function setup() {
     randomSeed(spaceSeed);
     noiseSeed(spaceSeed);
     buildBgStarfield();
-
-    // make test laser rail
-    laserTest = new Laserbeam(100, 150, 250, 1, DOWN, laserBlasterImage, ball);
 }
 
 function pauseMenu() {
@@ -886,10 +893,6 @@ function pauseMenu() {
 
 
 function update() {
-    if (laserTest !== null) {
-        laserTest.update();
-    }
-
     if (kb.pressed('P')) {
         pauseKey = !pauseKey;
     }
@@ -944,6 +947,10 @@ function update() {
     if (ball.y > 700) {
         respawn();
     }
+
+    levelObjects.laserBlasters?.forEach(laser => {
+        laser.update();
+    });
 
     // Moving Platform handler
     levelObjects.platforms?.forEach(platform => {

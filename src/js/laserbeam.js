@@ -34,10 +34,19 @@ class Laser {
             if (this.lifeTime < this.maxLifeTime) {
                 this.lifeTime += 1;
 
+                // check for player overlapping before checking against world sprites
                 if (this.sprite.overlapping(this.player)) {
                     // console.log("HIT PLAYER");
                     this.disable_bullet();
                     explodeAndRespawn();
+                    return;
+                }
+
+                // allSprites is a special p5js group that
+                // contains all active sprites
+                if (this.sprite.overlap(allSprites)) {
+                    this.disable_bullet();
+                    return;
                 }
 
                 if (this.dir === LEFT) {
@@ -62,8 +71,9 @@ class Laserbeam {
     // (x,y) represents the center of the laser rail
     // range represents the total length of the rail
     // dir represents the forward direction of the laser (direction it shoots in)
-    constructor(x,y,range,speed,dir,laserTexture,playerRef){
+    constructor(x,y,range,speedData,dir,laserTexture,playerRef){
         const offset = (range/2) - (25/2);
+        this.active = true;
 
         // place the rail anchors and draw the guide-rail
         if (dir === DOWN || dir === UP) {
@@ -115,12 +125,18 @@ class Laserbeam {
         }
 
         this.player = playerRef;
-        this.speed = speed;
+        this.speed = speedData.speed;
+        this.bulletSpeed = speedData.bulletSpeed;
 
         // reference to all fired bullets
         this.bullets = [];
-        this.shootDelay = 60 * 1;
+        this.shootDelay = 60 * 1; // shoot every 1 second
         this.shootCoolDown = 0;
+    }
+
+    // takes true or false boolean
+    setActive(b) {
+        this.active = b;
     }
 
     // keeps the sprite for the laser in a constant position
@@ -194,24 +210,26 @@ class Laserbeam {
         const x = this.laserBlaster.x;
         const y = this.laserBlaster.y;
         
-        const offset = 30;
+        const offset = 40;
         
         if (this.forward === LEFT) {
-            let bullet = new Laser(x - offset, y, 2, LEFT, this.player);
+            let bullet = new Laser(x - offset, y, this.bulletSpeed, LEFT, this.player);
             this.bullets.push(bullet);
         } else if (this.forward === RIGHT) {
-            const bullet = new Laser(x + offset,  y, 2, RIGHT, this.player);
+            const bullet = new Laser(x + offset,  y, this.bulletSpeed, RIGHT, this.player);
             this.bullets.push(bullet);
         } else if (this.forward === UP) {
-            const bullet = new Laser(x,y - offset, 2, UP, this.player);
+            const bullet = new Laser(x,y - offset, this.bulletSpeed, UP, this.player);
             this.bullets.push(bullet);
         } else if (this.forward === DOWN) {
-            const bullet = new Laser(x, y + offset, 2, DOWN, this.player);
+            const bullet = new Laser(x, y + offset, this.bulletSpeed, DOWN, this.player);
             this.bullets.push(bullet);
         }
     }
 
     update() {
+        if (!this.active) return;
+
         this.drawBlaster();
         this.moveBlaster();
         this.updateBullets();
