@@ -34,6 +34,12 @@ class Laser {
             if (this.lifeTime < this.maxLifeTime) {
                 this.lifeTime += 1;
 
+                if (this.sprite.overlapping(this.player)) {
+                    // console.log("HIT PLAYER");
+                    this.disable_bullet();
+                    explodeAndRespawn();
+                }
+
                 if (this.dir === LEFT) {
                     this.sprite.vel.x = -this.speed;
                 } else if (this.dir === RIGHT) {
