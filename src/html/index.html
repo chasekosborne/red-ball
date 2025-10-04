@@ -50,8 +50,14 @@
       text-shadow: 2px 2px 0 white;
     }
 
-    /* Button style */
-    #menu button {
+    /* Button style*/
+    #level-button{
+      display: flex;
+      flex-direction: row;
+      gap: 15px;
+    }
+
+    #level-button button{
       padding: 15px 30px;
       font-size: 24px;
       background-color: white;
@@ -71,7 +77,12 @@
   <!-- Menu overlay -->
   <div id="menu">
     <h1>Epsilon’s Greatest Ball</h1>
-    <button onclick="startGame()">Start Game</button>
+    <div id = "level-button">
+    <button onclick="startGame(0)">Tutorial</button>
+    <button onclick="startGame(1)">Level 1</button>
+    <button onclick="startGame(2)">Level 2</button>
+    <button onclick="startGame(3)">Level 3</button>
+    </div>
   </div>
 
   <!-- Game canvas -->
@@ -87,9 +98,12 @@
   <script src="../js/sketch.js"></script>
 
   <script>
-    function startGame() {
+    //let currentLevel = 0;
+    function startGame(level) {
+      let levelSelect = level
       // Hide the menu overlay when Start is clicked
       document.getElementById("menu").style.display = "none";
+      loadLevel(levelSelect);
     }
   </script>
 </body>

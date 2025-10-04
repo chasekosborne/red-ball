@@ -221,29 +221,29 @@ function initializeLevels() {
 
         {
             name: "Level 2",
-            respawnPosition: [500, 200],
-            ballColor: 'red',
+		   	theme: "space", 
+            respawnPosition: [500, 150],
+            ballColor: 'pink',
             platforms: [
-                               
-            
+                // question for later but why are the y's below != to eachothers pair
+                //{ x: 3150, y: -1000, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
                 
             ],
             ground: [
                 { x: 500, y: 350, w: 800, h: 40 },
 
             ],
-            springs: [
-                
-                
-            ],
-            spikes: [
+            springs: [],
+            spikes: [],
 
-
-            ],
             checkpoints: [
                 { x: 2960, y: -1045}
             ],
+
+		   	teleporter: [],  
+
             goalPosition: { x: 5400, y: -1050 }, 
+
             instructions: ""
         },
 
@@ -400,8 +400,9 @@ function loadLevel(levelIndex) {
             platform.minX = platformData.minX || platformData.x - 100;
             platform.maxX = platformData.maxX || platformData.x + 100;
             platform.moving = platformData.moving || false;
-            levelObjects.platforms.push(platform);
+            
         }
+        levelObjects.platforms.push(platform);
     }
     
     // Spring creator
