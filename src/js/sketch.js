@@ -13,6 +13,7 @@ let ball;
 let respawnPosition = [500, 150];
 let jumpSound;
 let deathSound;
+let teleportSound;
 let spikes;
 let platform;
 let button;
@@ -647,11 +648,13 @@ function teleportation() {
                 if (teleporter === levelObjects.teleporter[0]) {
                     ball.x = levelObjects.teleporter[1].x;  //changes ball position to other teleporter
                     ball.y = levelObjects.teleporter[1].y;
+                    //if(teleportSound) teleportSound.play(); 
                     teleporterActive = false;     //deactivates teleporter temporarily
-                    beginTime = millis();          //logs the milliseconds when teleportation occured
+                    beginTime = millis();         //logs the milliseconds when teleportation occured
                 } else if (teleporter === levelObjects.teleporter[1] && teleporterActive == true) {
                     ball.x = levelObjects.teleporter[0].x;        
                     ball.y = levelObjects.teleporter[0].y;
+                    //if(teleportSound) teleportSound.play(); 
                     teleporterActive = false;
                     beginTime = millis();
                    
@@ -801,6 +804,7 @@ function preload() {
     jumpSound = loadSound('../audio/jump.mp3');
     springSound = loadSound('../audio/spring.mp3');
 	deathSound = loadSound('../audio/dead.mp3');
+    teleportSound = loadSound('../audio/whoosh.mp3')
 
     unclaimedFlagImage = loadImage("../art/unclaimed_checkpoint.png", img => {
         
