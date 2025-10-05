@@ -104,7 +104,9 @@ function initializeLevels() {
                 { x: 100, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
                 { x: 600, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
             ],
-
+            disappearingPlatforms: [
+                { x: 1080, y: 100, w: 120, h: 20 },
+            ],
             goalPosition: { x: 1200, y: 300 }, 
             instructions: "Use SPACE to jump and arrow keys to move!"
         },
@@ -417,7 +419,20 @@ function loadLevel(levelIndex) {
         spring.color = 'cyan';
         levelObjects.springs.push(spring);
     }
-    
+       // Disappearing platforms creator
+    levelObjects.disappearingPlatforms = [];
+    for (let disappearData of (level.disappearingPlatforms || [])) {
+        let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
+        disappearPlatform.physics = STATIC;
+        disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
+        disappearPlatform.color = disappearPlatform.baseColor;
+        disappearPlatform.isDisappearing = false;
+        disappearPlatform.isReappearing = false;
+        disappearPlatform.fadeTimer = 0;
+        disappearPlatform.playerTouched = false;
+        disappearPlatform.opacity = 255;
+        levelObjects.disappearingPlatforms.push(disappearPlatform);
+    }
     // Spike creator
     levelObjects.spikes = [];
     for (let spikeData of level.spikes) {
@@ -951,7 +966,60 @@ function update() {
     levelObjects.laserBlasters?.forEach(laser => {
         laser.update();
     });
-
+   // Disappearing Platform handler
+    levelObjects.disappearingPlatforms?.forEach(platform => {
+        // Check if ball is touching platform
+        if (ball.colliding(platform) && !platform.playerTouched && !platform.isDisappearing && !platform.isReappearing) {
+            platform.playerTouched = true;
+            platform.isDisappearing = true;
+            platform.fadeTimer = 0;
+        }
+        
+        // Handle disappearing animation
+        if (platform.isDisappearing) {
+            platform.fadeTimer++;
+            // Fade out over 5 sec 
+            platform.opacity = map(platform.fadeTimer, 0, 300, 255, 0);
+            
+            // Update platform visibility
+            let r = red(platform.baseColor);
+            let g = green(platform.baseColor);
+            let b = blue(platform.baseColor);
+            platform.color = color(r, g, b, platform.opacity);
+            
+            // When fully faded cant touch
+            if (platform.fadeTimer >= 300) {
+                platform.collider = 'none';
+                platform.isDisappearing = false;
+                platform.isReappearing = true;
+                platform.fadeTimer = 0;
+            }
+        }
+        
+        // Handle reappearing animation
+        if (platform.isReappearing) {
+            platform.fadeTimer++;
+            // Wait 3 seconds 
+            if (platform.fadeTimer > 180) {
+                platform.opacity = map(platform.fadeTimer, 180, 240, 0, 255);
+                
+                // Update platform visibility
+                let r = red(platform.baseColor);
+                let g = green(platform.baseColor);
+                let b = blue(platform.baseColor);
+                platform.color = color(r, g, b, platform.opacity);
+            }
+            
+            // When fully reappeared, reset
+            if (platform.fadeTimer >= 240) {
+                platform.collider = 'static';
+                platform.isReappearing = false;
+                platform.playerTouched = false;
+                platform.opacity = 255;
+                platform.color = platform.baseColor;
+            }
+        }
+    });
     // Moving Platform handler
     levelObjects.platforms?.forEach(platform => {
         if (platform.moving) {
