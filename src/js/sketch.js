@@ -8,6 +8,7 @@ let unclaimedFlagImage;
 let claimedFlagImage;
 let spikeImage;
 let laserBlasterImage;
+let hammerImage;
 let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
 let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
 let ball;
@@ -107,6 +108,20 @@ function initializeLevels() {
             ],
             disappearingPlatforms: [
                 { x: 1080, y: 100, w: 120, h: 20 },
+            ],
+            swingingHammers: [
+                {
+                    pivotX: 700,
+                    pivotY: -200,
+                    length: 200,
+                    amplitude: 50,
+                    speed: 2,
+                    phase: 0,
+                    width: 780,
+                    height: 800,
+                    spikeHeight: 200,
+                    scale: 0.3
+                }
             ],
             goalPosition: { x: 1200, y: 300 }, 
             instructions: "Use SPACE to jump and arrow keys to move!"
@@ -219,7 +234,6 @@ function initializeLevels() {
             checkpoints: [
                 { x: 2960, y: -1045}
             ],
-
 		   	teleporter: [],  
 
             goalPosition: { x: 5400, y: -1050 }, 
@@ -508,6 +522,39 @@ function loadLevel(levelIndex) {
             enemy.vel.y = 0;
         }
         levelObjects.enemies.push(enemy);
+    }
+
+    //Creation of swinging hammer
+    levelObjects.swingingHammers = [];
+    for (let hammerData of level.swingingHammers || []) {
+        let hammer = new Sprite(hammerData.pivotX, hammerData.pivotY + hammerData.length, hammerData.width * hammerData.scale, hammerData.height * hammerData.scale);
+        hammer.img = hammerImage;
+        hammer.collider = 'none';
+        hammer.rotationLock = false;
+
+        let spikeHeight = typeof hammerData.spikeHeight == 'number' ? hammerData.spikeHeight * hammerData.scale : hammerData.height * hammerData.scale * (hammerData.spikeHeight || 0.33);
+
+        let spikeHitbox = new Sprite (hammerData.pivotX, hammerData.pivotY + hammerData.length + spikeHeight / 2, hammerData.width * hammerData.scale, spikeHeight);
+        spikeHitbox.collider = 'kinematic'
+        spikeHitbox.rotationLock = false;
+        spikeHitbox.visible = false;
+        levelObjects.spikes.push(spikeHitbox);
+
+        levelObjects.swingingHammers.push({
+            pivotX: hammerData.pivotX,
+            pivotY: hammerData.pivotY,
+            length: hammerData.length,
+            amplitude: hammerData.amplitude,
+            speed: hammerData.speed,
+            currentAngle: hammerData.phase,
+            direction: 1,
+            sprite: hammer,
+            spikeHitbox: spikeHitbox,
+            width: hammerData.width,
+            height: hammerData.height,
+            spikeHeight: spikeHeight,
+            scale: hammerData.scale
+        });
     }
 }
 
@@ -854,6 +901,10 @@ function preload() {
     laserBlasterImage = loadImage('../art/laserMount.png', img => {
         img.resize(50, 50);
     })
+
+    hammerImage = loadImage("../art/hammer.png", img => {
+        console.log("hammer loaded");
+    });
 }
 
 function setup() {
@@ -1107,6 +1158,30 @@ function update() {
         if (ball.colliding(enemy)) {
             respawn();
         }
+    });
+    
+    //Swinging Hammer Handler
+    levelObjects.swingingHammers?.forEach(hammer => {
+        hammer.currentAngle += hammer.speed * hammer.direction;
+        if (hammer.currentAngle > hammer.amplitude) {
+            hammer.direction = -1;
+        } else if (hammer.currentAngle < -hammer.amplitude) {
+            hammer.direction = 1;
+        }
+
+        let angleRad = radians(hammer.currentAngle);
+
+        hammer.sprite.x = hammer.pivotX + sin(angleRad) * hammer.length;
+        hammer.sprite.y = hammer.pivotY + cos(angleRad) * hammer.length;
+        hammer.sprite.rotation = hammer.currentAngle;
+
+        let totalHeight = hammer.height * hammer.scale;
+        let headOffset = hammer.length + (totalHeight / 2) - (hammer.spikeHeight / 2);
+        hammer.spikeHitbox.x = hammer.pivotX + sin(angleRad) * headOffset;
+        hammer.spikeHitbox.y = hammer.pivotY + cos(angleRad) * headOffset;
+        hammer.spikeHitbox.width = hammer.width * hammer.scale;
+        hammer.spikeHitbox.height = hammer.spikeHeight;
+        hammer.spikeHitbox.rotation = hammer.currentAngle;
     });
     
     // Checkpoint update
