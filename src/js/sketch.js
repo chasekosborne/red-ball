@@ -664,7 +664,6 @@ function drawUI() {
 
 function mousePressed() {
     if (pauseKey) {
-      // 检测是否点击了暂停菜单里的随机颜色按钮
       let btnX = width / 2;
       let btnY = height / 2 + 90;
       let btnW = 180;
@@ -680,7 +679,6 @@ function mousePressed() {
         return false;
       }
     } else {
-      // 检测是否点击右上角 Pause 按钮
       if (
         mouseX >= pauseButtonBounds.x &&
         mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
