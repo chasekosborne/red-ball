@@ -608,8 +608,8 @@ function checkLevelCompletion() {
 }
 function drawUI() {
     camera.off();
+    push();
 
-    // reset rectMode from modifications from pauseMenu
     rectMode(CORNER);
     
     // Name of level
@@ -648,6 +648,7 @@ function drawUI() {
 
      /* text(`Level ${currentLevel + 1} of ${levels.length}`, 20, height - 40); */
     
+    pop();
     camera.on();
     const level = levels[currentLevel];
 
@@ -899,20 +900,22 @@ function drawBackgroundForLevel() {
 // ============= Level Editor =======================
 
 function drawEditorBanner() {
-  camera.off();          // switch to screen space (no camera parallax)
+  camera.off();
   push();
-  resetMatrix();         // <-- wipe any lingering translate/scale/rotate
-  rectMode(CORNER);      // draw from (0,0)
+
+  // preserve scale/shear (t.a..t.d) but zero tx/ty so (0,0) is top-left
+  const t = drawingContext.getTransform();  // DOMMatrix
+  drawingContext.save();
+  drawingContext.setTransform(t.a, t.b, t.c, t.d, 0, 0);
+
+  rectMode(CORNER);
   noStroke();
 
-  // (debug: draw a red line at x=0 so you can see the left edge)
-  stroke('red'); strokeWeight(1); line(0, 0, 0, 28); noStroke();
-
-  // fully clear the strip so old text can’t stack
-  fill(0);               // opaque
+  // clear strip
+  fill(0);
   rect(0, 0, width, 28);
 
-  // optional translucent tint
+  // optional tint
   fill(0, 160);
   rect(0, 0, width, 28);
 
@@ -925,10 +928,10 @@ function drawEditorBanner() {
     8, 14
   );
 
+  drawingContext.restore();
   pop();
   camera.on();
 }
-
 
 function worldMouseRaw() {
   // screen -> world, no grid snap (best for precise picking)
@@ -1186,7 +1189,7 @@ function setup() {
 
 function pauseMenu() {
     camera.off(); // Draw UI directly in screen space
-  
+    push();
     noStroke();
     fill(255, 255, 255, 400); // semi-transparent black overlay
     rectMode(CORNER);
@@ -1245,6 +1248,7 @@ function pauseMenu() {
     fill(255);
     text("Random Color", width / 2 + btnW / 2 + 10, btnY + btnH / 2 + 2);
   
+    pop(); 
     camera.on();
 }
   
@@ -1365,7 +1369,7 @@ function update() {
 
     drawBackgroundForLevel();
     if (typeof allSprites !== 'undefined') allSprites.draw();
-    // optional: drawUI();
+    
 
     pauseMenu();            
     return;
