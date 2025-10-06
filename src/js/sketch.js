@@ -30,6 +30,7 @@ let teleporter;
 let teleporterImage;
 let teleporterActive = true;   
 let beginTime = millis();
+let pauseOverlayEl;
 //let blackhole;
 //let blackholeImage;
 
@@ -599,22 +600,35 @@ function drawUI() {
 
 function mousePressed() {
     if (pauseKey) {
-        let btnX = width/2, btnY = height/2 + 100;
-        let btnW = 120, btnH = 40;
-
-        if (mouseX >= btnX - btnW/2 && mouseX <= btnX + btnW/2 &&
-            mouseY >= btnY - btnH/2 && mouseY <= btnY + btnH/2) {
-            randomColor();
-            return false;
-        }
+      // 检测是否点击了暂停菜单里的随机颜色按钮
+      let btnX = width / 2;
+      let btnY = height / 2 + 90;
+      let btnW = 180;
+      let btnH = 50;
+  
+      if (
+        mouseX >= btnX - btnW / 2 &&
+        mouseX <= btnX + btnW / 2 &&
+        mouseY >= btnY - btnH / 2 &&
+        mouseY <= btnY + btnH / 2
+      ) {
+        randomColor();
+        return false;
+      }
     } else {
-        if (mouseX >= pauseButtonBounds.x && mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
-            mouseY >= pauseButtonBounds.y && mouseY <= pauseButtonBounds.y + pauseButtonBounds.h) {
-            pauseKey = true;
-            return false;
-        }
+      // 检测是否点击右上角 Pause 按钮
+      if (
+        mouseX >= pauseButtonBounds.x &&
+        mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
+        mouseY >= pauseButtonBounds.y &&
+        mouseY <= pauseButtonBounds.y + pauseButtonBounds.h
+      ) {
+        pauseKey = true;
+        return false;
+      }
     }
 }
+  
 
 
 
@@ -836,6 +850,128 @@ function preload() {
     })
 }
 
+
+
+function buildPauseOverlay() {
+    // === Outer container (covers entire screen) ===
+    pauseOverlayEl = document.createElement('div');
+    pauseOverlayEl.id = 'pauseOverlay';
+    pauseOverlayEl.style.cssText = `
+      position: fixed;
+      inset: 0;
+      display: none;                 /* hidden by default */
+      z-index: 9999;                 /* always on top of canvas */
+      background: rgba(0, 0, 0, 0.4); /* semi-transparent black overlay */
+      backdrop-filter: blur(6px);     /* blur game behind it */
+      justify-content: center;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+    `;
+  
+    // === Inner glass panel ===
+    const panel = document.createElement('div');
+    panel.style.cssText = `
+      width: min(90vw, 900px);
+      padding: 48px 40px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.25);  /* semi-transparent white */
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      color: #fff;
+      backdrop-filter: blur(10px);
+    `;
+    pauseOverlayEl.appendChild(panel);
+  
+    // === Title ===
+    const h1 = document.createElement('h1');
+    h1.textContent = 'Game Paused';
+    h1.style.cssText = `
+      margin: 0 0 24px;
+      font-size: 56px;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255,255,255,0.6);
+    `;
+    panel.appendChild(h1);
+  
+    // === Tips ===
+    const tip1 = document.createElement('div');
+    tip1.textContent = 'Press P to Resume';
+    tip1.style.cssText = `
+      font-size: 22px;
+      color: rgba(255,255,255,0.9);
+      margin: 12px 0;
+    `;
+    panel.appendChild(tip1);
+  
+    const tip2 = document.createElement('div');
+    tip2.textContent = 'Press R to Restart Level';
+    tip2.style.cssText = `
+      font-size: 22px;
+      color: rgba(255,255,255,0.9);
+      margin: 12px 0 36px;
+    `;
+    panel.appendChild(tip2);
+  
+    // === Button container ===
+    const controls = document.createElement('div');
+    controls.style.cssText = `
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 16px;
+    `;
+    panel.appendChild(controls);
+  
+    // Resume Button
+    const resumeBtn = document.createElement('button');
+    resumeBtn.textContent = 'Resume';
+    resumeBtn.style.cssText = `
+      padding: 14px 24px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.15);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    `;
+    resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(255,255,255,0.3)';
+    resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(255,255,255,0.15)';
+    resumeBtn.onclick = () => { pauseKey = false; hidePauseOverlay(); };
+    controls.appendChild(resumeBtn);
+  
+    // Random Color Button
+    const colorBtn = document.createElement('button');
+    colorBtn.textContent = 'Random Color';
+    colorBtn.style.cssText = `
+      padding: 14px 24px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,100,100,0.8);
+      background: rgba(255,100,100,0.4);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    `;
+    colorBtn.onmouseenter = () => colorBtn.style.background = 'rgba(255,100,100,0.6)';
+    colorBtn.onmouseleave = () => colorBtn.style.background = 'rgba(255,100,100,0.4)';
+    colorBtn.onclick = () => { randomColor(); };
+    controls.appendChild(colorBtn);
+  
+    document.body.appendChild(pauseOverlayEl);
+  }
+  
+  function showPauseOverlay() {
+    if (pauseOverlayEl) pauseOverlayEl.style.display = 'flex';
+  }
+  
+  function hidePauseOverlay() {
+    if (pauseOverlayEl) pauseOverlayEl.style.display = 'none';
+}
+
+  
+
 function setup() {
     // makes the pixels not blurry
     noSmooth();
@@ -857,44 +993,80 @@ function setup() {
     randomSeed(spaceSeed);
     noiseSeed(spaceSeed);
     buildBgStarfield();
+    buildPauseOverlay();
 }
 
 function pauseMenu() {
-    camera.off();
-    
-    fill(173, 216, 230, 200);  
-    rectMode(CENTER);  
-    rect(width/2, height/2, width * 0.8, height * 0.6); 
-
-    fill(255, 216, 230, 255);  
-    textAlign(CENTER, CENTER);
-    textSize(32);
-    text('Game Paused', width/2, height/2 - 100);
-
-    textSize(20);
-    text('Press P to resume', width/2, height/2 - 50);
-    text('Press R to restart level', width/2, height/2);
-
-    push();
-    rectMode(CENTER);
+    camera.off(); // Draw UI directly in screen space
+  
+    noStroke();
+    fill(255, 255, 255, 400); // semi-transparent black overlay
+    rectMode(CORNER);
+    rect(0, 0, width, height);
+  
+    // === Glass panel ===
+    const panelW = width * 0.7;
+    const panelH = height * 0.6;
+    const panelX = width / 2 - panelW / 2;
+    const panelY = height / 2 - panelH / 2;
+  
+    // translucent white "glass"
+    drawingContext.save();
+    drawingContext.shadowBlur = 40;
+    drawingContext.shadowColor = "rgba(255,255,255,0.4)";
+    fill(255, 255, 255, 50);
+    stroke(255, 255, 255, 100);
+    strokeWeight(2);
+    rect(panelX, panelY, panelW, panelH, 30);
+    drawingContext.restore();
+  
+    // === Title ===
     fill(255);
-    stroke(0);
-    rect(width/2, height/2 + 100, 120, 40, 10);
-
-    fill(0);
     noStroke();
     textAlign(CENTER, CENTER);
-    textSize(16);
-    text("Random Color", width/2, height/2 + 100);
-    pop();
-
+    textSize(60);
+    text("Game Paused", width / 2, height / 2 - 120);
+  
+    // === Sub text ===
+    textSize(28);
+    fill(255, 230);
+    text("Press P to Resume", width / 2, height / 2 - 40);
+    text("Press R to Restart Level", width / 2, height / 2 + 10);
+  
+    // === Buttons ===
+    const btnY = height / 2 + 100;
+    const btnW = 180;
+    const btnH = 50;
+  
+    // Resume Button
+    fill(255, 255, 255, 40);
+    stroke(255, 255, 255, 150);
+    strokeWeight(2);
+    rect(width / 2 - btnW - 10, btnY, btnW, btnH, 12);
+    noStroke();
+    fill(255);
+    textSize(24);
+    text("Resume", width / 2 - btnW / 2 - 10, btnY + btnH / 2 + 2);
+  
+    // Random Color Button
+    fill(255, 100, 100, 100);
+    stroke(255, 100, 100);
+    strokeWeight(2);
+    rect(width / 2 + 10, btnY, btnW, btnH, 12);
+    noStroke();
+    fill(255);
+    text("Random Color", width / 2 + btnW / 2 + 10, btnY + btnH / 2 + 2);
+  
     camera.on();
 }
-
+  
+   
 
 function update() {
     if (kb.pressed('P')) {
         pauseKey = !pauseKey;
+        if (pauseKey) showPauseOverlay(); 
+        else hidePauseOverlay();
     }
     
     if (kb.pressed('r')) {
@@ -913,15 +1085,17 @@ function update() {
         ball.physics = NONE;
         ball.vel.x = 0;
         ball.vel.y = 0;
-        
+            
         ball.rotationSpeed = 0;
         ball.angularVelocity = 0;
         ball.rotation = ball.rotation;
-
+    
         ball.x = pausePosition[0];
         ball.y = pausePosition[1];
+
         return;
     }
+    
 
     // Unpause physiscs
     if (!pauseKey) {
@@ -1057,8 +1231,9 @@ function update() {
     }
 
     // Checking if the level is done
+
+    drawBackgroundForLevel();
     checkLevelCompletion();
-    
     
     drawUI();
 }
