@@ -55,6 +55,15 @@ let currentLevel = 0; // 0 = dev room
 let levels = [];
 let levelObjects = {}; // Will store level platforms and stuff
 
+// Level Editor
+let editor = {
+  enabled: false,
+  tool: 'ground',          // 'ground' | 'platform' | 'spring' | 'spike' | 'checkpoint' | 'goal'
+  grid: 20,
+  dragStart: null,         // {x,y} while drawing rectangles
+  spikeDir: 'up'           // 'up' | 'down' | 'left' | 'right'
+};
+
 // --- Cloud settings + state ---
 const PARALLAX_X = 0.08;   // smaller = moves less with camera (x)
 const PARALLAX_Y = 0.015;  // smaller = moves less with camera (y)
@@ -599,8 +608,8 @@ function checkLevelCompletion() {
 }
 function drawUI() {
     camera.off();
+    push();
 
-    // reset rectMode from modifications from pauseMenu
     rectMode(CORNER);
     
     // Name of level
@@ -639,6 +648,7 @@ function drawUI() {
 
      /* text(`Level ${currentLevel + 1} of ${levels.length}`, 20, height - 40); */
     
+    pop();
     camera.on();
     const level = levels[currentLevel];
 
@@ -661,7 +671,7 @@ function drawUI() {
     }
 }
 
-
+/*
 function mousePressed() {
     if (pauseKey) {
       let btnX = width / 2;
@@ -690,7 +700,7 @@ function mousePressed() {
       }
     }
 }
-  
+*/  
 
 
 
@@ -887,6 +897,118 @@ function drawBackgroundForLevel() {
   camera.on();
 }
 
+// ============= Level Editor =======================
+
+function drawEditorBanner() {
+  camera.off();
+  push();
+
+  // preserve scale/shear (t.a..t.d) but zero tx/ty so (0,0) is top-left
+  const t = drawingContext.getTransform();  // DOMMatrix
+  drawingContext.save();
+  drawingContext.setTransform(t.a, t.b, t.c, t.d, 0, 0);
+
+  rectMode(CORNER);
+  noStroke();
+
+  // clear strip
+  fill(0);
+  rect(0, 0, width, 28);
+
+  // optional tint
+  fill(0, 160);
+  rect(0, 0, width, 28);
+
+  // fresh text
+  fill(255);
+  textAlign(LEFT, CENTER);
+  textSize(12);
+  text(
+    `EDITOR – tool: ${editor.tool} (1:ground 2:platform 3:spring 4:spike 5:checkpoint 6:goal) | E:toggle | R:rotate spike | S:save`,
+    8, 14
+  );
+
+  drawingContext.restore();
+  pop();
+  camera.on();
+}
+
+function worldMouseRaw() {
+  // screen -> world, no grid snap (best for precise picking)
+  return { x: mouseX + camera.x - halfWidth, y: mouseY + camera.y - halfHeight };
+}
+
+// pick radius in pixels (bump if needed)
+const PICK_RADIUS = 70; // was 50; a bit more forgiving
+
+function mousePressed() {
+  // If the editor is enabled, priority goes to editor placement
+  if (editor.enabled) {
+    const p = worldMouse(); // snapped
+
+    if (editor.tool === 'ground' || editor.tool === 'platform' || editor.tool === 'spring') {
+      editor.dragStart = p; // start drawing a rect
+    } else if (editor.tool === 'spike') {
+      levels[currentLevel].spikes.push({ x: p.x, y: p.y, orientation: editor.spikeDir });
+      loadLevel(currentLevel);
+    } else if (editor.tool === 'checkpoint') {
+      levels[currentLevel].checkpoints.push({ x: p.x, y: p.y });
+      loadLevel(currentLevel);
+    } else if (editor.tool === 'goal') {
+      levels[currentLevel].goalPosition = { x: p.x, y: p.y };
+      loadLevel(currentLevel);
+    }
+    return false; // don’t let clicks fall through to HUD while editing
+  }
+
+  // --- normal (non-editor) clicks: pause button & pause-menu button ---
+  if (pauseKey) {
+    // Example "Random Color" button in pause menu
+    const btnX = width/2, btnY = height/2 + 100, btnW = 120, btnH = 40;
+    if (mouseX >= btnX - btnW/2 && mouseX <= btnX + btnW/2 &&
+        mouseY >= btnY - btnH/2 && mouseY <= btnY + btnH/2) {
+      randomColor();
+      return false;
+    }
+  } else {
+    // On-screen Pause button
+    if (mouseX >= pauseButtonBounds.x && mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
+        mouseY >= pauseButtonBounds.y && mouseY <= pauseButtonBounds.y + pauseButtonBounds.h) {
+      pauseKey = true;
+      return false;
+    }
+  }
+}
+
+
+function mouseReleased() {
+  if (!editor.enabled || !editor.dragStart) return;
+  const a = editor.dragStart, b = worldMouse();
+  const x = (a.x + b.x)/2, y = (a.y + b.y)/2;
+  const w = Math.abs(b.x - a.x), h = Math.abs(b.y - a.y);
+
+  if (w > 0 && h > 0) {
+    if (editor.tool === 'ground')
+      levels[currentLevel].ground.push({ x, y, w, h });
+    if (editor.tool === 'platform')
+      levels[currentLevel].platforms.push({ x, y, w, h, color:'orange', moving:false });
+    if (editor.tool === 'spring')
+      levels[currentLevel].springs.push({ x, y, w, h });
+  }
+  editor.dragStart = null;
+  loadLevel(currentLevel);
+}
+
+// Mouse for Level
+function worldMouse() {
+  const wx = mouseX + camera.x - halfWidth;
+  const wy = mouseY + camera.y - halfHeight;
+  // snap to grid
+  const g = editor.grid;
+  return { x: Math.round(wx/g)*g, y: Math.round(wy/g)*g };
+}
+//============================ End Level Editor ======================================
+
 function preload() {
     jumpSound = loadSound('../audio/jump.mp3');
     springSound = loadSound('../audio/spring.mp3');
@@ -1067,7 +1189,7 @@ function setup() {
 
 function pauseMenu() {
     camera.off(); // Draw UI directly in screen space
-  
+    push();
     noStroke();
     fill(255, 255, 255, 400); // semi-transparent black overlay
     rectMode(CORNER);
@@ -1126,59 +1248,139 @@ function pauseMenu() {
     fill(255);
     text("Random Color", width / 2 + btnW / 2 + 10, btnY + btnH / 2 + 2);
   
+    pop(); 
     camera.on();
 }
   
    
 
 function update() {
-    if (kb.pressed('P')) {
-        pauseKey = !pauseKey;
-        if (pauseKey) showPauseOverlay(); 
-        else hidePauseOverlay();
+// --- toggles ---
+  if (kb.pressed('e')) {
+    editor.enabled = !editor.enabled;
+
+    // if entering editor while paused, unpause & hide DOM pause overlay
+    if (editor.enabled && pauseKey) {
+      pauseKey = false;
+      if (typeof hidePauseOverlay === 'function') hidePauseOverlay();
     }
-    
-    if (kb.pressed('r')) {
-      //level restart
-        loadLevel(currentLevel); 
+  }
 
+  if (kb.pressed('P')) {
+    pauseKey = !pauseKey;
+    if (pauseKey) { if (typeof showPauseOverlay === 'function') showPauseOverlay(); }
+    else          { if (typeof hidePauseOverlay === 'function') hidePauseOverlay(); }
+  }
+
+  // restart level ONLY when not editing and not paused
+  if (!editor.enabled && !pauseKey && kb.pressed('r')) loadLevel(currentLevel);
+
+  // --- editor hotkeys: tool switching + rotate + delete + save ---
+  if (editor.enabled) {
+    if (kb.pressed('1')) editor.tool = 'ground';
+    if (kb.pressed('2')) editor.tool = 'platform';
+    if (kb.pressed('3')) editor.tool = 'spring';
+    if (kb.pressed('4')) editor.tool = 'spike';
+    if (kb.pressed('5')) editor.tool = 'checkpoint';
+    if (kb.pressed('6')) editor.tool = 'goal';
+
+    if (kb.pressed('r') && editor.tool === 'spike') {
+      const dirs = ['up','right','down','left'];
+      editor.spikeDir = dirs[(dirs.indexOf(editor.spikeDir)+1)%dirs.length];
     }
 
-    if (pauseKey) {
-        pauseMenu();
-        pausePosition = [ball.x, ball.y];
-        // Physics when paused handler
-        levelObjects.platforms?.forEach(platform => {
-            platform.physics = STATIC;
-        });
-        ball.physics = NONE;
-        ball.vel.x = 0;
-        ball.vel.y = 0;
-            
-        ball.rotationSpeed = 0;
-        ball.angularVelocity = 0;
-        ball.rotation = ball.rotation;
-    
-        ball.x = pausePosition[0];
-        ball.y = pausePosition[1];
+    // Delete nearest of active tool
+    if (kb.pressed('delete') || kb.pressed('backspace')) {
+      const p = worldMouseRaw();
+      let key = null;
+      if (editor.tool === 'ground')          key = 'ground';
+      else if (editor.tool === 'platform')   key = 'platforms';
+      else if (editor.tool === 'spring')     key = 'springs';
+      else if (editor.tool === 'spike')      key = 'spikes';
+      else if (editor.tool === 'checkpoint') key = 'checkpoints';
+      else if (editor.tool === 'goal') {
+        levels[currentLevel].goalPosition = null;
+        loadLevel(currentLevel);
+      }
+      if (key) {
+        const dataArr = levels[currentLevel][key];
+        if (dataArr && dataArr.length) {
+          const spriteArr =
+            key === 'ground'      ? levelObjects.ground :
+            key === 'platforms'   ? levelObjects.platforms :
+            key === 'springs'     ? levelObjects.springs :
+            key === 'spikes'      ? levelObjects.spikes :
+            key === 'checkpoints' ? levelObjects.checkpoints : null;
 
-        return;
-    }
-    
-
-    // Unpause physiscs
-    if (!pauseKey) {
-        levelObjects.platforms?.forEach(platform => {
-
-            platform.physics = KINEMATIC;
-            if (!platform.speed) {
-                platform.speed = 2;
+          let idx = -1, best = 1e9;
+          if (spriteArr && spriteArr.length === dataArr.length) {
+            for (let i=0;i<spriteArr.length;i++){
+              const s = spriteArr[i];
+              const d = dist(p.x,p.y,s.x,s.y);
+              if (d<best){best=d;idx=i;}
             }
-
-        });
-        ball.physics = DYNAMIC;
-        //drawSkyGradient(color(0,150,255), color(135,206,235));
+          } else {
+            for (let i=0;i<dataArr.length;i++){
+              const it = dataArr[i];
+              const d = dist(p.x,p.y,it.x,it.y);
+              if (d<best){best=d;idx=i;}
+            }
+          }
+          if (idx>=0 && best<PICK_RADIUS) { dataArr.splice(idx,1); loadLevel(currentLevel); }
+        }
+      }
     }
+
+    // Save current level JSON
+    if (kb.pressed('s')) {
+      if (typeof saveJSON === 'function') saveJSON(levels[currentLevel], `level-${currentLevel}.json`);
+      else {
+        const txt = JSON.stringify(levels[currentLevel], null, 2);
+        navigator.clipboard?.writeText(txt);
+        console.log('Level JSON copied to clipboard');
+      }
+    }
+  }
+
+  // ===== EDITOR MODE (separate from Pause): freeze + repaint + banner, then return =====
+  if (editor.enabled) {
+    // freeze physics/state
+    levelObjects.platforms?.forEach(p => { p.physics = STATIC; });
+    ball.physics = NONE;
+    ball.vel.x = 0; ball.vel.y = 0;
+    ball.rotationSpeed = 0; ball.angularVelocity = 0;
+
+    // repaint world so edits show immediately
+    drawBackgroundForLevel();
+    if (typeof allSprites !== 'undefined') allSprites.draw();
+    
+
+    // editor UI (no pause menu/DOM overlay)
+    drawEditorBanner();
+    return;
+  }
+
+  // ===== PAUSED MODE (no editor)
+  if (pauseKey) {
+    levelObjects.platforms?.forEach(p => { p.physics = STATIC; });
+    ball.physics = NONE;
+    ball.vel.x = 0; ball.vel.y = 0;
+    ball.rotationSpeed = 0; ball.angularVelocity = 0;
+
+    drawBackgroundForLevel();
+    if (typeof allSprites !== 'undefined') allSprites.draw();
+    
+
+    pauseMenu();            
+    return;
+  }
+
+  // --- unpaused: normal game ---
+  levelObjects.platforms?.forEach(platform => {
+    platform.physics = KINEMATIC;
+    if (!platform.speed) platform.speed = 2;
+  });
+  ball.physics = DYNAMIC;
 
     // Camera handeler
     camera.x += (ball.x - camera.x) * 0.1;
@@ -1377,11 +1579,12 @@ function update() {
     }
 
     // Checking if the level is done
-
-    drawBackgroundForLevel();
     checkLevelCompletion();
     
     drawUI();
+
+    // editor banner while unpaused
+    if (editor.enabled) drawEditorBanner();
 }
    
 
