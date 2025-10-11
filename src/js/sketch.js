@@ -671,39 +671,6 @@ function drawUI() {
     }
 }
 
-/*
-function mousePressed() {
-    if (pauseKey) {
-      let btnX = width / 2;
-      let btnY = height / 2 + 90;
-      let btnW = 180;
-      let btnH = 50;
-  
-      if (
-        mouseX >= btnX - btnW / 2 &&
-        mouseX <= btnX + btnW / 2 &&
-        mouseY >= btnY - btnH / 2 &&
-        mouseY <= btnY + btnH / 2
-      ) {
-        randomColor();
-        return false;
-      }
-    } else {
-      if (
-        mouseX >= pauseButtonBounds.x &&
-        mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
-        mouseY >= pauseButtonBounds.y &&
-        mouseY <= pauseButtonBounds.y + pauseButtonBounds.h
-      ) {
-        pauseKey = true;
-        return false;
-      }
-    }
-}
-*/  
-
-
-
 function explodeAndRespawn() {
     for (let i = 0; i < 20; i++) {
         particles.push({
