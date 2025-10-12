@@ -71,6 +71,49 @@
       background-color: red;
       color: white;
     }
+    /*Option Button*/
+    #options-btn {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+    }
+
+    #options-btn button {
+      padding: 15px 30px;
+      font-size: 24px;
+      background-color: white;
+      border: 2px solid red;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;      
+    }
+
+    /* Option page */
+    #options-menu {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.8);
+    padding: 30px 40px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    z-index: 20;
+    }
+
+    #options-menu input[type="range"] {
+      width: 300px;
+      margin: 10px 0;
+    }
+    /* Volume slider */
+    #volumeSlider {
+      width: 300px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
   </style>
 </head>
 <body>
@@ -83,6 +126,17 @@
     <button onclick="startGame(2)">Level 2</button>
     <button onclick="startGame(3)">Level 3</button>
     </div>
+
+    <div id="options-btn">
+      <button id="openOptions()" onclick="openOptions()">Options</button>
+    </div>
+  </div>
+
+  <!--Options Menu-->
+  <div id = "options-menu">
+    <label for = "volumeSlider" style="font-size: 25px;">Volume: <span id = "volumeValue">50%</span></label><br>
+    <input type = "range" id = "volumeSlider" min = "0" max = "1" step = "0.01" value = "0.5"><br><br>
+    <button onclick = "closeOptions()" style="padding: 10px 15px; font-size:19px; border: 2px solid red; border-radius: 12px">Close</button>
   </div>
 
   <!-- Game canvas -->
@@ -106,6 +160,32 @@
       document.getElementById("menu").style.display = "none";
       loadLevel(levelSelect);
     }
+
+    function masterVolume(vol) {
+      allSounds.forEach(s => s.setVolume(vol));
+    }
+
+    function openOptions() {
+      document.getElementById("options-menu").style.display = "block";
+
+      const slider = document.getElementById("volumeSlider");
+      const volumeValue = document.getElementById("volumeValue");
+
+      volumeValue.innerText = Math.round(volumeSlider.value * 100) + "%";
+
+      volumeSlider.oninput = function () {
+        volumeValue.innerText = Math.round(this.value *  100) + "%";
+        if(typeof masterVolume === "function") {
+          masterVolume(value);
+        }
+      };
+    }
+
+    function closeOptions() {
+      document.getElementById("options-menu").style.display = "none";
+    }
+
   </script>
 </body>
+</html>
 </html>
