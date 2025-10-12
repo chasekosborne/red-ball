@@ -33,8 +33,8 @@ let teleporterImage;
 let teleporterActive = true;   
 let beginTime = millis();
 let pauseOverlayEl;
-//let blackhole;
-//let blackholeImage;
+let blackhole;
+let blackholeImage;
 
 // === Background themes ===
 const BG_SKY   = "sky";
@@ -132,10 +132,7 @@ function initializeLevels() {
             enemies: [
                 { startX: 450, startY: 100, endX: 475, endY: 100, speed: 1 }
             ],
-            teleporter: [
-                { x: 1080, y: 300, w: 50, h: 50 },
-                { x: 420, y: 300, w: 50, h: 50 },
-            ],
+            
             lasers: [
                 { x: 100, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
                 { x: 600, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
@@ -157,6 +154,15 @@ function initializeLevels() {
                     scale: 0.3
                 }
             ],
+            teleporter: [
+                { x: 150, y: 300, w: 60, h: 60 },
+                { x: 1000, y: 300, w: 60, h: 60 },
+            ],
+              
+            blackhole: [
+              { x: 350, y: 200, w: 120, h: 120 },
+            ],
+
             goalPosition: { x: 1200, y: 300 }, 
             instructions: "Use SPACE to jump and arrow keys to move!"
         },
@@ -502,15 +508,14 @@ function loadLevel(levelIndex) {
     levelObjects.laserBlasters.push(laserBlaster);
   }
 
-  /*
   levelObjects.blackhole = [];
-  for (let blackholeData of level.blackhole) {
-      let blackhole = new Sprite(blackholeData.x, blackholeData.y, blackholeData.w, blackholeData.h);
-      blackhole.physics = STATIC;
-      blackhole.collider = "none";
-      levelObjects.blackhole.push(blackhole);
+    for (let blackholeData of level.blackhole) {
+        let blackhole = new Sprite(blackholeData.x, blackholeData.y, blackholeData.w, blackholeData.h);
+       blackhole.physics = STATIC;
+        blackhole.collider = "none";
+        blackhole.img = blackholeImage; 
+        levelObjects.blackhole.push(blackhole);
     }
-  */
 
   // Creation of checkpoints
   levelObjects.checkpoints = [];
@@ -734,6 +739,27 @@ function teleportation() {
 
     }); 
 }
+
+function blackholeAttraction() {
+    levelObjects.blackhole?.forEach(blackhole => {   //for each blackhole 
+        let distanceBlackhole = dist(ball.x, ball.y, blackhole.x, blackhole.y);
+        let attractionField = 150;
+        if (distanceBlackhole < attractionField) {   
+            let distanceBetweenX = blackhole.x - ball.x;   //calculates distance between redball and blackhole
+            let distanceBetweenY = blackhole.y - ball.y;   
+            forceOnY = (1.2 * distanceBetweenY)/100; //calculates force on ball based on distance between redball and blackhole. Uses a constant and divisor to adjust force strength
+            forceOnX = (1.2 * distanceBetweenX)/100;   
+            ball.vel.x += forceOnX; //applies force to ball velocity
+            ball.vel.y += forceOnY
+          if (distanceBlackhole < 60) {  
+            explodeAndRespawn();  //if ball is too close to blackhole, it explodes
+            deathSound.play();
+          }
+        }
+        
+    }); 
+} 
+
 
 // ============ Space Background =================
 // SPACE: build once (or when canvas size changes)
@@ -1137,6 +1163,10 @@ function preload() {
 
     hammerImage = loadImage("../art/hammer.png", img => {
         console.log("hammer loaded");
+    });
+
+    blackholeImage = loadImage("../art/blackhole.png", img => {
+        img.resize(300, 200);
     });
 }
 
@@ -1691,6 +1721,8 @@ function update() {
     levelObjects.checkpoints?.forEach(checkpoint => {
         checkpoint.update();
     });
+
+    blackholeAttraction(); //blackhole attraction
 
     teleportation (); //teleporter check
 
