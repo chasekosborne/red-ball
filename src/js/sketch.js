@@ -55,7 +55,7 @@ let currentLevel = 0; // 0 = dev room
 let levels = [];
 let levelObjects = {}; // Will store level platforms and stuff
 
-// Level Editor
+// ================ Level Editor Tools ======================
 let editor = {
   enabled: false,
   tool: 'ground',          // 'ground' | 'platform' | 'spring' | 'spike' | 'checkpoint' | 'goal'
@@ -63,6 +63,30 @@ let editor = {
   dragStart: null,         // {x,y} while drawing rectangles
   spikeDir: 'up'           // 'up' | 'down' | 'left' | 'right'
 };
+
+// List of editor tools (cycle with 1/2)
+const TOOL_LIST = [
+  'ground',
+  'platform',
+  'spring',
+  'spike',
+  'checkpoint',
+  'goal',
+  'enemy',
+  'teleporter',
+  'laser',
+  'disappearingPlatform',
+  'swingingHammer'
+];
+
+// editor defaults for multi-step tools / orientation
+editor.toolIndex = TOOL_LIST.indexOf(editor.tool);
+editor.spikeDir = editor.spikeDir || 'up';          // 'up'|'right'|'down'|'left'
+editor.laserDir = editor.laserDir || 'down';        // 'up'|'right'|'down'|'left'
+editor.dragStart = null;                            // for rectangle tools
+editor.staging = null;                              // for 2-click tools (enemy)
+
+//================================ End Level Editor Tools =====================================
 
 // --- Cloud settings + state ---
 const PARALLAX_X = 0.08;   // smaller = moves less with camera (x)
@@ -83,7 +107,7 @@ function initializeLevels() {
     levels = [
         {
             name: "Tutorial",
-			theme: "space", 
+			      theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'red',
             platforms: [
@@ -139,7 +163,7 @@ function initializeLevels() {
 
        {
             name: "Level 1",
-		   	theme: "space", 
+		   	    theme: "sky", 
             respawnPosition: [500, 150],
             ballColor: 'red',
             platforms: [
@@ -244,7 +268,7 @@ function initializeLevels() {
             checkpoints: [
                 { x: 2960, y: -1045}
             ],
-		   	teleporter: [],  
+		   	    teleporter: [],  
 
             goalPosition: { x: 5400, y: -1050 }, 
 
@@ -253,36 +277,24 @@ function initializeLevels() {
 
         {
             name: "Level 2",
-		   	theme: "space", 
+		   	    theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'pink',
-            platforms: [
-                // question for later but why are the y's below != to eachothers pair
-                //{ x: 3150, y: -1000, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
-                
-            ],
+            platforms: [],
             ground: [
                 { x: 500, y: 350, w: 800, h: 40 },
-
             ],
             springs: [],
             spikes: [],
-
             checkpoints: [
                 { x: 2960, y: -1045}
             ],
-
-		   	teleporter: [],  
-
+		   	    teleporter: [],  
             goalPosition: { x: 5400, y: -1050 }, 
-
             instructions: ""
         },
 
-
-
         // Add more levels here  Be sure to use the template as seen above
-      
     ];
 }
 // Background: gradient sky + clouds (screen-space)
@@ -383,189 +395,182 @@ function respawn() {
 }
 
 function loadLevel(levelIndex) {
-    clearLevel();
-    
-    currentLevel = levelIndex;
-    const level = levels[currentLevel];
+  clearLevel();
+  
+  currentLevel = levelIndex;
+  const level = levels[currentLevel];
 	currentBgTheme = levels[currentLevel].theme || BG_SKY;
-    
-    // set the player reset spawn point based on the level on level-load
-    respawnPosition[0] = level.respawnPosition[0];
-    respawnPosition[1] = level.respawnPosition[1];
-    
-    // This is to reset the ball
-    ball.x = respawnPosition[0];
-    ball.y = respawnPosition[1];
-    
-    ball.color = level.ballColor;
-
-    ball.vel.x = 0;
-    ball.vel.y = 0;
-    jumpCount = 0;
-    
-    // Handles ground creation
-    levelObjects.ground = [];
-    for (let groundData of level.ground) {
-        let ground = new Sprite(groundData.x, groundData.y, groundData.w, groundData.h);
-        ground.physics = STATIC;
-        ground.color = 'green';
-
-        levelObjects.ground.push(ground);
-
+  
+  // set the player reset spawn point based on the level on level-load
+  respawnPosition[0] = level.respawnPosition[0];
+  respawnPosition[1] = level.respawnPosition[1];
+  
+  // This is to reset the ball
+  ball.x = respawnPosition[0];
+  ball.y = respawnPosition[1];
+  
+  ball.color = level.ballColor;
+  ball.vel.x = 0;
+  ball.vel.y = 0;
+  jumpCount = 0;
+  
+  // Handles ground creation
+  levelObjects.ground = [];
+  for (let groundData of level.ground) {
+    let ground = new Sprite(groundData.x, groundData.y, groundData.w, groundData.h);
+    ground.physics = STATIC;
+    ground.color = 'green';
+    levelObjects.ground.push(ground);
+  }
+  
+  // Creation of platforms
+  levelObjects.platforms = [];
+  for (let platformData of level.platforms) {
+    let platform = new Sprite(platformData.x, platformData.y, platformData.w, platformData.h);
+    if(platformData.fake == 'true'){
+      platform.physics = 'none';
+      platform.color = platformData.color || 'orange'
+      platform.stroke = 'black'
+      platform.strokeWeight = 2;
     }
-    
-    // Creation of platforms
-    levelObjects.platforms = [];
-    for (let platformData of level.platforms) {
-        let platform = new Sprite(platformData.x, platformData.y, platformData.w, platformData.h);
-        if(platformData.fake == 'true'){
-            platform.physics = 'none';
-            platform.color = platformData.color || 'orange'
-            platform.stroke = 'black'
-            platform.strokeWeight = 2;
-        }
-        else {
-            platform.physics = KINEMATIC;
-            platform.color = platformData.color || 'orange'
-            platform.speed = platformData.speed || 0;
-            platform.direction = 1;
-            platform.minX = platformData.minX || platformData.x - 100;
-            platform.maxX = platformData.maxX || platformData.x + 100;
-            platform.moving = platformData.moving || false;
-            
-        }
-        levelObjects.platforms.push(platform);
+    else {
+      platform.physics = KINEMATIC;
+      platform.color = platformData.color || 'orange'
+      platform.speed = platformData.speed || 0;
+      platform.direction = 1;
+      platform.minX = platformData.minX || platformData.x - 100;
+      platform.maxX = platformData.maxX || platformData.x + 100;
+      platform.moving = platformData.moving || false; 
     }
-    
-    // Spring creator
-    levelObjects.springs = [];
-    for (let springData of level.springs) {
-        let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
-        spring.physics = STATIC;
-        spring.color = 'cyan';
-        levelObjects.springs.push(spring);
+    levelObjects.platforms.push(platform);
+  }
+  
+  // Spring creator
+  levelObjects.springs = [];
+  for (let springData of level.springs) {
+    let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
+    spring.physics = STATIC;
+    spring.color = 'cyan';
+    levelObjects.springs.push(spring);
+  }
+  // Disappearing platforms creator
+  levelObjects.disappearingPlatforms = [];
+  for (let disappearData of (level.disappearingPlatforms || [])) {
+    let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
+    disappearPlatform.physics = STATIC;
+    disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
+    disappearPlatform.color = disappearPlatform.baseColor;
+    disappearPlatform.isDisappearing = false;
+    disappearPlatform.isReappearing = false;
+    disappearPlatform.fadeTimer = 0;
+    disappearPlatform.playerTouched = false;
+    disappearPlatform.opacity = 255;
+    levelObjects.disappearingPlatforms.push(disappearPlatform);
+  }
+
+  // Spike creator
+  levelObjects.spikes = [];
+  for (let spikeData of level.spikes) {
+    let spike = new Sprite(spikeData.x, spikeData.y, 50, 50);
+    spike.img = spikeImage;
+    spike.collider = 'static';
+    spike.physics = STATIC;
+    spike.rotationLock = true;
+    switch (spikeData.orientation || 'up') {
+      case 'up': spike.rotation = 0; break;
+      case 'down': spike.rotation = 180; break;
+      case 'left': spike.rotation = 90; break;
+      case 'right': spike.rotation = -90; break;
     }
-       // Disappearing platforms creator
-    levelObjects.disappearingPlatforms = [];
-    for (let disappearData of (level.disappearingPlatforms || [])) {
-        let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
-        disappearPlatform.physics = STATIC;
-        disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
-        disappearPlatform.color = disappearPlatform.baseColor;
-        disappearPlatform.isDisappearing = false;
-        disappearPlatform.isReappearing = false;
-        disappearPlatform.fadeTimer = 0;
-        disappearPlatform.playerTouched = false;
-        disappearPlatform.opacity = 255;
-        levelObjects.disappearingPlatforms.push(disappearPlatform);
+    levelObjects.spikes.push(spike);
+  }
+
+  levelObjects.teleporter = [];
+  for (let teleporterData of level.teleporter) {
+    let teleporter = new Sprite(teleporterData.x, teleporterData.y, teleporterData.w, teleporterData.h);
+    teleporter.img = teleporterImage;
+    teleporter.physics = STATIC;
+    teleporter.collider = "none";
+    levelObjects.teleporter.push(teleporter);
+  }
+
+  levelObjects.laserBlasters = [];
+  for (let laser of level.lasers) {
+    let laserBlaster = new Laserbeam(laser.x, laser.y,
+                                    laser.range, laser.speedData,
+                                    laser.fwdDir, laserBlasterImage, ball);
+    levelObjects.laserBlasters.push(laserBlaster);
+  }
+
+  /*
+  levelObjects.blackhole = [];
+  for (let blackholeData of level.blackhole) {
+      let blackhole = new Sprite(blackholeData.x, blackholeData.y, blackholeData.w, blackholeData.h);
+      blackhole.physics = STATIC;
+      blackhole.collider = "none";
+      levelObjects.blackhole.push(blackhole);
     }
-    // Spike creator
-    levelObjects.spikes = [];
-    for (let spikeData of level.spikes) {
-        let spike = new Sprite(spikeData.x, spikeData.y, 50, 50);
-        spike.img = spikeImage;
-        spike.collider = 'static';
-        spike.physics = STATIC;
-        spike.rotationLock = true;
+  */
 
-        switch (spikeData.orientation || 'up') {
-            case 'up': spike.rotation = 0; break;
-            case 'down': spike.rotation = 180; break;
-            case 'left': spike.rotation = 90; break;
-            case 'right': spike.rotation = -90; break;
-        }
-        levelObjects.spikes.push(spike);
+  // Creation of checkpoints
+  levelObjects.checkpoints = [];
+  for (let checkpointData of level.checkpoints) {
+    let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
+    levelObjects.checkpoints.push(checkpoint);
+  }
+
+  //Creation of enemies
+  levelObjects.enemies = [];
+  for (let enemyData of level.enemies || []) {
+    let enemy = new Sprite(enemyData.startX, enemyData.startY, 50);
+    enemy.color = 'gray';
+    enemy.collider = 'kinematic';
+    enemy.posA = { x: enemyData.startX, y: enemyData.startY };
+    enemy.posB = { x: enemyData.endX, y: enemyData.endY };
+    enemy.goingToB = true;
+    let dx = enemy.posB.x - enemy.posA.x;
+    let dy = enemy.posB.y - enemy.posA.y;
+    let distAB = sqrt(dx * dx + dy * dy);
+    if (distAB > 0) {
+      enemy.vel.x = (dx / distAB) * (enemyData.speed || 2);
+      enemy.vel.y = (dy / distAB) * (enemyData.speed || 2);
     }
-
-    levelObjects.teleporter = [];
-    for (let teleporterData of level.teleporter) {
-        let teleporter = new Sprite(teleporterData.x, teleporterData.y, teleporterData.w, teleporterData.h);
-        teleporter.img = teleporterImage;
-        teleporter.physics = STATIC;
-        teleporter.collider = "none";
-        levelObjects.teleporter.push(teleporter);
+    else {
+      enemy.vel.x = 0;
+      enemy.vel.y = 0;
     }
+    levelObjects.enemies.push(enemy);
+  }
 
-    levelObjects.laserBlasters = [];
-    for (let laser of level.lasers) {
-        let laserBlaster = new Laserbeam(laser.x, laser.y,
-                                        laser.range, laser.speedData,
-                                        laser.fwdDir, laserBlasterImage, ball);
-        levelObjects.laserBlasters.push(laserBlaster);
-    }
-
-   /*  levelObjects.blackhole = [];
-    for (let blackholeData of level.blackhole) {
-        let blackhole = new Sprite(blackholeData.x, blackholeData.y, blackholeData.w, blackholeData.h);
-       blackhole.physics = STATIC;
-        blackhole.collider = "none";
-        levelObjects.blackhole.push(blackhole);
-    }*/
-
-    // Creation of checkpoints
-    levelObjects.checkpoints = [];
-    for (let checkpointData of level.checkpoints) {
-
-        let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
-
-        levelObjects.checkpoints.push(checkpoint);
-    }
-
-    //Creation of enemies
-    levelObjects.enemies = [];
-    for (let enemyData of level.enemies || []) {
-        let enemy = new Sprite(enemyData.startX, enemyData.startY, 50);
-        enemy.color = 'gray';
-        enemy.collider = 'kinematic';
-        enemy.posA = { x: enemyData.startX, y: enemyData.startY };
-        enemy.posB = { x: enemyData.endX, y: enemyData.endY };
-        enemy.goingToB = true;
-        let dx = enemy.posB.x - enemy.posA.x;
-        let dy = enemy.posB.y - enemy.posA.y;
-        let distAB = sqrt(dx * dx + dy * dy);
-        if (distAB > 0) {
-            enemy.vel.x = (dx / distAB) * (enemyData.speed || 2);
-            enemy.vel.y = (dy / distAB) * (enemyData.speed || 2);
-        }
-        else {
-            enemy.vel.x = 0;
-            enemy.vel.y = 0;
-        }
-        levelObjects.enemies.push(enemy);
-    }
-
-    //Creation of swinging hammer
-    levelObjects.swingingHammers = [];
-    for (let hammerData of level.swingingHammers || []) {
-        let hammer = new Sprite(hammerData.pivotX, hammerData.pivotY + hammerData.length, hammerData.width * hammerData.scale, hammerData.height * hammerData.scale);
-        hammer.img = hammerImage;
-        hammer.collider = 'none';
-        hammer.rotationLock = false;
-
-        let spikeHeight = typeof hammerData.spikeHeight == 'number' ? hammerData.spikeHeight * hammerData.scale : hammerData.height * hammerData.scale * (hammerData.spikeHeight || 0.33);
-
-        let spikeHitbox = new Sprite (hammerData.pivotX, hammerData.pivotY + hammerData.length + spikeHeight / 2, hammerData.width * hammerData.scale, spikeHeight);
-        spikeHitbox.collider = 'kinematic'
-        spikeHitbox.rotationLock = false;
-        spikeHitbox.visible = false;
-        levelObjects.spikes.push(spikeHitbox);
-
-        levelObjects.swingingHammers.push({
-            pivotX: hammerData.pivotX,
-            pivotY: hammerData.pivotY,
-            length: hammerData.length,
-            amplitude: hammerData.amplitude,
-            speed: hammerData.speed,
-            currentAngle: hammerData.phase,
-            direction: 1,
-            sprite: hammer,
-            spikeHitbox: spikeHitbox,
-            width: hammerData.width,
-            height: hammerData.height,
-            spikeHeight: spikeHeight,
-            scale: hammerData.scale
-        });
-    }
+  //Creation of swinging hammer
+  levelObjects.swingingHammers = [];
+  for (let hammerData of level.swingingHammers || []) {
+    let hammer = new Sprite(hammerData.pivotX, hammerData.pivotY + hammerData.length, hammerData.width * hammerData.scale, hammerData.height * hammerData.scale);
+    hammer.img = hammerImage;
+    hammer.collider = 'none';
+    hammer.rotationLock = false;
+    let spikeHeight = typeof hammerData.spikeHeight == 'number' ? hammerData.spikeHeight * hammerData.scale : hammerData.height * hammerData.scale * (hammerData.spikeHeight || 0.33);
+    let spikeHitbox = new Sprite (hammerData.pivotX, hammerData.pivotY + hammerData.length + spikeHeight / 2, hammerData.width * hammerData.scale, spikeHeight);
+    spikeHitbox.collider = 'kinematic'
+    spikeHitbox.rotationLock = false;
+    spikeHitbox.visible = false;
+    levelObjects.spikes.push(spikeHitbox);
+    levelObjects.swingingHammers.push({
+        pivotX: hammerData.pivotX,
+        pivotY: hammerData.pivotY,
+        length: hammerData.length,
+        amplitude: hammerData.amplitude,
+        speed: hammerData.speed,
+        currentAngle: hammerData.phase,
+        direction: 1,
+        sprite: hammer,
+        spikeHitbox: spikeHitbox,
+        width: hammerData.width,
+        height: hammerData.height,
+        spikeHeight: spikeHeight,
+        scale: hammerData.scale
+    });
+  }
 }
 
 function clearLevel() {
@@ -583,8 +588,6 @@ function clearLevel() {
     });
     levelObjects = {};
 }
-
-
 
 function nextLevel() {
 
@@ -606,6 +609,7 @@ function checkLevelCompletion() {
         }
     }
 }
+
 function drawUI() {
     camera.off();
     push();
@@ -670,39 +674,6 @@ function drawUI() {
         
     }
 }
-
-/*
-function mousePressed() {
-    if (pauseKey) {
-      let btnX = width / 2;
-      let btnY = height / 2 + 90;
-      let btnW = 180;
-      let btnH = 50;
-  
-      if (
-        mouseX >= btnX - btnW / 2 &&
-        mouseX <= btnX + btnW / 2 &&
-        mouseY >= btnY - btnH / 2 &&
-        mouseY <= btnY + btnH / 2
-      ) {
-        randomColor();
-        return false;
-      }
-    } else {
-      if (
-        mouseX >= pauseButtonBounds.x &&
-        mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
-        mouseY >= pauseButtonBounds.y &&
-        mouseY <= pauseButtonBounds.y + pauseButtonBounds.h
-      ) {
-        pauseKey = true;
-        return false;
-      }
-    }
-}
-*/  
-
-
 
 function explodeAndRespawn() {
     for (let i = 0; i < 20; i++) {
@@ -890,7 +861,25 @@ function drawBackgroundForLevel() {
     updateBgMeteors();
 
   } else {
-    drawSkyBackgroundAndClouds();
+    drawSkyGradient(); 
+
+    // parallax based on current camera each frame
+    const px = -camera.x * PARALLAX_X;
+    const py = -camera.y * PARALLAX_Y;
+
+    // optional gentle drift + horizontal wrap so clouds keep coming
+    const span = width + CLOUD_MARGIN * 2;
+
+    for (const c of CLOUDS) {
+      c.dx += c.vx;                    // slow drift to the right
+      let sx = c.x + px + c.dx;
+      let sy = c.y + py;
+
+      while (sx < -CLOUD_MARGIN) sx += span;
+      while (sx > width + CLOUD_MARGIN) sx -= span;
+
+      drawCloud(sx, sy, c.s);
+    }
   }
 
   pop();
@@ -903,7 +892,7 @@ function drawEditorBanner() {
   camera.off();
   push();
 
-  // preserve scale/shear (t.a..t.d) but zero tx/ty so (0,0) is top-left
+  // preserve scale/shear
   const t = drawingContext.getTransform();  // DOMMatrix
   drawingContext.save();
   drawingContext.setTransform(t.a, t.b, t.c, t.d, 0, 0);
@@ -924,7 +913,7 @@ function drawEditorBanner() {
   textAlign(LEFT, CENTER);
   textSize(12);
   text(
-    `EDITOR – tool: ${editor.tool} (1:ground 2:platform 3:spring 4:spike 5:checkpoint 6:goal) | E:toggle | R:rotate spike | S:save`,
+    `EDITOR – tool: ${editor.tool} | 1:prev  2:next | R:rotate spike/laser | E:toggle | S:save`,
     8, 14
   );
 
@@ -946,19 +935,81 @@ function mousePressed() {
   if (editor.enabled) {
     const p = worldMouse(); // snapped
 
-    if (editor.tool === 'ground' || editor.tool === 'platform' || editor.tool === 'spring') {
-      editor.dragStart = p; // start drawing a rect
-    } else if (editor.tool === 'spike') {
-      levels[currentLevel].spikes.push({ x: p.x, y: p.y, orientation: editor.spikeDir });
+    // Rectangle-by-drag tools
+    if (['ground','platform','spring','teleporter','disappearingPlatform'].includes(editor.tool)) {
+      editor.dragStart = p;
+      return false;
+    }
+
+    // Single-click tools
+    if (editor.tool === 'spike') {
+      (levels[currentLevel].spikes ||= []).push({
+        x: p.x, y: p.y, orientation: editor.spikeDir
+      });
       loadLevel(currentLevel);
-    } else if (editor.tool === 'checkpoint') {
-      levels[currentLevel].checkpoints.push({ x: p.x, y: p.y });
+      return false;
+    }
+
+    if (editor.tool === 'checkpoint') {
+      (levels[currentLevel].checkpoints ||= []).push({ x: p.x, y: p.y });
       loadLevel(currentLevel);
-    } else if (editor.tool === 'goal') {
+      return false;
+    }
+
+    if (editor.tool === 'goal') {
       levels[currentLevel].goalPosition = { x: p.x, y: p.y };
       loadLevel(currentLevel);
+      return false;
     }
-    return false; // don’t let clicks fall through to HUD while editing
+
+    // Two-click tool: enemy (click A = start, click B = end)
+    if (editor.tool === 'enemy') {
+      if (!editor.staging) {
+        editor.staging = { startX: p.x, startY: p.y };
+      } 
+      else {
+        const a = editor.staging;
+        (levels[currentLevel].enemies ||= []).push({
+          startX: a.startX, startY: a.startY,
+          endX: p.x, endY: p.y,
+          speed: 1
+        });
+        editor.staging = null;
+        loadLevel(currentLevel);
+      }
+      return false;
+    }
+
+    // Single-click with defaults: laser, swingingHammer
+    if (editor.tool === 'laser') {
+      (levels[currentLevel].lasers ||= []).push({
+        x: p.x, y: p.y,
+        range: 300,
+        speedData: { speed: 3, bulletSpeed: 8 },
+        fwdDir: editor.laserDir.toUpperCase()   // UP/DOWN/LEFT/RIGHT
+      });
+      loadLevel(currentLevel);
+      return false;
+    }
+
+    if (editor.tool === 'swingingHammer') {
+      (levels[currentLevel].swingingHammers ||= []).push({
+        pivotX: p.x,
+        pivotY: p.y,
+        length: 200,
+        amplitude: 50,
+        speed: 2,
+        phase: 0,
+        width: 780,
+        height: 800,
+        spikeHeight: 200,
+        scale: 0.3
+      });
+      loadLevel(currentLevel);
+      return false;
+    }
+
+    return false; // consume clicks while editing
   }
 
   // --- normal (non-editor) clicks: pause button & pause-menu button ---
@@ -982,21 +1033,68 @@ function mousePressed() {
 
 
 function mouseReleased() {
+  // Only finish a drag if the editor is on and a drag started
   if (!editor.enabled || !editor.dragStart) return;
-  const a = editor.dragStart, b = worldMouse();
-  const x = (a.x + b.x)/2, y = (a.y + b.y)/2;
-  const w = Math.abs(b.x - a.x), h = Math.abs(b.y - a.y);
 
-  if (w > 0 && h > 0) {
-    if (editor.tool === 'ground')
-      levels[currentLevel].ground.push({ x, y, w, h });
-    if (editor.tool === 'platform')
-      levels[currentLevel].platforms.push({ x, y, w, h, color:'orange', moving:false });
-    if (editor.tool === 'spring')
-      levels[currentLevel].springs.push({ x, y, w, h });
+  const a = editor.dragStart;
+  const b = worldMouse();
+
+  // Convert two corners -> center + size
+  const x = (a.x + b.x) / 2;
+  const y = (a.y + b.y) / 2;
+  const w = Math.abs(b.x - a.x);
+  const h = Math.abs(b.y - a.y);
+
+  // ignore tiny drags (prevents accidental clicks)
+  const MIN = 2;
+  if (w < MIN || h < MIN) {
+    editor.dragStart = null;
+    return;
   }
+
+  let placed = false;
+
+  // Ground
+  if (editor.tool === 'ground') {
+    (levels[currentLevel].ground ||= []).push({ x, y, w, h });
+    placed = true;
+  }
+
+  // Platform
+  else if (editor.tool === 'platform') {
+    (levels[currentLevel].platforms ||= []).push({
+      x, y, w, h,
+      color: 'orange',
+      moving: false
+    });
+    placed = true;
+  }
+
+  // Spring
+  else if (editor.tool === 'spring') {
+    (levels[currentLevel].springs ||= []).push({ x, y, w, h });
+    placed = true;
+  }
+
+  // Teleporter
+  else if (editor.tool === 'teleporter') {
+    (levels[currentLevel].teleporter ||= []).push({ x, y, w, h });
+    placed = true;
+  }
+
+  // Disappearing Platform
+  else if (editor.tool === 'disappearingPlatform') {
+    (levels[currentLevel].disappearingPlatforms ||= []).push({ x, y, w, h });
+    placed = true;
+  }
+
+  // For non-rectangle tools (spike, checkpoint, goal, laser, enemy, swingingHammer),
+  // placement happens on mousePressed()
+
   editor.dragStart = null;
-  loadLevel(currentLevel);
+
+  // Rebuild sprites
+  if (placed) loadLevel(currentLevel);
 }
 
 // Mouse for Level
@@ -1007,6 +1105,7 @@ function worldMouse() {
   const g = editor.grid;
   return { x: Math.round(wx/g)*g, y: Math.round(wy/g)*g };
 }
+
 //============================ End Level Editor ======================================
 
 function preload() {
@@ -1255,7 +1354,7 @@ function pauseMenu() {
    
 
 function update() {
-// --- toggles ---
+  // --- toggles ---
   if (kb.pressed('e')) {
     editor.enabled = !editor.enabled;
 
@@ -1276,69 +1375,99 @@ function update() {
   if (!editor.enabled && !pauseKey && kb.pressed('r')) loadLevel(currentLevel);
 
   // --- editor hotkeys: tool switching + rotate + delete + save ---
-  if (editor.enabled) {
-    if (kb.pressed('1')) editor.tool = 'ground';
-    if (kb.pressed('2')) editor.tool = 'platform';
-    if (kb.pressed('3')) editor.tool = 'spring';
-    if (kb.pressed('4')) editor.tool = 'spike';
-    if (kb.pressed('5')) editor.tool = 'checkpoint';
-    if (kb.pressed('6')) editor.tool = 'goal';
+  // cycle tools: 1 = previous, 2 = next
+  if (kb.pressed('1')) {
+    editor.toolIndex = (editor.toolIndex - 1 + TOOL_LIST.length) % TOOL_LIST.length;
+    editor.tool = TOOL_LIST[editor.toolIndex];
+  }
+  if (kb.pressed('2')) {
+    editor.toolIndex = (editor.toolIndex + 1) % TOOL_LIST.length;
+    editor.tool = TOOL_LIST[editor.toolIndex];
+  }
 
-    if (kb.pressed('r') && editor.tool === 'spike') {
-      const dirs = ['up','right','down','left'];
+  // rotate spike orientation (unchanged)
+  if (kb.pressed('r')) {
+    const dirs = ['up','right','down','left'];
+    if (editor.tool === 'spike') {
       editor.spikeDir = dirs[(dirs.indexOf(editor.spikeDir)+1)%dirs.length];
+    } else if (editor.tool === 'laser') {
+      editor.laserDir = dirs[(dirs.indexOf(editor.laserDir)+1)%dirs.length];
+    }
+  }
+
+  // Delete nearest of active tool
+  if (editor.enabled && (kb.pressed('delete') || kb.pressed('backspace'))) {
+    const p = worldMouseRaw();
+    let key = null;
+
+    if (editor.tool === 'ground')                key = 'ground';
+    else if (editor.tool === 'platform')         key = 'platforms';
+    else if (editor.tool === 'spring')           key = 'springs';
+    else if (editor.tool === 'spike')            key = 'spikes';
+    else if (editor.tool === 'checkpoint')       key = 'checkpoints';
+    else if (editor.tool === 'goal') {
+      levels[currentLevel].goalPosition = null;
+      loadLevel(currentLevel);
+      return; // early exit after removing goal
+    }
+    else if (editor.tool === 'enemy')            key = 'enemies';
+    else if (editor.tool === 'teleporter')       key = 'teleporter';
+    else if (editor.tool === 'laser')            key = 'lasers';
+    else if (editor.tool === 'disappearingPlatform') key = 'disappearingPlatforms';
+    else if (editor.tool === 'swingingHammer')   key = 'swingingHammers';
+
+    if (!key) return;
+
+    const dataArr = levels[currentLevel][key] || [];
+    if (!dataArr.length) return;
+
+    // Prefer sprite positions when available
+    const spriteArr =
+      key === 'ground'                 ? levelObjects.ground :
+      key === 'platforms'              ? levelObjects.platforms :
+      key === 'springs'                ? levelObjects.springs :
+      key === 'spikes'                 ? levelObjects.spikes :
+      key === 'checkpoints'            ? levelObjects.checkpoints :
+      key === 'enemies'                ? levelObjects.enemies :
+      key === 'teleporter'             ? levelObjects.teleporter :
+      key === 'lasers'                 ? levelObjects.laserBlasters :
+      key === 'disappearingPlatforms'  ? levelObjects.disappearingPlatforms :
+      key === 'swingingHammers'        ? levelObjects.swingingHammers :
+      null;
+
+    let idx = -1, best = 1e9;
+
+    if (spriteArr && spriteArr.length) {
+      // pick by sprite centers
+      for (let i = 0; i < spriteArr.length; i++) {
+        const s = spriteArr[i];
+        const d = dist(p.x, p.y, s.x, s.y);
+        if (d < best) { best = d; idx = i; }
+      }
+    } else {
+      // fallback: pick by data center
+      for (let i = 0; i < dataArr.length; i++) {
+        const it = dataArr[i];
+        const cx = it.x ?? it.startX ?? it.pivotX ?? 0;
+        const cy = it.y ?? it.startY ?? it.pivotY ?? 0;
+        const d = dist(p.x, p.y, cx, cy);
+        if (d < best) { best = d; idx = i; }
+      }
     }
 
-    // Delete nearest of active tool
-    if (kb.pressed('delete') || kb.pressed('backspace')) {
-      const p = worldMouseRaw();
-      let key = null;
-      if (editor.tool === 'ground')          key = 'ground';
-      else if (editor.tool === 'platform')   key = 'platforms';
-      else if (editor.tool === 'spring')     key = 'springs';
-      else if (editor.tool === 'spike')      key = 'spikes';
-      else if (editor.tool === 'checkpoint') key = 'checkpoints';
-      else if (editor.tool === 'goal') {
-        levels[currentLevel].goalPosition = null;
-        loadLevel(currentLevel);
-      }
-      if (key) {
-        const dataArr = levels[currentLevel][key];
-        if (dataArr && dataArr.length) {
-          const spriteArr =
-            key === 'ground'      ? levelObjects.ground :
-            key === 'platforms'   ? levelObjects.platforms :
-            key === 'springs'     ? levelObjects.springs :
-            key === 'spikes'      ? levelObjects.spikes :
-            key === 'checkpoints' ? levelObjects.checkpoints : null;
-
-          let idx = -1, best = 1e9;
-          if (spriteArr && spriteArr.length === dataArr.length) {
-            for (let i=0;i<spriteArr.length;i++){
-              const s = spriteArr[i];
-              const d = dist(p.x,p.y,s.x,s.y);
-              if (d<best){best=d;idx=i;}
-            }
-          } else {
-            for (let i=0;i<dataArr.length;i++){
-              const it = dataArr[i];
-              const d = dist(p.x,p.y,it.x,it.y);
-              if (d<best){best=d;idx=i;}
-            }
-          }
-          if (idx>=0 && best<PICK_RADIUS) { dataArr.splice(idx,1); loadLevel(currentLevel); }
-        }
-      }
+    if (idx >= 0 && best < PICK_RADIUS) {
+      dataArr.splice(idx, 1);
+      loadLevel(currentLevel);
     }
+  }
 
-    // Save current level JSON
-    if (kb.pressed('s')) {
-      if (typeof saveJSON === 'function') saveJSON(levels[currentLevel], `level-${currentLevel}.json`);
-      else {
-        const txt = JSON.stringify(levels[currentLevel], null, 2);
-        navigator.clipboard?.writeText(txt);
-        console.log('Level JSON copied to clipboard');
-      }
+  // Save current level JSON
+  if (kb.pressed('s')) {
+    if (typeof saveJSON === 'function') saveJSON(levels[currentLevel], `level-${currentLevel}.json`);
+    else {
+      const txt = JSON.stringify(levels[currentLevel], null, 2);
+      navigator.clipboard?.writeText(txt);
+      console.log('Level JSON copied to clipboard');
     }
   }
 
@@ -1355,12 +1484,12 @@ function update() {
     if (typeof allSprites !== 'undefined') allSprites.draw();
     
 
-    // editor UI (no pause menu/DOM overlay)
+    // editor UI
     drawEditorBanner();
     return;
   }
 
-  // ===== PAUSED MODE (no editor)
+  // ===== PAUSED MODE =======
   if (pauseKey) {
     levelObjects.platforms?.forEach(p => { p.physics = STATIC; });
     ball.physics = NONE;
