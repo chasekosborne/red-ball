@@ -20,14 +20,7 @@
   	width: 100%;
   	height: 100%;
 
-  	/* Cloud background with scrolling animation */
-  	background: url("1c62bb07-3c6a-458b-95aa-b3be4af8ecfc.png") repeat-x;
-  	background-size: cover;
-  	animation: moveClouds 60s linear infinite;
-
-  	/* Add overlay color + blur so game doesn’t distract */
-  	background-color: rgba(0, 0, 0, 0.4); /* dark transparent layer */
-  	backdrop-filter: blur(5px);            /* soft blur behind menu */
+    background-color: #000;
 
   	display: flex;
   	flex-direction: column;
@@ -51,13 +44,13 @@
     }
 
     /* Button style*/
-    #level-button{
+    #main-buttons{
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       gap: 15px;
     }
 
-    #level-button button{
+    #main-buttons button{
       padding: 15px 30px;
       font-size: 24px;
       background-color: white;
@@ -67,6 +60,22 @@
       transition: 0.2s;
     }
 
+    #level-select{
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #level-select button{
+      padding: 15px 30px;
+      font-size: 24px;
+      background-color: white;
+      border: 2px solid red;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
     #menu button:hover {
       background-color: red;
       color: white;
@@ -86,6 +95,15 @@
       border-radius: 12px;
       cursor: pointer;
       transition: 0.2s;      
+    }
+
+    #difficulty-toggle {
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-size: 24px;
     }
 
     /* Option page */
@@ -114,19 +132,37 @@
       margin-bottom: 20px;
     }
 
+    #diffBtn {
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: white;
+      border: 2px solid red;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #diffBtn:hover {
+      background-color: red;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <!-- Menu overlay -->
   <div id="menu">
-    <h1>Epsilon’s Greatest Ball</h1>
-    <div id = "level-button">
+    <h1>Epsilon's Greatest Ball</h1>
+    <div id = "main-buttons">
+      <button onclick="newGame()">New Game</button>
+      <button onclick="showLevelSelect()">Level Select</button>
+    </div>
+    <div id="level-select" style="display: none;">
     <button onclick="startGame(0)">Tutorial</button>
     <button onclick="startGame(1)">Level 1</button>
     <button onclick="startGame(2)">Level 2</button>
     <button onclick="startGame(3)">Level 3</button>
+    <button onclick="backToMain()">Back</button>
     </div>
-
     <div id="options-btn">
       <button id="openOptions()" onclick="openOptions()">Options</button>
     </div>
@@ -136,6 +172,9 @@
   <div id = "options-menu">
     <label for = "volumeSlider" style="font-size: 25px;">Volume: <span id = "volumeValue">50%</span></label><br>
     <input type = "range" id = "volumeSlider" min = "0" max = "1" step = "0.01" value = "0.5"><br><br>
+    <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 25px;">
+      Difficulty: <button id="diffBtn" onclick="toggleDifficulty()">Normal</button>
+    </div>
     <button onclick = "closeOptions()" style="padding: 10px 15px; font-size:19px; border: 2px solid red; border-radius: 12px">Close</button>
   </div>
 
@@ -153,12 +192,37 @@
   <script src="../js/sketch.js"></script>
 
   <script>
-    //let currentLevel = 0;
     function startGame(level) {
-      let levelSelect = level
-      // Hide the menu overlay when Start is clicked
-      document.getElementById("menu").style.display = "none";
-      loadLevel(levelSelect);
+      document.getElementById("menu").style.display="none";
+      loadLevel(level);
+    }
+
+    function newGame() {
+      startGame(0);
+    }
+
+    function showLevelSelect() {
+      document.getElementById('main-buttons').style.display = 'none';
+      document.getElementById('options-btn').style.display = 'none';
+      document.getElementById('level-select').style.display = 'flex';
+    }
+
+    function backToMain() {
+      document.getElementById('level-select').style.display = 'none';
+      document.getElementById('main-buttons').style.display = 'flex';
+      document.getElementById('options-btn').style.display = 'flex';
+    }
+
+    function toggleDifficulty() {
+      const diffBtn = document.getElementById('diffBtn');
+      if (window.difficulty === 'normal') {
+        window.difficulty = 'hard';
+        diffBtn.textContent = 'Hard';
+      } else {
+        window.difficulty = 'normal';
+        diffBtn.textContent = 'Normal';
+      }
+      difficulty = window.difficulty;
     }
 
     function masterVolume(vol) {
