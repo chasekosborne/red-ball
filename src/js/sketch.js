@@ -1278,7 +1278,29 @@ function buildPauseOverlay() {
     colorBtn.onmouseleave = () => colorBtn.style.background = 'rgba(255,100,100,0.4)';
     colorBtn.onclick = () => { randomColor(); };
     controls.appendChild(colorBtn);
-  
+
+    //Quit Game Button
+    const quitBtn = document.createElement('button');
+    quitBtn.textContent = 'Quit Game';
+    quitBtn.style.cssText = `
+      padding: 14px 24px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,100,100,0.8);
+      background: rgba(255,100,100,0.4);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      `;
+      quitBtn.onmouseenter = () => quitBtn.style.background = 'rgba(255,100,100,0.6)';
+      quitBtn.onmouseleave = () => quitBtn.style.background = 'rgba(255,100,100,0.4)';
+      quitBtn.onclick = () => {
+        pauseKey = false;
+        hidePauseOverlay();
+        document.getElementById('menu').style.display = 'flex';
+        isMenuOpen = true;
+      };
+      controls.appendChild(quitBtn);
     document.body.appendChild(pauseOverlayEl);
   }
   
