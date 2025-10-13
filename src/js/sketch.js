@@ -1336,6 +1336,17 @@ function setup() {
     noiseSeed(spaceSeed);
     buildBgStarfield();
     buildPauseOverlay();
+
+  const picker = document.getElementById('colorPicker');
+  picker.addEventListener('input', () => {
+  const chosenColor = picker.value;
+    if (ball) {
+      ball.color = chosenColor;
+      levels[currentLevel].ballColor = chosenColor;
+    }
+  });
+
+
 }
 
 function pauseMenu() {
