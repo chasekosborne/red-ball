@@ -15,6 +15,7 @@ let ball;
 let respawnPosition = [500, 150];
 let jumpSound;
 let deathSound;
+let ballSkinImage;
 let teleportSound;
 let spikes;
 let platform;
@@ -1168,7 +1169,13 @@ function preload() {
     blackholeImage = loadImage("../art/blackhole.png", img => {
         img.resize(300, 200);
     });
+   
+    
+    ballSkinImage = loadImage("../art/donut.png", img => {
+        img.resize(150, 150);
+    });
 }
+
 
 
 
@@ -1325,9 +1332,9 @@ function setup() {
     ball = new Sprite();
     ball.drag = 0.4;
     ball.textSize = 40;
-    ball.text = ":)";
+    //ball.text = ":)";
     ball.diameter = 50;
-    
+    ball.img = ballSkinImage;
     // Load da dev room 
     loadLevel(0);
 
