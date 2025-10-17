@@ -1,3 +1,20 @@
+// global function
+const randRange = (min,max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+function rotateVector (thetaDeg, scalar) {
+    // convert to radians
+    const thetaRad = thetaDeg * (Math.PI / 180);
+    // calculate new vector using trig
+    const x = -Math.sin(thetaRad);
+    const y =  Math.cos(thetaRad);
+
+    // produce normalized vector (magnitude is 1)
+    // and multiply it with a scalar to show speed
+    return { x: (x * scalar), y: (y * scalar) };
+}
+
 class Asteriod {
     constructor(x,y,speed,playerRef) {
         this.player = playerRef;
@@ -10,7 +27,10 @@ class Asteriod {
         this.particleColor = color(166, 151, 109); // RGB
 
         // randomly generate (x,y) velocity asteriod uses
-        this.dir = { x: 0, y: 1};
+        const angle = randRange(-65,65);
+        const newDir = rotateVector(angle, this.speed);
+
+        this.dir = { x: newDir.x, y: newDir.y };
 
         this.sprite = new Sprite(x, y, 50, 50);
         this.sprite.collider = "none";
@@ -60,12 +80,6 @@ class Asteriod {
             this.sprite.vel.x = this.dir.x;
             this.sprite.vel.y = this.dir.y;
 
-            if (this.sprite.overlapping(this.player)) {
-                this.spawnImpact();
-                explodeAndRespawn(); // player dies
-                return;
-            }
-
             // allSprites is a special p5js group that
             // contains all active sprites
             this.sprite.overlap(allSprites, (self, other) => {
@@ -74,10 +88,17 @@ class Asteriod {
                     return;
                 }
 
+                if (other === this.player) {
+                    this.spawnImpact();
+                    explodeAndRespawn(); // player dies
+                    return;
+                }
+
                 // landed on the ground
                 this.spawnImpact();
                 return;
-            })
+            });
+
         } else {
             this.updateParticles();
 
@@ -137,10 +158,6 @@ class AsteriodField {
 
     generateBurst() {
         for (let i = 0; i < this.burstCount; ++i) {
-            const randRange = (min,max) => {
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            };
-
             // generate random x position
             const x = this.x + randRange(-this.range / 2, this.range / 2);
             const y = this.y;
