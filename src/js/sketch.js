@@ -9,6 +9,8 @@ let claimedFlagImage;
 let spikeImage;
 let laserBlasterImage;
 let hammerImage;
+let asteriod_sprites;
+
 let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
 let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
 let ball;
@@ -138,6 +140,11 @@ function initializeLevels() {
                 { x: 100, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
                 { x: 600, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
             ],
+
+            asteriodFields: [
+                { x: 500, y: -100, range: 400, fallSpeed: 2, burstCount: 4, timeInterval: 3 }
+            ],
+
             disappearingPlatforms: [
                 { x: 1080, y: 100, w: 120, h: 20 },
             ],
@@ -507,6 +514,14 @@ function loadLevel(levelIndex) {
                                     laser.range, laser.speedData,
                                     laser.fwdDir, laserBlasterImage, ball);
     levelObjects.laserBlasters.push(laserBlaster);
+  }
+
+  levelObjects.asteriodFields = [];
+  for (let field of level.asteriodFields) {
+    let asteriodField = new AsteriodField(field.x, field.y, field.range,
+                                        field.fallSpeed, field.burstCount,
+                                        field.timeInterval, ball);
+    levelObjects.asteriodFields.push(asteriodField);
   }
 
   levelObjects.blackhole = [];
@@ -1162,6 +1177,19 @@ function preload() {
         img.resize(50, 50);
     })
 
+    // multiple asteriod sprites
+    asteriod_sprites = [];
+    asteriod_sprites.push(
+        loadImage("../art/pixel_asteriod_sprite.png", img => {
+            img.resize(100, 100);
+        })
+    );
+    asteriod_sprites.push(
+        loadImage("../art/pixel_asteriod_sprite_2.png", img => {
+            img.resize(100, 100);
+        })
+    );
+
     hammerImage = loadImage("../art/hammer.png", img => {
         console.log("hammer loaded");
     });
@@ -1501,6 +1529,7 @@ function update() {
       key === 'enemies'                ? levelObjects.enemies :
       key === 'teleporter'             ? levelObjects.teleporter :
       key === 'lasers'                 ? levelObjects.laserBlasters :
+      key === 'asteriods'              ? levelObjects.asteriodFields :
       key === 'disappearingPlatforms'  ? levelObjects.disappearingPlatforms :
       key === 'swingingHammers'        ? levelObjects.swingingHammers :
       null;
@@ -1595,6 +1624,11 @@ function update() {
     levelObjects.laserBlasters?.forEach(laser => {
         laser.update();
     });
+
+    levelObjects.asteriodFields?.forEach(field => {
+        field.update();
+    });
+    
    // Disappearing Platform handler
     levelObjects.disappearingPlatforms?.forEach(platform => {
         // Check if ball is touching platform
