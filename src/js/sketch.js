@@ -111,17 +111,26 @@ function initializeLevels() {
         {
             name: "Tutorial",
 			      theme: "space", 
-            respawnPosition: [500, 150],
+            
+                  respawnPosition: [500, 150],
             ballColor: 'red',
+
+            goalPosition: { x: 5000, y: 50 },
+
             platforms: [
                 { x: 600, y: 250, w: 120, h: 20, color: 'orange', moving: true, speed: 2, minX: 200, maxX: 1000 },
-                { x: 850, y: 200, w: 120, h: 20, color: 'orange', fake: 'true'}
-                
+                { x: 850, y: 200, w: 120, h: 20, color: 'orange', moving: false, fake: 'true'} // acting oddly
             ],
+            disappearingPlatforms: [
+                { x: 1080, y: 0, w: 120, h: 20 },
+            ],
+
             ground: [
                 { x: 500, y: 350, w: 800, h: 40 },
-                
-
+                { x: 2000, y: 100, w: 1000, h: 40 },
+                { x: 1800, y: 250, w: 400, h: 40 },
+                { x: 3200, y: 100, w: 1000, h: 40 },
+                { x: 4400, y: 100, w: 1000, h: 40 },
             ],
             springs: [
                 { x: 1100, y: 350, w: 200, h: 40 }
@@ -130,28 +139,26 @@ function initializeLevels() {
                 { x: 800, y: 306, orientation: "up" }
             ],
             checkpoints: [
-                { x: 200, y: 305 }
+                { x: 1800, y: 50 }
             ],
+
             enemies: [
-                { startX: 450, startY: 100, endX: 475, endY: 100, speed: 1 }
+                { startX: 2100, startY: 50, endX: 2200, endY: 50, speed: 1 }
             ],
             
             lasers: [
-                { x: 100, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
-                { x: 600, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
+                { x: 200, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
+                { x: 1500, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
             ],
 
             asteriodFields: [
-                { x: 500, y: -100, range: 400, fallSpeed: 2, burstCount: 4, timeInterval: 3 }
+                { x: 4000, y: -600, range: 400, fallSpeed: 4, burstCount: 4, timeInterval: 3 }
             ],
 
-            disappearingPlatforms: [
-                { x: 1080, y: 100, w: 120, h: 20 },
-            ],
             swingingHammers: [
                 {
-                    pivotX: 700,
-                    pivotY: -200,
+                    pivotX: 2800,
+                    pivotY: -400,
                     length: 200,
                     amplitude: 50,
                     speed: 2,
@@ -164,14 +171,14 @@ function initializeLevels() {
             ],
             teleporter: [
                 { x: 150, y: 300, w: 60, h: 60 },
-                { x: 1000, y: 300, w: 60, h: 60 },
+                { x: 1800, y: 200, w: 60, h: 60 },
             ],
               
             blackhole: [
-              { x: 350, y: 200, w: 120, h: 120 },
+              { x: 2200, y: 250, w: 120, h: 120 },
+              { x: 2600, y: 250, w: 120, h: 120 },
             ],
-
-            goalPosition: { x: 1200, y: 300 }, 
+ 
             instructions: "Use SPACE to jump and arrow keys to move!"
         },
 
