@@ -38,7 +38,7 @@ class Laser {
                 if (this.sprite.overlapping(this.player)) {
                     // console.log("HIT PLAYER");
                     this.disable_bullet();
-                    explodeAndRespawn();
+                    respawn();
                     return;
                 }
 
