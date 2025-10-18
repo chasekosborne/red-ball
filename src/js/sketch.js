@@ -36,6 +36,8 @@ let beginTime = millis();
 let pauseOverlayEl;
 let blackhole;
 let blackholeImage;
+let difficulty = 'normal';
+let lives = Infinity;
 
 // === Background themes ===
 const BG_SKY   = "sky";
@@ -107,7 +109,7 @@ const CLOUDS = [
 function initializeLevels() {
     levels = [
         {
-            name: "Tutorial",
+            name: "Dev Room",
 			      theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'red',
@@ -117,25 +119,25 @@ function initializeLevels() {
                 
             ],
             ground: [
-                { x: 500, y: 350, w: 800, h: 40 },
+                { x: 500, y: 350, w: 2300, h: 40 },
                 
 
             ],
             springs: [
-                { x: 1100, y: 350, w: 200, h: 40 }
+                { x: 1800, y: 350, w: 200, h: 40 }
             ],
             spikes: [
-                { x: 800, y: 306, orientation: "up" }
+                { x: 1600, y: 306, orientation: "up" }
             ],
             checkpoints: [
-                { x: 200, y: 305 }
+                { x: 100, y: 305 }
             ],
             enemies: [
                 { startX: 450, startY: 100, endX: 475, endY: 100, speed: 1 }
             ],
             
             lasers: [
-                { x: 100, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
+                { x: -500, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
                 { x: 600, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
             ],
             disappearingPlatforms: [
@@ -156,15 +158,15 @@ function initializeLevels() {
                 }
             ],
             teleporter: [
-                { x: 150, y: 300, w: 60, h: 60 },
-                { x: 1000, y: 300, w: 60, h: 60 },
+                { x: -200, y: 300, w: 60, h: 60 },
+                { x: 1200, y: 300, w: 60, h: 60 },
             ],
               
             blackhole: [
-              { x: 350, y: 200, w: 120, h: 120 },
+                { x: 350, y: 200, w: 120, h: 120 },
             ],
 
-            goalPosition: { x: 1200, y: 300 }, 
+            goalPosition: { x: 1900, y: 300 }, 
             instructions: "Use SPACE to jump and arrow keys to move!"
         },
 
@@ -273,8 +275,10 @@ function initializeLevels() {
             ],
 
             checkpoints: [
-                { x: 2960, y: -1045}
+                { x: 700, y: 350 },
+                { x: 2960, y: -1045 }
             ],
+            
 		   	    teleporter: [],  
 
             goalPosition: { x: 5400, y: -1050 }, 
@@ -371,6 +375,7 @@ function explodeAndRespawn() {
   ball.y = halfHeight - 200;
   respawnTimer = 40;
 }
+
 function updateParticles() {
   for (let i = particles.length - 1; i >= 0; i--) {
     let p = particles[i];
@@ -396,8 +401,15 @@ function updateCheckpoints() {
 
 function respawn() {
     if (respawnTimer === 0) {
-        explodeAndRespawn();
-		deathSound.play();
+      if (difficulty === 'hard') {
+        lives--;
+        if (lives <= 0) {
+          loadLevel(currentLevel);
+          return;
+        }
+      }
+      explodeAndRespawn();
+      deathSound.play();
     }
 }
 
@@ -407,6 +419,13 @@ function loadLevel(levelIndex) {
   currentLevel = levelIndex;
   const level = levels[currentLevel];
 	currentBgTheme = levels[currentLevel].theme || BG_SKY;
+  
+  difficulty = window.difficulty || 'normal';
+  if (difficulty == 'hard') {
+    lives = 3;
+  } else {
+    lives = Infinity;
+  }
   
   // set the player reset spawn point based on the level on level-load
   respawnPosition[0] = level.respawnPosition[0];
@@ -622,8 +641,15 @@ function drawUI() {
 
     rectMode(CORNER);
     
+    let textColor;
+    if (levels[currentLevel].theme == 'space') {
+      textColor = 'white';
+    } else {
+      textColor = 'black';
+    }
+    
     // Name of level
-    fill(0);
+    fill(textColor);
     textAlign(LEFT, TOP);
     textSize(24);
     text(`Level: ${levels[currentLevel].name}`, 20, 20);
@@ -640,8 +666,13 @@ function drawUI() {
         textSize(12);
         text('Pause (P)', pauseButtonBounds.x + pauseButtonBounds.w/2, pauseButtonBounds.y + pauseButtonBounds.h/2);
     }
-  
 
+    if(difficulty == 'hard') {
+      fill(textColor);
+      textSize(24);
+      noStroke();
+      text(`Lives: ${lives}`, 61, 60)
+    }
 
 
 
@@ -753,7 +784,7 @@ function blackholeAttraction() {
             ball.vel.x += forceOnX; //applies force to ball velocity
             ball.vel.y += forceOnY
           if (distanceBlackhole < 60) {  
-            explodeAndRespawn();  //if ball is too close to blackhole, it explodes
+            respawn();  //if ball is too close to blackhole, it explodes
             deathSound.play();
           }
         }
