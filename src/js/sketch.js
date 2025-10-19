@@ -29,6 +29,7 @@ let spring;
 let pauseKey = false;
 let pausePosition = [0, 0];
 let gameState = "playing"; // start in menu
+let presspause = false;
 let teleporter;
 let teleporterImage;
 let teleporterActive = true;   
@@ -1103,7 +1104,7 @@ function mousePressed() {
     // On-screen Pause button
     if (mouseX >= pauseButtonBounds.x && mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
         mouseY >= pauseButtonBounds.y && mouseY <= pauseButtonBounds.y + pauseButtonBounds.h) {
-      pauseKey = true;
+      presspause = true;
       return false;
     }
   }
@@ -1487,10 +1488,11 @@ function update() {
     }
   }
 
-  if (kb.pressed('P')) {
+  if (kb.pressed('P')|| presspause) {
     pauseKey = !pauseKey;
     if (pauseKey) { if (typeof showPauseOverlay === 'function') showPauseOverlay(); }
     else          { if (typeof hidePauseOverlay === 'function') hidePauseOverlay(); }
+    presspause = false;
   }
 
   // restart level ONLY when not editing and not paused
