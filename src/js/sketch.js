@@ -275,11 +275,10 @@ function initializeLevels() {
             ],
 
             checkpoints: [
-                { x: 700, y: 350 },
                 { x: 2960, y: -1045 }
             ],
             
-		   	    enemies: [],
+		   	enemies: [],
 
             lasers: [],
 
@@ -298,7 +297,7 @@ function initializeLevels() {
 
         {
             name: "Level 2",
-			      theme: "space", 
+			theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'red',
             platforms: [],
