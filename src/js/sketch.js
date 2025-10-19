@@ -38,6 +38,7 @@ let blackhole;
 let blackholeImage;
 let difficulty = 'normal';
 let lives = Infinity;
+let globalVolume = 0.5;
 
 // === Background themes ===
 const BG_SKY   = "sky";
@@ -419,7 +420,12 @@ function respawn() {
         }
       }
       explodeAndRespawn();
-      deathSound.play();
+
+      if(deathSound.isLoaded()) {
+        deathSound.setVolume(globalVolume);
+        deathSound.play();
+      }
+      
     }
 }
 
@@ -763,7 +769,11 @@ function teleportation() {
                 if (teleporter === levelObjects.teleporter[0]) {
                     ball.x = levelObjects.teleporter[1].x;  //changes ball position to other teleporter
                     ball.y = levelObjects.teleporter[1].y;
-                    if(teleportSound) teleportSound.play(); 
+                    if(teleportSound && teleportSound.isLoaded()) {
+                      teleportSound.setVolume(globalVolume);
+                      teleportSound.play(); 
+                    } 
+
                     teleporterActive = false;     //deactivates teleporter temporarily
                     beginTime = millis();         //logs the milliseconds when teleportation occured
                 } else if (teleporter === levelObjects.teleporter[1] && teleporterActive == true) {
@@ -1180,7 +1190,7 @@ function preload() {
     jumpSound = loadSound('../audio/jump.mp3');
     springSound = loadSound('../audio/spring.mp3');
 	deathSound = loadSound('../audio/dead.mp3');
-    teleportSound = loadSound('../audio/whoosh.mp3')
+    teleportSound = loadSound('../audio/whoosh.mp3');
 
     unclaimedFlagImage = loadImage("../art/unclaimed_checkpoint.png", img => {
         
@@ -1360,9 +1370,10 @@ function buildPauseOverlay() {
     if (pauseOverlayEl) pauseOverlayEl.style.display = 'none';
 }
 
-  
-
 function setup() {
+    createCanvas(windowWidth, windowHeight);
+
+    // jumpSound.loop();
     // makes the pixels not blurry
     noSmooth();
 
@@ -1725,7 +1736,10 @@ function update() {
     levelObjects.springs?.forEach(spring => {
         if (ball.colliding(spring)) {
             ball.vel.y = -15;
-            if (springSound) springSound.play();
+            if (springSound && springSound.isLoaded()) {
+              springSound.setVolume(globalVolume);
+              springSound.play();
+            } 
         }
     });
 
@@ -1745,7 +1759,11 @@ function update() {
             // when grounded we can assume vel.y is 0
             // we can just increment the vel.y by the jump-strength
             ball.vel.y += -7;
-            if (jumpSound) jumpSound.play();
+            if (jumpSound && jumpSound.isLoaded()) {
+              jumpSound.setVolume(globalVolume);
+              jumpSound.play();
+            }
+              
             jumpCount++;
         }
     }

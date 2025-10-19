@@ -225,10 +225,7 @@
       difficulty = window.difficulty;
     }
 
-    function masterVolume(vol) {
-      allSounds.forEach(s => s.setVolume(vol));
-    }
-
+    //Sounds
     function openOptions() {
       document.getElementById("options-menu").style.display = "block";
 
@@ -238,10 +235,8 @@
       volumeValue.innerText = Math.round(volumeSlider.value * 100) + "%";
 
       volumeSlider.oninput = function () {
-        volumeValue.innerText = Math.round(this.value *  100) + "%";
-        if(typeof masterVolume === "function") {
-          masterVolume(value);
-        }
+        globalVolume = parseFloat(this.value);
+        volumeValue.innerText = Math.round(globalVolume *  100) + "%";
       };
     }
 
