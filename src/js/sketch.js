@@ -15,6 +15,7 @@ let ball;
 let respawnPosition = [500, 150];
 let jumpSound;
 let deathSound;
+let ballSkinImage;
 let teleportSound;
 let spikes;
 let platform;
@@ -33,8 +34,10 @@ let teleporterImage;
 let teleporterActive = true;   
 let beginTime = millis();
 let pauseOverlayEl;
-//let blackhole;
-//let blackholeImage;
+let blackhole;
+let blackholeImage;
+let difficulty = 'normal';
+let lives = Infinity;
 
 // === Background themes ===
 const BG_SKY   = "sky";
@@ -106,7 +109,7 @@ const CLOUDS = [
 function initializeLevels() {
     levels = [
         {
-            name: "Tutorial",
+            name: "Dev Room",
 			      theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'red',
@@ -116,28 +119,25 @@ function initializeLevels() {
                 
             ],
             ground: [
-                { x: 500, y: 350, w: 800, h: 40 },
+                { x: 500, y: 350, w: 2300, h: 40 },
                 
 
             ],
             springs: [
-                { x: 1100, y: 350, w: 200, h: 40 }
+                { x: 1800, y: 350, w: 200, h: 40 }
             ],
             spikes: [
-                { x: 800, y: 306, orientation: "up" }
+                { x: 1600, y: 306, orientation: "up" }
             ],
             checkpoints: [
-                { x: 200, y: 305 }
+                { x: 100, y: 305 }
             ],
             enemies: [
                 { startX: 450, startY: 100, endX: 475, endY: 100, speed: 1 }
             ],
-            teleporter: [
-                { x: 1080, y: 300, w: 50, h: 50 },
-                { x: 420, y: 300, w: 50, h: 50 },
-            ],
+            
             lasers: [
-                { x: 100, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
+                { x: -500, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
                 { x: 600, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
             ],
             disappearingPlatforms: [
@@ -157,7 +157,16 @@ function initializeLevels() {
                     scale: 0.3
                 }
             ],
-            goalPosition: { x: 1200, y: 300 }, 
+            teleporter: [
+                { x: -200, y: 300, w: 60, h: 60 },
+                { x: 1200, y: 300, w: 60, h: 60 },
+            ],
+              
+            blackhole: [
+                { x: 350, y: 200, w: 120, h: 120 },
+            ],
+
+            goalPosition: { x: 1900, y: 300 }, 
             instructions: "Use SPACE to jump and arrow keys to move!"
         },
 
@@ -266,7 +275,8 @@ function initializeLevels() {
             ],
 
             checkpoints: [
-                { x: 2960, y: -1045}
+                { x: 700, y: 350 },
+                { x: 2960, y: -1045 }
             ],
             
 		   	    enemies: [],
@@ -376,6 +386,7 @@ function explodeAndRespawn() {
   ball.y = halfHeight - 200;
   respawnTimer = 40;
 }
+
 function updateParticles() {
   for (let i = particles.length - 1; i >= 0; i--) {
     let p = particles[i];
@@ -401,8 +412,15 @@ function updateCheckpoints() {
 
 function respawn() {
     if (respawnTimer === 0) {
-        explodeAndRespawn();
-		deathSound.play();
+      if (difficulty === 'hard') {
+        lives--;
+        if (lives <= 0) {
+          loadLevel(currentLevel);
+          return;
+        }
+      }
+      explodeAndRespawn();
+      deathSound.play();
     }
 }
 
@@ -412,6 +430,13 @@ function loadLevel(levelIndex) {
   currentLevel = levelIndex;
   const level = levels[currentLevel];
 	currentBgTheme = levels[currentLevel].theme || BG_SKY;
+  
+  difficulty = window.difficulty || 'normal';
+  if (difficulty == 'hard') {
+    lives = 3;
+  } else {
+    lives = Infinity;
+  }
   
   // set the player reset spawn point based on the level on level-load
   respawnPosition[0] = level.respawnPosition[0];
@@ -514,15 +539,14 @@ function loadLevel(levelIndex) {
     levelObjects.laserBlasters.push(laserBlaster);
   }
 
-  /*
   levelObjects.blackhole = [];
-  for (let blackholeData of level.blackhole) {
-      let blackhole = new Sprite(blackholeData.x, blackholeData.y, blackholeData.w, blackholeData.h);
-      blackhole.physics = STATIC;
-      blackhole.collider = "none";
-      levelObjects.blackhole.push(blackhole);
+    for (let blackholeData of level.blackhole) {
+        let blackhole = new Sprite(blackholeData.x, blackholeData.y, blackholeData.w, blackholeData.h);
+       blackhole.physics = STATIC;
+        blackhole.collider = "none";
+        blackhole.img = blackholeImage; 
+        levelObjects.blackhole.push(blackhole);
     }
-  */
 
   // Creation of checkpoints
   levelObjects.checkpoints = [];
@@ -628,8 +652,15 @@ function drawUI() {
 
     rectMode(CORNER);
     
+    let textColor;
+    if (levels[currentLevel].theme == 'space') {
+      textColor = 'white';
+    } else {
+      textColor = 'black';
+    }
+    
     // Name of level
-    fill(0);
+    fill(textColor);
     textAlign(LEFT, TOP);
     textSize(24);
     text(`Level: ${levels[currentLevel].name}`, 20, 20);
@@ -646,8 +677,13 @@ function drawUI() {
         textSize(12);
         text('Pause (P)', pauseButtonBounds.x + pauseButtonBounds.w/2, pauseButtonBounds.y + pauseButtonBounds.h/2);
     }
-  
 
+    if(difficulty == 'hard') {
+      fill(textColor);
+      textSize(24);
+      noStroke();
+      text(`Lives: ${lives}`, 61, 60)
+    }
 
 
 
@@ -746,6 +782,27 @@ function teleportation() {
 
     }); 
 }
+
+function blackholeAttraction() {
+    levelObjects.blackhole?.forEach(blackhole => {   //for each blackhole 
+        let distanceBlackhole = dist(ball.x, ball.y, blackhole.x, blackhole.y);
+        let attractionField = 150;
+        if (distanceBlackhole < attractionField) {   
+            let distanceBetweenX = blackhole.x - ball.x;   //calculates distance between redball and blackhole
+            let distanceBetweenY = blackhole.y - ball.y;   
+            forceOnY = (1.2 * distanceBetweenY)/100; //calculates force on ball based on distance between redball and blackhole. Uses a constant and divisor to adjust force strength
+            forceOnX = (1.2 * distanceBetweenX)/100;   
+            ball.vel.x += forceOnX; //applies force to ball velocity
+            ball.vel.y += forceOnY
+          if (distanceBlackhole < 60) {  
+            respawn();  //if ball is too close to blackhole, it explodes
+            deathSound.play();
+          }
+        }
+        
+    }); 
+} 
+
 
 // ============ Space Background =================
 // SPACE: build once (or when canvas size changes)
@@ -1150,7 +1207,17 @@ function preload() {
     hammerImage = loadImage("../art/hammer.png", img => {
         console.log("hammer loaded");
     });
+
+    blackholeImage = loadImage("../art/blackhole.png", img => {
+        img.resize(300, 200);
+    });
+   
+    
+    ballSkinImage = loadImage("../art/donut.png", img => {
+        img.resize(150, 150);
+    });
 }
+
 
 
 
@@ -1260,7 +1327,29 @@ function buildPauseOverlay() {
     colorBtn.onmouseleave = () => colorBtn.style.background = 'rgba(255,100,100,0.4)';
     colorBtn.onclick = () => { randomColor(); };
     controls.appendChild(colorBtn);
-  
+
+    //Quit Game Button
+    const quitBtn = document.createElement('button');
+    quitBtn.textContent = 'Quit Game';
+    quitBtn.style.cssText = `
+      padding: 14px 24px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,100,100,0.8);
+      background: rgba(255,100,100,0.4);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      `;
+      quitBtn.onmouseenter = () => quitBtn.style.background = 'rgba(255,100,100,0.6)';
+      quitBtn.onmouseleave = () => quitBtn.style.background = 'rgba(255,100,100,0.4)';
+      quitBtn.onclick = () => {
+        pauseKey = false;
+        hidePauseOverlay();
+        document.getElementById('menu').style.display = 'flex';
+        isMenuOpen = true;
+      };
+      controls.appendChild(quitBtn);
     document.body.appendChild(pauseOverlayEl);
   }
   
@@ -1285,9 +1374,9 @@ function setup() {
     ball = new Sprite();
     ball.drag = 0.4;
     ball.textSize = 40;
-    ball.text = ":)";
+    //ball.text = ":)";
     ball.diameter = 50;
-    
+    ball.img = ballSkinImage;
     // Load da dev room 
     loadLevel(0);
 
@@ -1296,6 +1385,17 @@ function setup() {
     noiseSeed(spaceSeed);
     buildBgStarfield();
     buildPauseOverlay();
+
+  const picker = document.getElementById('colorPicker');
+  picker.addEventListener('input', () => {
+  const chosenColor = picker.value;
+    if (ball) {
+      ball.color = chosenColor;
+      levels[currentLevel].ballColor = chosenColor;
+    }
+  });
+
+
 }
 
 function pauseMenu() {
@@ -1703,6 +1803,8 @@ function update() {
     levelObjects.checkpoints?.forEach(checkpoint => {
         checkpoint.update();
     });
+
+    blackholeAttraction(); //blackhole attraction
 
     teleportation (); //teleporter check
 
