@@ -268,7 +268,18 @@ function initializeLevels() {
             checkpoints: [
                 { x: 2960, y: -1045}
             ],
-		   	    teleporter: [],  
+            
+		   	    enemies: [],
+
+            lasers: [],
+
+            disappearingPlatforms: [],
+
+            swingingHammers: [],
+
+            teleporter: [],
+
+            blackhole: [], 
 
             goalPosition: { x: 5400, y: -1050 }, 
 
@@ -277,20 +288,21 @@ function initializeLevels() {
 
         {
             name: "Level 2",
-		   	    theme: "space", 
+			      theme: "space", 
             respawnPosition: [500, 150],
-            ballColor: 'pink',
+            ballColor: 'red',
             platforms: [],
-            ground: [
-                { x: 500, y: 350, w: 800, h: 40 },
-            ],
+            ground: [{"x": 450,"y": 390,"w": 580,"h": 20}],
             springs: [],
             spikes: [],
-            checkpoints: [
-                { x: 2960, y: -1045}
-            ],
-		   	    teleporter: [],  
-            goalPosition: { x: 5400, y: -1050 }, 
+            checkpoints: [{"x": 260, "y": 340 }],
+            enemies: [],
+            lasers: [],
+            disappearingPlatforms: [],
+            swingingHammers: [],
+            teleporter: [],
+            blackhole: [],
+            goalPosition: { x: 1900, y: 300 }, 
             instructions: ""
         },
 
