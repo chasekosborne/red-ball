@@ -1223,8 +1223,8 @@ function preload() {
     });
    
     
-    ballSkinImage = loadImage("../art/donut.png", img => {
-        img.resize(150, 150);
+    ballSkinImage = loadImage("../art/8ball.png", img => {
+        img.resize(125, 125);
     });
 }
 
