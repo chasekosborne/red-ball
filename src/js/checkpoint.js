@@ -14,6 +14,12 @@ class CheckPoint {
         // draw image on the sprite
         this.sprite.img = unclaimedFlagImage;
     }
+    dtor() {
+        console.log("Running checkpoint dtor");
+
+        if (this.sprite)
+            this.sprite.remove();
+    }
 
     // check if the player has collided into the checkpoint and change states
     update() {

@@ -110,9 +110,9 @@ function initializeLevels() {
     levels = [
         {
             name: "Tutorial",
-			      theme: "space", 
-            
-                  respawnPosition: [500, 150],
+            theme: "space", 
+    
+            respawnPosition: [500, 150],
             ballColor: 'red',
 
             goalPosition: { x: 5000, y: 50 },
@@ -184,7 +184,7 @@ function initializeLevels() {
 
        {
             name: "Level 1",
-		   	    theme: "sky", 
+            theme: "sky", 
             respawnPosition: [500, 150],
             ballColor: 'red',
             platforms: [
@@ -415,215 +415,229 @@ function respawn() {
     }
 }
 
-function loadLevel(levelIndex) {
-  clearLevel();
+async function loadLevel(levelIndex) {
+  await clearLevel();
   
   currentLevel = levelIndex;
   const level = levels[currentLevel];
-	currentBgTheme = levels[currentLevel].theme || BG_SKY;
-  
-  // set the player reset spawn point based on the level on level-load
-  respawnPosition[0] = level.respawnPosition[0];
-  respawnPosition[1] = level.respawnPosition[1];
-  
-  // This is to reset the ball
-  ball.x = respawnPosition[0];
-  ball.y = respawnPosition[1];
-  
-  ball.color = level.ballColor;
-  ball.vel.x = 0;
-  ball.vel.y = 0;
-  jumpCount = 0;
-  
-  // Handles ground creation
-  levelObjects.ground = [];
-  for (let groundData of level.ground) {
-    let ground = new Sprite(groundData.x, groundData.y, groundData.w, groundData.h);
-    ground.physics = STATIC;
-    ground.color = 'green';
-    levelObjects.ground.push(ground);
-  }
-  
-  // Creation of platforms
-  levelObjects.platforms = [];
-  for (let platformData of level.platforms) {
-    let platform = new Sprite(platformData.x, platformData.y, platformData.w, platformData.h);
-    if(platformData.fake == 'true'){
-      platform.physics = 'none';
-      platform.color = platformData.color || 'orange'
-      platform.stroke = 'black'
-      platform.strokeWeight = 2;
-    }
-    else {
-      platform.physics = KINEMATIC;
-      platform.color = platformData.color || 'orange'
-      platform.speed = platformData.speed || 0;
-      platform.direction = 1;
-      platform.minX = platformData.minX || platformData.x - 100;
-      platform.maxX = platformData.maxX || platformData.x + 100;
-      platform.moving = platformData.moving || false; 
-    }
-    levelObjects.platforms.push(platform);
-  }
-  
-  // Spring creator
-  levelObjects.springs = [];
-  for (let springData of level.springs) {
-    let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
-    spring.physics = STATIC;
-    spring.color = 'cyan';
-    levelObjects.springs.push(spring);
-  }
-  // Disappearing platforms creator
-  levelObjects.disappearingPlatforms = [];
-  for (let disappearData of (level.disappearingPlatforms || [])) {
-    let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
-    disappearPlatform.physics = STATIC;
-    disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
-    disappearPlatform.color = disappearPlatform.baseColor;
-    disappearPlatform.isDisappearing = false;
-    disappearPlatform.isReappearing = false;
-    disappearPlatform.fadeTimer = 0;
-    disappearPlatform.playerTouched = false;
-    disappearPlatform.opacity = 255;
-    levelObjects.disappearingPlatforms.push(disappearPlatform);
-  }
-
-  // Spike creator
-  levelObjects.spikes = [];
-  for (let spikeData of level.spikes) {
-    let spike = new Sprite(spikeData.x, spikeData.y, 50, 50);
-    spike.img = spikeImage;
-    spike.collider = 'static';
-    spike.physics = STATIC;
-    spike.rotationLock = true;
-    switch (spikeData.orientation || 'up') {
-      case 'up': spike.rotation = 0; break;
-      case 'down': spike.rotation = 180; break;
-      case 'left': spike.rotation = 90; break;
-      case 'right': spike.rotation = -90; break;
-    }
-    levelObjects.spikes.push(spike);
-  }
-
-  levelObjects.teleporter = [];
-  for (let teleporterData of level.teleporter) {
-    let teleporter = new Sprite(teleporterData.x, teleporterData.y, teleporterData.w, teleporterData.h);
-    teleporter.img = teleporterImage;
-    teleporter.physics = STATIC;
-    teleporter.collider = "none";
-    levelObjects.teleporter.push(teleporter);
-  }
-
-  levelObjects.laserBlasters = [];
-  for (let laser of level.lasers) {
-    let laserBlaster = new Laserbeam(laser.x, laser.y,
-                                    laser.range, laser.speedData,
-                                    laser.fwdDir, laserBlasterImage, ball);
-    levelObjects.laserBlasters.push(laserBlaster);
-  }
-
-  levelObjects.asteriodFields = [];
-  for (let field of level.asteriodFields) {
-    let asteriodField = new AsteriodField(field.x, field.y, field.range,
-                                        field.fallSpeed, field.burstCount,
-                                        field.timeInterval, ball);
-    levelObjects.asteriodFields.push(asteriodField);
-  }
-
-  levelObjects.blackhole = [];
-    for (let blackholeData of level.blackhole) {
+  if (level) {
+      currentBgTheme = level.theme || BG_SKY;
+      
+      // set the player reset spawn point based on the level on level-load
+      respawnPosition[0] = level.respawnPosition[0];
+      respawnPosition[1] = level.respawnPosition[1];
+      
+      // This is to reset the ball
+      ball.x = respawnPosition[0];
+      ball.y = respawnPosition[1];
+      
+      ball.color = level.ballColor;
+      ball.vel.x = 0;
+      ball.vel.y = 0;
+      jumpCount = 0;
+      
+      // Handles ground creation
+      levelObjects.ground = [];
+      for (let groundData of level.ground || []) {
+        let ground = new Sprite(groundData.x, groundData.y, groundData.w, groundData.h);
+        ground.physics = STATIC;
+        ground.color = 'green';
+        levelObjects.ground.push(ground);
+      }
+      
+      // Creation of platforms
+      levelObjects.platforms = [];
+      for (let platformData of level.platforms || []) {
+        let platform = new Sprite(platformData.x, platformData.y, platformData.w, platformData.h);
+        if(platformData.fake == 'true'){
+          platform.physics = 'none';
+          platform.color = platformData.color || 'orange'
+          platform.stroke = 'black'
+          platform.strokeWeight = 2;
+        }
+        else {
+          platform.physics = KINEMATIC;
+          platform.color = platformData.color || 'orange'
+          platform.speed = platformData.speed || 0;
+          platform.direction = 1;
+          platform.minX = platformData.minX || platformData.x - 100;
+          platform.maxX = platformData.maxX || platformData.x + 100;
+          platform.moving = platformData.moving || false; 
+        }
+        levelObjects.platforms.push(platform);
+      }
+      
+      // Spring creator
+      levelObjects.springs = [];
+      for (let springData of level.springs || []) {
+        let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
+        spring.physics = STATIC;
+        spring.color = 'cyan';
+        levelObjects.springs.push(spring);
+      }
+      // Disappearing platforms creator
+      levelObjects.disappearingPlatforms = [];
+      for (let disappearData of (level.disappearingPlatforms || [])) {
+        let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
+        disappearPlatform.physics = STATIC;
+        disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
+        disappearPlatform.color = disappearPlatform.baseColor;
+        disappearPlatform.isDisappearing = false;
+        disappearPlatform.isReappearing = false;
+        disappearPlatform.fadeTimer = 0;
+        disappearPlatform.playerTouched = false;
+        disappearPlatform.opacity = 255;
+        levelObjects.disappearingPlatforms.push(disappearPlatform);
+      }
+    
+      // Spike creator
+      levelObjects.spikes = [];
+      for (let spikeData of level.spikes || []) {
+        let spike = new Sprite(spikeData.x, spikeData.y, 50, 50);
+        spike.img = spikeImage;
+        spike.collider = 'static';
+        spike.physics = STATIC;
+        spike.rotationLock = true;
+        switch (spikeData.orientation || 'up') {
+          case 'up': spike.rotation = 0; break;
+          case 'down': spike.rotation = 180; break;
+          case 'left': spike.rotation = 90; break;
+          case 'right': spike.rotation = -90; break;
+        }
+        levelObjects.spikes.push(spike);
+      }
+    
+      levelObjects.teleporter = [];
+      for (let teleporterData of level.teleporter || []) {
+        let teleporter = new Sprite(teleporterData.x, teleporterData.y, teleporterData.w, teleporterData.h);
+        teleporter.img = teleporterImage;
+        teleporter.physics = STATIC;
+        teleporter.collider = "none";
+        levelObjects.teleporter.push(teleporter);
+      }
+    
+      levelObjects.laserBlasters = [];
+      for (let laser of level.lasers || []) {
+        let laserBlaster = new Laserbeam(laser.x, laser.y,
+                                        laser.range, laser.speedData,
+                                        laser.fwdDir, laserBlasterImage, ball);
+        levelObjects.laserBlasters.push(laserBlaster);
+      }
+    
+      levelObjects.asteriodFields = [];
+      for (let field of level.asteriodFields || []) {
+        let asteriodField = new AsteriodField(field.x, field.y, field.range,
+                                            field.fallSpeed, field.burstCount,
+                                            field.timeInterval, ball);
+        levelObjects.asteriodFields.push(asteriodField);
+      }
+    
+      levelObjects.blackhole = [];
+      for (let blackholeData of level.blackhole || []) {
         let blackhole = new Sprite(blackholeData.x, blackholeData.y, blackholeData.w, blackholeData.h);
-       blackhole.physics = STATIC;
+        blackhole.physics = STATIC;
         blackhole.collider = "none";
         blackhole.img = blackholeImage; 
         levelObjects.blackhole.push(blackhole);
-    }
-
-  // Creation of checkpoints
-  levelObjects.checkpoints = [];
-  for (let checkpointData of level.checkpoints) {
-    let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
-    levelObjects.checkpoints.push(checkpoint);
-  }
-
-  //Creation of enemies
-  levelObjects.enemies = [];
-  for (let enemyData of level.enemies || []) {
-    let enemy = new Sprite(enemyData.startX, enemyData.startY, 50);
-    enemy.color = 'gray';
-    enemy.collider = 'kinematic';
-    enemy.posA = { x: enemyData.startX, y: enemyData.startY };
-    enemy.posB = { x: enemyData.endX, y: enemyData.endY };
-    enemy.goingToB = true;
-    let dx = enemy.posB.x - enemy.posA.x;
-    let dy = enemy.posB.y - enemy.posA.y;
-    let distAB = sqrt(dx * dx + dy * dy);
-    if (distAB > 0) {
-      enemy.vel.x = (dx / distAB) * (enemyData.speed || 2);
-      enemy.vel.y = (dy / distAB) * (enemyData.speed || 2);
-    }
-    else {
-      enemy.vel.x = 0;
-      enemy.vel.y = 0;
-    }
-    levelObjects.enemies.push(enemy);
-  }
-
-  //Creation of swinging hammer
-  levelObjects.swingingHammers = [];
-  for (let hammerData of level.swingingHammers || []) {
-    let hammer = new Sprite(hammerData.pivotX, hammerData.pivotY + hammerData.length, hammerData.width * hammerData.scale, hammerData.height * hammerData.scale);
-    hammer.img = hammerImage;
-    hammer.collider = 'none';
-    hammer.rotationLock = false;
-    let spikeHeight = typeof hammerData.spikeHeight == 'number' ? hammerData.spikeHeight * hammerData.scale : hammerData.height * hammerData.scale * (hammerData.spikeHeight || 0.33);
-    let spikeHitbox = new Sprite (hammerData.pivotX, hammerData.pivotY + hammerData.length + spikeHeight / 2, hammerData.width * hammerData.scale, spikeHeight);
-    spikeHitbox.collider = 'kinematic'
-    spikeHitbox.rotationLock = false;
-    spikeHitbox.visible = false;
-    levelObjects.spikes.push(spikeHitbox);
-    levelObjects.swingingHammers.push({
-        pivotX: hammerData.pivotX,
-        pivotY: hammerData.pivotY,
-        length: hammerData.length,
-        amplitude: hammerData.amplitude,
-        speed: hammerData.speed,
-        currentAngle: hammerData.phase,
-        direction: 1,
-        sprite: hammer,
-        spikeHitbox: spikeHitbox,
-        width: hammerData.width,
-        height: hammerData.height,
-        spikeHeight: spikeHeight,
-        scale: hammerData.scale
-    });
+      }
+    
+      // Creation of checkpoints
+      levelObjects.checkpoints = [];
+      for (let checkpointData of level.checkpoints || []) {
+        let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
+        levelObjects.checkpoints.push(checkpoint);
+      }
+    
+      //Creation of enemies
+      levelObjects.enemies = [];
+      for (let enemyData of level.enemies || []) {
+        let enemy = new Sprite(enemyData.startX, enemyData.startY, 50);
+        enemy.color = 'gray';
+        enemy.collider = 'kinematic';
+        enemy.posA = { x: enemyData.startX, y: enemyData.startY };
+        enemy.posB = { x: enemyData.endX, y: enemyData.endY };
+        enemy.goingToB = true;
+        let dx = enemy.posB.x - enemy.posA.x;
+        let dy = enemy.posB.y - enemy.posA.y;
+        let distAB = sqrt(dx * dx + dy * dy);
+        if (distAB > 0) {
+          enemy.vel.x = (dx / distAB) * (enemyData.speed || 2);
+          enemy.vel.y = (dy / distAB) * (enemyData.speed || 2);
+        }
+        else {
+          enemy.vel.x = 0;
+          enemy.vel.y = 0;
+        }
+        levelObjects.enemies.push(enemy);
+      }
+    
+      //Creation of swinging hammer
+      levelObjects.swingingHammers = [];
+      for (let hammerData of level.swingingHammers || []) {
+        let hammer = new Sprite(hammerData.pivotX, hammerData.pivotY + hammerData.length, hammerData.width * hammerData.scale, hammerData.height * hammerData.scale);
+        hammer.img = hammerImage;
+        hammer.collider = 'none';
+        hammer.rotationLock = false;
+        let spikeHeight = typeof hammerData.spikeHeight == 'number' ? hammerData.spikeHeight * hammerData.scale : hammerData.height * hammerData.scale * (hammerData.spikeHeight || 0.33);
+        let spikeHitbox = new Sprite (hammerData.pivotX, hammerData.pivotY + hammerData.length + spikeHeight / 2, hammerData.width * hammerData.scale, spikeHeight);
+        spikeHitbox.collider = 'kinematic'
+        spikeHitbox.rotationLock = false;
+        spikeHitbox.visible = false;
+        levelObjects.spikes.push(spikeHitbox);
+        levelObjects.swingingHammers.push({
+            pivotX: hammerData.pivotX,
+            pivotY: hammerData.pivotY,
+            length: hammerData.length,
+            amplitude: hammerData.amplitude,
+            speed: hammerData.speed,
+            currentAngle: hammerData.phase,
+            direction: 1,
+            sprite: hammer,
+            spikeHitbox: spikeHitbox,
+            width: hammerData.width,
+            height: hammerData.height,
+            spikeHeight: spikeHeight,
+            scale: hammerData.scale
+        });
+      }
   }
 }
 
-function clearLevel() {
+async function clearLevel() {
     Object.values(levelObjects).forEach(objectArray => {
-
         if (Array.isArray(objectArray)) {
-
             objectArray.forEach(obj => {
-                if (obj.sprite) obj.sprite.remove();
 
+                // Check for non-sprite objects and run their
+                // cleanup method
+                if (obj instanceof CheckPoint) {
+                    obj.dtor();
+                } else if (obj instanceof Laserbeam) {
+                    obj.dtor();
+                } else if (obj instanceof AsteriodField) {
+                    obj.dtor();
+                } else {
+                    // normal sprite cleanup handling
+                    if (obj.sprite) {
+                        obj.sprite.remove();
+                    } else if (obj.remove) {
+                        obj.remove();
+                    }
+                }
 
-                else if (obj.remove) obj.remove();
             });
         }
     });
+
     levelObjects = {};
+    await new Promise(resolve => setTimeout(resolve, 1));
 }
 
 function nextLevel() {
-
     if (currentLevel < levels.length - 1) {
-
+        console.log("Moving to next Level");
         loadLevel(currentLevel + 1);
     } else {
-       
         console.log("YOU WINNN!!!!!!!!!!!! WOWW!!!!!");
     }
 }
@@ -995,18 +1009,21 @@ function mousePressed() {
       (levels[currentLevel].spikes ||= []).push({
         x: p.x, y: p.y, orientation: editor.spikeDir
       });
+      
       loadLevel(currentLevel);
       return false;
     }
 
     if (editor.tool === 'checkpoint') {
       (levels[currentLevel].checkpoints ||= []).push({ x: p.x, y: p.y });
+      
       loadLevel(currentLevel);
       return false;
     }
 
     if (editor.tool === 'goal') {
       levels[currentLevel].goalPosition = { x: p.x, y: p.y };
+      
       loadLevel(currentLevel);
       return false;
     }
@@ -1024,6 +1041,7 @@ function mousePressed() {
           speed: 1
         });
         editor.staging = null;
+        
         loadLevel(currentLevel);
       }
       return false;
@@ -1037,6 +1055,7 @@ function mousePressed() {
         speedData: { speed: 3, bulletSpeed: 8 },
         fwdDir: editor.laserDir.toUpperCase()   // UP/DOWN/LEFT/RIGHT
       });
+      
       loadLevel(currentLevel);
       return false;
     }
@@ -1054,6 +1073,7 @@ function mousePressed() {
         spikeHeight: 200,
         scale: 0.3
       });
+      
       loadLevel(currentLevel);
       return false;
     }
@@ -1143,7 +1163,9 @@ function mouseReleased() {
   editor.dragStart = null;
 
   // Rebuild sprites
-  if (placed) loadLevel(currentLevel);
+  if (placed) {
+    loadLevel(currentLevel);
+  }
 }
 
 // Mouse for Level
@@ -1354,9 +1376,17 @@ function buildPauseOverlay() {
     if (pauseOverlayEl) pauseOverlayEl.style.display = 'none';
 }
 
-  
+// performs an aggressive cleaning of the canvas
+function forceClean() {
+    // clear drawing space
+    clear();
+    // remove all sprites from the scene
+    allSprites.remove();
+}
 
-function setup() {
+async function setup() {
+    forceClean();
+
     // makes the pixels not blurry
     noSmooth();
 
@@ -1370,12 +1400,11 @@ function setup() {
     //ball.text = ":)";
     ball.diameter = 50;
     ball.img = ballSkinImage;
-    // Load da dev room 
-    loadLevel(0);
 
 	// Space background init
     randomSeed(spaceSeed);
     noiseSeed(spaceSeed);
+
     buildBgStarfield();
     buildPauseOverlay();
 
@@ -1477,7 +1506,9 @@ function update() {
   }
 
   // restart level ONLY when not editing and not paused
-  if (!editor.enabled && !pauseKey && kb.pressed('r')) loadLevel(currentLevel);
+  if (!editor.enabled && !pauseKey && kb.pressed('r')) {
+    loadLevel(currentLevel);
+  }
 
   // --- editor hotkeys: tool switching + rotate + delete + save ---
   // cycle tools: 1 = previous, 2 = next
@@ -1573,7 +1604,7 @@ function update() {
     else {
       const txt = JSON.stringify(levels[currentLevel], null, 2);
       navigator.clipboard?.writeText(txt);
-      console.log('Level JSON copied to clipboard');
+      alert('Level JSON copied to clipboard');
     }
   }
 

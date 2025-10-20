@@ -41,6 +41,16 @@ class Asteriod {
         const i = Math.floor(Math.random() * (asteriod_sprites.length - 1));
         this.sprite.img = asteriod_sprites[i];
     }
+    dtor() {
+        console.log("Running asteriod_field dtor");
+
+        if (this.sprite)
+            this.sprite.remove();
+
+        for (let i = 0; i > this.particles.length; ++i) {
+            this.particles.pop();
+        }
+    }
 
     updateParticles() {
         for (let i = this.particles.length - 1; i >= 0; i--) {
@@ -143,6 +153,13 @@ class AsteriodField {
         this.y = y;
 
         this.asteriods = [];
+    }
+    dtor() {
+        // destroy asteriods
+        for (let i = 0; i > this.asteriods.length; ++i) {
+            let asteriod = this.asteriods.pop();
+            if (asteriod) asteriod.dtor();
+        }
     }
 
     updateAsteriods() {
