@@ -364,6 +364,8 @@ function drawCloud(x, y, s = 1) {
 }
 
 function explodeAndRespawn() {
+  if (!ball) return;
+
   for (let i = 0; i < 12; i++) {
     particles.push({
       x: ball.x,
@@ -420,6 +422,9 @@ async function loadLevel(levelIndex) {
   
   currentLevel = levelIndex;
   const level = levels[currentLevel];
+
+  console.log(`Current Level = ${currentLevel} | levels.length -> ${levels.length}`);
+
   if (level) {
       currentBgTheme = level.theme || BG_SKY;
       
@@ -428,12 +433,22 @@ async function loadLevel(levelIndex) {
       respawnPosition[1] = level.respawnPosition[1];
       
       // This is to reset the ball
-      ball.x = respawnPosition[0];
-      ball.y = respawnPosition[1];
-      
-      ball.color = level.ballColor;
-      ball.vel.x = 0;
-      ball.vel.y = 0;
+      if (!ball) {
+          // Creation of out fun little ball
+          ball = new Sprite();
+          ball.drag = 0.4;
+          ball.textSize = 40;
+          //ball.text = ":)";
+          ball.diameter = 50;
+          ball.img = ballSkinImage;
+      }
+
+    ball.x = respawnPosition[0];
+    ball.y = respawnPosition[1];
+
+    ball.color = level.ballColor;
+    ball.vel.x = 0;
+    ball.vel.y = 0;
       jumpCount = 0;
       
       // Handles ground creation
@@ -644,7 +659,7 @@ function nextLevel() {
 
 function checkLevelCompletion() {
     const level = levels[currentLevel];
-    if (level.goalPosition) {
+    if (ball && level.goalPosition) {
         let distance = dist(ball.x, ball.y, level.goalPosition.x, level.goalPosition.y);
         if (distance < 60) {
             nextLevel();
@@ -718,6 +733,8 @@ function drawUI() {
 }
 
 function explodeAndRespawn() {
+    if (!ball) return;
+
     for (let i = 0; i < 20; i++) {
         particles.push({
             x: ball.x,
@@ -745,7 +762,7 @@ function updateParticles() {
         p.vy += 0.2;
         p.life--;
 
-        fill(ball.color);
+        if (ball) fill(ball.color); else fill(color(255, 255, 255));
         rect(p.x, p.y, 6, 6);
 
         if (p.life <= 0) particles.splice(i, 1);
@@ -753,6 +770,8 @@ function updateParticles() {
 }
 
 function teleportation() {
+    if (!ball) return;
+
     levelObjects.teleporter?.forEach(teleporter => {   //for each teleporter 
         if (dist(ball.x, ball.y, teleporter.x, teleporter.y) < 45 && teleporterActive == true) {    //if ball is 45 pixes from teleporter and the teleporter is activated
                 if (teleporter === levelObjects.teleporter[0]) {
@@ -778,6 +797,8 @@ function teleportation() {
 }
 
 function blackholeAttraction() {
+    if (!ball) return;
+
     levelObjects.blackhole?.forEach(blackhole => {   //for each blackhole 
         let distanceBlackhole = dist(ball.x, ball.y, blackhole.x, blackhole.y);
         let attractionField = 150;
@@ -1384,22 +1405,14 @@ function forceClean() {
     allSprites.remove();
 }
 
-async function setup() {
-    forceClean();
+function setup() {
+    // forceClean();
 
     // makes the pixels not blurry
     noSmooth();
 
     // Initialization pretty cool stuff
     initializeLevels();
-    
-    // Creation of out fun little ball
-    ball = new Sprite();
-    ball.drag = 0.4;
-    ball.textSize = 40;
-    //ball.text = ":)";
-    ball.diameter = 50;
-    ball.img = ballSkinImage;
 
 	// Space background init
     randomSeed(spaceSeed);
@@ -1416,8 +1429,6 @@ async function setup() {
       levels[currentLevel].ballColor = chosenColor;
     }
   });
-
-
 }
 
 function pauseMenu() {
@@ -1612,9 +1623,12 @@ function update() {
   if (editor.enabled) {
     // freeze physics/state
     levelObjects.platforms?.forEach(p => { p.physics = STATIC; });
-    ball.physics = NONE;
-    ball.vel.x = 0; ball.vel.y = 0;
-    ball.rotationSpeed = 0; ball.angularVelocity = 0;
+    
+    if (ball) {
+        ball.physics = NONE;
+        ball.vel.x = 0; ball.vel.y = 0;
+        ball.rotationSpeed = 0; ball.angularVelocity = 0;
+    }
 
     // repaint world so edits show immediately
     drawBackgroundForLevel();
@@ -1629,9 +1643,12 @@ function update() {
   // ===== PAUSED MODE =======
   if (pauseKey) {
     levelObjects.platforms?.forEach(p => { p.physics = STATIC; });
-    ball.physics = NONE;
-    ball.vel.x = 0; ball.vel.y = 0;
-    ball.rotationSpeed = 0; ball.angularVelocity = 0;
+
+    if (ball) {
+        ball.physics = NONE;
+        ball.vel.x = 0; ball.vel.y = 0;
+        ball.rotationSpeed = 0; ball.angularVelocity = 0;
+    }
 
     drawBackgroundForLevel();
     if (typeof allSprites !== 'undefined') allSprites.draw();
@@ -1646,16 +1663,19 @@ function update() {
     platform.physics = KINEMATIC;
     if (!platform.speed) platform.speed = 2;
   });
-  ball.physics = DYNAMIC;
+
+  if (ball) {
+    ball.physics = DYNAMIC;
 
     // Camera handeler
     camera.x += (ball.x - camera.x) * 0.1;
     camera.y += (ball.y - camera.y) * 0.1;
+  }
 
 	drawBackgroundForLevel();
 
     // Ball fall off map respawner
-    if (ball.y > 700) {
+    if (ball && ball.y > 700) {
         respawn();
     }
 
@@ -1670,7 +1690,7 @@ function update() {
    // Disappearing Platform handler
     levelObjects.disappearingPlatforms?.forEach(platform => {
         // Check if ball is touching platform
-        if (ball.colliding(platform) && !platform.playerTouched && !platform.isDisappearing && !platform.isReappearing) {
+        if (ball && (ball.colliding(platform) && !platform.playerTouched && !platform.isDisappearing && !platform.isReappearing)) {
             platform.playerTouched = true;
             platform.isDisappearing = true;
             platform.fadeTimer = 0;
@@ -1733,7 +1753,7 @@ function update() {
             }
             
             // Ball + Platform interaction
-            if (ball.colliding(platform) && ball.vel.y >= 0) {
+            if (ball && (ball.colliding(platform) && ball.vel.y >= 0)) {
                 ball.x += platform.vel.x;
             }
         }
@@ -1754,7 +1774,7 @@ function update() {
 
     // Spring Handler
     levelObjects.springs?.forEach(spring => {
-        if (ball.colliding(spring)) {
+        if (ball && ball.colliding(spring)) {
             ball.vel.y = -15;
             if (springSound) springSound.play();
         }
@@ -1763,16 +1783,16 @@ function update() {
     // Jump reset Handler
     let onGround = false;
     levelObjects.ground?.forEach(ground => {
-        if (ball.colliding(ground)) onGround = true;
+        if (ball && ball.colliding(ground)) onGround = true;
     });
     levelObjects.platforms?.forEach(platform => {
-        if (ball.colliding(platform)) onGround = true;
+        if (ball && ball.colliding(platform)) onGround = true;
     });
     if (onGround) jumpCount = 0;
 
     // Controls
     if (kb.presses('space')) {
-        if (jumpCount < maxJumps) {
+        if (ball && jumpCount < maxJumps) {
             // when grounded we can assume vel.y is 0
             // we can just increment the vel.y by the jump-strength
             ball.vel.y += -7;
@@ -1781,26 +1801,26 @@ function update() {
         }
     }
 
-    if (kb.pressing('left')) {
+    if (ball && kb.pressing('left')) {
         if (ball.vel.x > 0) ball.applyForce(-30);
         else ball.applyForce(-15);
     }
 
-    if (kb.pressing('right')) {
+    if (ball && kb.pressing('right')) {
         if (ball.vel.x < 0) ball.applyForce(30);
         else ball.applyForce(15);
     }
 
     // Spike collision handeler
     levelObjects.spikes?.forEach(spike => {
-        if (ball.colliding(spike)) {
+        if (ball && ball.colliding(spike)) {
             respawn();
         }
     });
 
     //Enemy Collision Handler
     levelObjects.enemies?.forEach(enemy => {
-        if (ball.colliding(enemy)) {
+        if (ball && ball.colliding(enemy)) {
             respawn();
         }
     });
@@ -1841,7 +1861,7 @@ function update() {
     updateParticles();
 
     // Respawn Timer handler
-    if (respawnTimer > 0) {
+    if (ball && respawnTimer > 0) {
         respawnTimer--;
         if (respawnTimer === 0) {
             ball.vel.x = 0;
@@ -1864,5 +1884,5 @@ function update() {
 // When called the function assigns ballColor to a random color
 function randomColor() {
     levels[currentLevel].ballColor = random(['red', 'black', 'purple', 'pink', 'yellow', 'green', 'blue']);
-    ball.color = levels[currentLevel].ballColor;
+    if (ball) ball.color = levels[currentLevel].ballColor;
 }

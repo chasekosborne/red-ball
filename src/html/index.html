@@ -193,6 +193,9 @@
   <script src="../js/sketch.js"></script>
 
   <script>
+    // need to initialize before loading
+    initializeLevels();
+
     function startGame(level) {
       document.getElementById("menu").style.display="none";
       loadLevel(level);
