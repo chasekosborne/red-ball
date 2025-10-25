@@ -188,10 +188,14 @@
   <script src="https://p5play.org/v3/p5play.js"></script>
 
   <script src="../js/checkpoint.js"></script>
+  <script src="../js/falling_asteriods.js"></script>
   <script src="../js/laserbeam.js"></script>
   <script src="../js/sketch.js"></script>
 
   <script>
+    // need to initialize before loading
+    initializeLevels();
+
     function startGame(level) {
       document.getElementById("menu").style.display="none";
       loadLevel(level);
