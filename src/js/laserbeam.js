@@ -138,20 +138,19 @@ class Laserbeam {
     }
     dtor() {
         console.log("Running laserbeam dtor");
-
         // destroy rail and anchors
-        if (this.rail.sprite)
-            this.rail.sprite.remove();
-        if (this.leftAnchor.sprite)
-            this.leftAnchor.sprite.remove();
-        if (this.rightAnchor.sprite)
-            this.rightAnchor.sprite.remove();
+        if (this.rail)
+            this.rail.remove();
+        if (this.leftAnchor)
+            this.leftAnchor.remove();
+        if (this.rightAnchor)
+            this.rightAnchor.remove();
         
         // destroy laser-gun
         if (this.sprite)
             this.sprite.remove();
-        if (this.laserBlaster.sprite)
-            this.laserBlaster.sprite.remove();
+        if (this.laserBlaster)
+            this.laserBlaster.remove();
 
         // destroy bullets
         for (let i = 0; i > this.bullets.length; ++i) {
