@@ -31,6 +31,7 @@ let spring;
 let pauseKey = false;
 let pausePosition = [0, 0];
 let gameState = "playing"; // start in menu
+let presspause = false;
 let teleporter;
 let teleporterImage;
 let teleporterActive = true;   
@@ -38,6 +39,9 @@ let beginTime = millis();
 let pauseOverlayEl;
 let blackhole;
 let blackholeImage;
+let difficulty = 'normal';
+let lives = Infinity;
+let globalVolume = 0.5;
 
 // === Background themes ===
 const BG_SKY   = "sky";
@@ -109,9 +113,8 @@ const CLOUDS = [
 function initializeLevels() {
     levels = [
         {
-            name: "Tutorial",
-            theme: "space", 
-    
+            name: "Dev Room",
+			      theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'red',
 
@@ -133,10 +136,10 @@ function initializeLevels() {
                 { x: 4400, y: 100, w: 1000, h: 40 },
             ],
             springs: [
-                { x: 1100, y: 350, w: 200, h: 40 }
+                { x: 1800, y: 350, w: 200, h: 40 }
             ],
             spikes: [
-                { x: 800, y: 306, orientation: "up" }
+                { x: 1600, y: 306, orientation: "up" }
             ],
             checkpoints: [
                 { x: 1800, y: 50 }
@@ -287,9 +290,20 @@ function initializeLevels() {
             ],
 
             checkpoints: [
-                { x: 2960, y: -1045}
+                { x: 2960, y: -1045 }
             ],
-		   	    teleporter: [],  
+            
+		   	enemies: [],
+
+            lasers: [],
+
+            disappearingPlatforms: [],
+
+            swingingHammers: [],
+
+            teleporter: [],
+
+            blackhole: [], 
 
             goalPosition: { x: 5400, y: -1050 }, 
 
@@ -298,20 +312,21 @@ function initializeLevels() {
 
         {
             name: "Level 2",
-		   	    theme: "space", 
+			theme: "space", 
             respawnPosition: [500, 150],
-            ballColor: 'pink',
+            ballColor: 'red',
             platforms: [],
-            ground: [
-                { x: 500, y: 350, w: 800, h: 40 },
-            ],
+            ground: [{"x": 450,"y": 390,"w": 580,"h": 20}],
             springs: [],
             spikes: [],
-            checkpoints: [
-                { x: 2960, y: -1045}
-            ],
-		   	    teleporter: [],  
-            goalPosition: { x: 5400, y: -1050 }, 
+            checkpoints: [{"x": 260, "y": 340 }],
+            enemies: [],
+            lasers: [],
+            disappearingPlatforms: [],
+            swingingHammers: [],
+            teleporter: [],
+            blackhole: [],
+            goalPosition: { x: 1900, y: 300 }, 
             instructions: ""
         },
 
@@ -387,6 +402,7 @@ function explodeAndRespawn() {
   ball.y = halfHeight - 200;
   respawnTimer = 40;
 }
+
 function updateParticles() {
   for (let i = particles.length - 1; i >= 0; i--) {
     let p = particles[i];
@@ -412,8 +428,20 @@ function updateCheckpoints() {
 
 function respawn() {
     if (respawnTimer === 0) {
-        explodeAndRespawn();
-		deathSound.play();
+      if (difficulty === 'hard') {
+        lives--;
+        if (lives <= 0) {
+          loadLevel(currentLevel);
+          return;
+        }
+      }
+      explodeAndRespawn();
+
+      if(deathSound.isLoaded()) {
+        deathSound.setVolume(globalVolume);
+        deathSound.play();
+      }
+      
     }
 }
 
@@ -673,8 +701,15 @@ function drawUI() {
 
     rectMode(CORNER);
     
+    let textColor;
+    if (levels[currentLevel].theme == 'space') {
+      textColor = 'white';
+    } else {
+      textColor = 'black';
+    }
+    
     // Name of level
-    fill(0);
+    fill(textColor);
     textAlign(LEFT, TOP);
     textSize(24);
     text(`Level: ${levels[currentLevel].name}`, 20, 20);
@@ -691,8 +726,13 @@ function drawUI() {
         textSize(12);
         text('Pause (P)', pauseButtonBounds.x + pauseButtonBounds.w/2, pauseButtonBounds.y + pauseButtonBounds.h/2);
     }
-  
 
+    if(difficulty == 'hard') {
+      fill(textColor);
+      textSize(24);
+      noStroke();
+      text(`Lives: ${lives}`, 61, 60)
+    }
 
 
 
@@ -777,7 +817,11 @@ function teleportation() {
                 if (teleporter === levelObjects.teleporter[0]) {
                     ball.x = levelObjects.teleporter[1].x;  //changes ball position to other teleporter
                     ball.y = levelObjects.teleporter[1].y;
-                    if(teleportSound) teleportSound.play(); 
+                    if(teleportSound && teleportSound.isLoaded()) {
+                      teleportSound.setVolume(globalVolume);
+                      teleportSound.play(); 
+                    } 
+
                     teleporterActive = false;     //deactivates teleporter temporarily
                     beginTime = millis();         //logs the milliseconds when teleportation occured
                 } else if (teleporter === levelObjects.teleporter[1] && teleporterActive == true) {
@@ -810,7 +854,7 @@ function blackholeAttraction() {
             ball.vel.x += forceOnX; //applies force to ball velocity
             ball.vel.y += forceOnY
           if (distanceBlackhole < 60) {  
-            explodeAndRespawn();  //if ball is too close to blackhole, it explodes
+            respawn();  //if ball is too close to blackhole, it explodes
             deathSound.play();
           }
         }
@@ -1115,7 +1159,7 @@ function mousePressed() {
     // On-screen Pause button
     if (mouseX >= pauseButtonBounds.x && mouseX <= pauseButtonBounds.x + pauseButtonBounds.w &&
         mouseY >= pauseButtonBounds.y && mouseY <= pauseButtonBounds.y + pauseButtonBounds.h) {
-      pauseKey = true;
+      presspause = true;
       return false;
     }
   }
@@ -1204,7 +1248,7 @@ function preload() {
     jumpSound = loadSound('../audio/jump.mp3');
     springSound = loadSound('../audio/spring.mp3');
 	deathSound = loadSound('../audio/dead.mp3');
-    teleportSound = loadSound('../audio/whoosh.mp3')
+    teleportSound = loadSound('../audio/whoosh.mp3');
 
     unclaimedFlagImage = loadImage("../art/unclaimed_checkpoint.png", img => {
         
@@ -1249,8 +1293,8 @@ function preload() {
     });
    
     
-    ballSkinImage = loadImage("../art/donut.png", img => {
-        img.resize(150, 150);
+    ballSkinImage = loadImage("../art/8ball.png", img => {
+        img.resize(125, 125);
     });
 }
 
@@ -1406,8 +1450,9 @@ function forceClean() {
 }
 
 function setup() {
-    // forceClean();
+    createCanvas(windowWidth, windowHeight);
 
+    // jumpSound.loop();
     // makes the pixels not blurry
     noSmooth();
 
@@ -1510,10 +1555,11 @@ function update() {
     }
   }
 
-  if (kb.pressed('P')) {
+  if (kb.pressed('P')|| presspause) {
     pauseKey = !pauseKey;
     if (pauseKey) { if (typeof showPauseOverlay === 'function') showPauseOverlay(); }
     else          { if (typeof hidePauseOverlay === 'function') hidePauseOverlay(); }
+    presspause = false;
   }
 
   // restart level ONLY when not editing and not paused
@@ -1776,7 +1822,10 @@ function update() {
     levelObjects.springs?.forEach(spring => {
         if (ball && ball.colliding(spring)) {
             ball.vel.y = -15;
-            if (springSound) springSound.play();
+            if (springSound && springSound.isLoaded()) {
+              springSound.setVolume(globalVolume);
+              springSound.play();
+            } 
         }
     });
 
@@ -1796,7 +1845,11 @@ function update() {
             // when grounded we can assume vel.y is 0
             // we can just increment the vel.y by the jump-strength
             ball.vel.y += -7;
-            if (jumpSound) jumpSound.play();
+            if (jumpSound && jumpSound.isLoaded()) {
+              jumpSound.setVolume(globalVolume);
+              jumpSound.play();
+            }
+              
             jumpCount++;
         }
     }
