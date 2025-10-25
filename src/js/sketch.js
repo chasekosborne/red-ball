@@ -136,10 +136,10 @@ function initializeLevels() {
                 { x: 4400, y: 100, w: 1000, h: 40 },
             ],
             springs: [
-                { x: 1800, y: 350, w: 200, h: 40 }
+                { x: 1200, y: 350, w: 200, h: 40 }
             ],
             spikes: [
-                { x: 1600, y: 306, orientation: "up" }
+                { x: 800, y: 306, orientation: "up" }
             ],
             checkpoints: [
                 { x: 1800, y: 50 }
