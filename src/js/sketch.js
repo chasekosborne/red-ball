@@ -1302,136 +1302,162 @@ function preload() {
 
 
 function buildPauseOverlay() {
-    // === Outer container (covers entire screen) ===
-    pauseOverlayEl = document.createElement('div');
-    pauseOverlayEl.id = 'pauseOverlay';
-    pauseOverlayEl.style.cssText = `
-      position: fixed;
-      inset: 0;
-      display: none;                 /* hidden by default */
-      z-index: 9999;                 /* always on top of canvas */
-      background: rgba(0, 0, 0, 0.4); /* semi-transparent black overlay */
-      backdrop-filter: blur(6px);     /* blur game behind it */
-      justify-content: center;
-      align-items: center;
-      font-family: 'Arial', sans-serif;
-    `;
-  
-    // === Inner glass panel ===
-    const panel = document.createElement('div');
-    panel.style.cssText = `
-      width: min(90vw, 900px);
-      padding: 48px 40px;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.25);  /* semi-transparent white */
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      color: #fff;
-      backdrop-filter: blur(10px);
-    `;
-    pauseOverlayEl.appendChild(panel);
-  
-    // === Title ===
-    const h1 = document.createElement('h1');
-    h1.textContent = 'Game Paused';
-    h1.style.cssText = `
-      margin: 0 0 24px;
-      font-size: 56px;
-      color: #fff;
-      text-shadow: 0 0 12px rgba(255,255,255,0.6);
-    `;
-    panel.appendChild(h1);
-  
-    // === Tips ===
-    const tip1 = document.createElement('div');
-    tip1.textContent = 'Press P to Resume';
-    tip1.style.cssText = `
-      font-size: 22px;
-      color: rgba(255,255,255,0.9);
-      margin: 12px 0;
-    `;
-    panel.appendChild(tip1);
-  
-    const tip2 = document.createElement('div');
-    tip2.textContent = 'Press R to Restart Level';
-    tip2.style.cssText = `
-      font-size: 22px;
-      color: rgba(255,255,255,0.9);
-      margin: 12px 0 36px;
-    `;
-    panel.appendChild(tip2);
-  
-    // === Button container ===
-    const controls = document.createElement('div');
-    controls.style.cssText = `
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      margin-top: 16px;
-    `;
-    panel.appendChild(controls);
-  
-    // Resume Button
-    const resumeBtn = document.createElement('button');
-    resumeBtn.textContent = 'Resume';
-    resumeBtn.style.cssText = `
-      padding: 14px 24px;
-      font-size: 18px;
-      border-radius: 12px;
-      border: 2px solid rgba(255,255,255,0.6);
-      background: rgba(255,255,255,0.15);
-      color: white;
-      cursor: pointer;
-      transition: all 0.2s;
-    `;
-    resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(255,255,255,0.3)';
-    resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(255,255,255,0.15)';
-    resumeBtn.onclick = () => { pauseKey = false; hidePauseOverlay(); };
-    controls.appendChild(resumeBtn);
-  
-    // Random Color Button
-    const colorBtn = document.createElement('button');
-    colorBtn.textContent = 'Random Color';
-    colorBtn.style.cssText = `
-      padding: 14px 24px;
-      font-size: 18px;
-      border-radius: 12px;
-      border: 2px solid rgba(255,100,100,0.8);
-      background: rgba(255,100,100,0.4);
-      color: white;
-      cursor: pointer;
-      transition: all 0.2s;
-    `;
-    colorBtn.onmouseenter = () => colorBtn.style.background = 'rgba(255,100,100,0.6)';
-    colorBtn.onmouseleave = () => colorBtn.style.background = 'rgba(255,100,100,0.4)';
-    colorBtn.onclick = () => { randomColor(); };
-    controls.appendChild(colorBtn);
+  // === Outer overlay ===
+  pauseOverlayEl = document.createElement('div');
+  pauseOverlayEl.id = 'pauseOverlay';
+  pauseOverlayEl.style.cssText = `
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+  `;
 
-    //Quit Game Button
-    const quitBtn = document.createElement('button');
-    quitBtn.textContent = 'Quit Game';
-    quitBtn.style.cssText = `
-      padding: 14px 24px;
-      font-size: 18px;
-      border-radius: 12px;
-      border: 2px solid rgba(255,100,100,0.8);
-      background: rgba(255,100,100,0.4);
-      color: white;
-      cursor: pointer;
-      transition: all 0.2s;
-      `;
-      quitBtn.onmouseenter = () => quitBtn.style.background = 'rgba(255,100,100,0.6)';
-      quitBtn.onmouseleave = () => quitBtn.style.background = 'rgba(255,100,100,0.4)';
-      quitBtn.onclick = () => {
-        pauseKey = false;
-        hidePauseOverlay();
-        document.getElementById('menu').style.display = 'flex';
-        isMenuOpen = true;
-      };
-      controls.appendChild(quitBtn);
-    document.body.appendChild(pauseOverlayEl);
-  }
+  // === Inner glass panel ===
+  const panel = document.createElement('div');
+  panel.style.cssText = `
+    width: min(90vw, 900px);
+    padding: 50px 60px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    color: white;
+    text-align: center;
+  `;
+  pauseOverlayEl.appendChild(panel);
+
+  // === Title ===
+  const h1 = document.createElement('h1');
+  h1.textContent = 'Game Paused';
+  h1.style.cssText = `
+    font-size: 60px;
+    margin: 0 0 25px;
+    color: white;
+    text-shadow: 0 0 15px rgba(255,255,255,0.8);
+  `;
+  panel.appendChild(h1);
+
+  // === Instructions ===
+  const tip1 = document.createElement('div');
+  tip1.textContent = 'Press P to Resume';
+  tip1.style.cssText = `
+    font-size: 22px;
+    margin: 10px 0;
+    color: rgba(255,255,255,0.9);
+  `;
+  panel.appendChild(tip1);
+
+  const tip2 = document.createElement('div');
+  tip2.textContent = 'Press R to Restart Level';
+  tip2.style.cssText = `
+    font-size: 22px;
+    margin-bottom: 40px;
+    color: rgba(255,255,255,0.9);
+  `;
+  panel.appendChild(tip2);
+
+  // === Color Picker Section ===
+  const colorSection = document.createElement('div');
+  colorSection.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 50px;
+  `;
+
+  const colorLabel = document.createElement('div');
+  colorLabel.textContent = 'Choose Ball Color';
+  colorLabel.style.cssText = `
+    font-size: 20px;
+    color: rgba(255,255,255,0.95);
+  `;
+  colorSection.appendChild(colorLabel);
+
+  const colorPicker = document.createElement('input');
+  colorPicker.type = 'color';
+  colorPicker.value = '#ff0000';
+  colorPicker.style.cssText = `
+    width: 90px;
+    height: 45px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  `;
+  colorPicker.oninput = (e) => {
+    if (typeof changeBallColor === 'function') {
+      changeBallColor(e.target.value);
+    }
+  };
+  colorSection.appendChild(colorPicker);
+
+  panel.appendChild(colorSection);
+
+  // === Bottom buttons ===
+  const bottomButtons = document.createElement('div');
+  bottomButtons.style.cssText = `
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+  `;
+  panel.appendChild(bottomButtons);
+
+  // Resume Button
+  const resumeBtn = document.createElement('button');
+  resumeBtn.textContent = 'Resume';
+  resumeBtn.style.cssText = `
+    padding: 14px 28px;
+    font-size: 20px;
+    border-radius: 12px;
+    border: 2px solid rgba(0,255,150,0.7);
+    background: rgba(0,255,150,0.3);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  `;
+  resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(0,255,150,0.5)';
+  resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(0,255,150,0.3)';
+  resumeBtn.onclick = () => { pauseKey = false; hidePauseOverlay(); };
+  bottomButtons.appendChild(resumeBtn);
+
+  // Quit Button
+  const quitBtn = document.createElement('button');
+  quitBtn.textContent = 'Quit Game';
+  quitBtn.style.cssText = `
+    padding: 14px 28px;
+    font-size: 20px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,100,100,0.8);
+    background: rgba(255,100,100,0.4);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  `;
+  quitBtn.onmouseenter = () => quitBtn.style.background = 'rgba(255,100,100,0.6)';
+  quitBtn.onmouseleave = () => quitBtn.style.background = 'rgba(255,100,100,0.4)';
+  quitBtn.onclick = () => { location.reload(); }; // Back to menu
+  bottomButtons.appendChild(quitBtn);
+
+  // === Final mount ===
+  document.body.appendChild(pauseOverlayEl);
+}
+
+// Show / hide helpers
+function showPauseOverlay() {
+  if (pauseOverlayEl) pauseOverlayEl.style.display = 'flex';
+}
+
+function hidePauseOverlay() {
+  if (pauseOverlayEl) pauseOverlayEl.style.display = 'none';
+}
+
+
   
   function showPauseOverlay() {
     if (pauseOverlayEl) pauseOverlayEl.style.display = 'flex';
