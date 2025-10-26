@@ -182,10 +182,70 @@ function initializeLevels() {
               { x: 2600, y: 250, w: 120, h: 120 },
             ],
  
-            instructions: "Use SPACE to jump and arrow keys to move!"
+            instructions: "Use SPACE to jump and arrow keys to move!",
+            signs: [],
         },
 
-       {
+        {
+            name: "Tutorial",
+            theme: "sky",
+            respawnPosition: [125, 150],
+            ballColor: "red",
+           platforms: [
+                { "x": 2250, "y": 0, "w": 120, "h": 20, "color": "orange", "moving": true, "speed": 2, "minX": 2231, "maxX": 2683 }
+            ],
+           ground: [
+                { "x": 550, "y": 350, "w": 1000, "h": 40 },
+                { "x": 1800, "y": 0, "w": 700, "h": 40 },
+                { "x": 3100, "y": 0, "w": 700, "h": 40 },
+                { "x": 3125, "y": -420, "w": 20, "h": 800 },
+                { "x": 4701, "y": 0, "w": 500, "h": 40 },
+                { "x": 550, "y": 120, "w": 1000, "h": 40 },
+                { "x": 60, "y": 235, "w": 20, "h": 190}
+            ],
+            springs: [
+                { "x": 1250, "y": 425, "w": 200, "h": 40 }
+            ],
+            spikes: [
+                { "x": 780, "y": 307, "orientation": "up" },
+                { "x": 420, "y": 307, "orientation": "up" },
+                { "x": 480, "y": 307, "orientation": "up" },
+                { "x": 540, "y": 307, "orientation": "up" },
+                { "x": 600, "y": 307, "orientation": "up" },
+                { "x": 660, "y": 307, "orientation": "up" },
+                { "x": 720, "y": 307, "orientation": "up" }
+            ],
+            checkpoints: [
+                { "x": 1600, "y": -45 }
+            ],
+            enemies: [
+                { "startX": 2080, "startY": -60, "endX": 2080, "endY": -200, "speed": 30 }
+            ],
+            lasers: [],
+            disappearingPlatforms: [
+                { "x": 3950, "y": 0, "w": 1000, "h": 40 }
+            ],
+            swingingHammers: [],
+            teleporter: [
+                { "x": 3030, "y": -49, "w": 60, "h": 40 },
+                { "x": 3230, "y": -49, "w": 100, "h": 100 }
+            ],
+            blackhole: [],
+            goalPosition: { "x": 4790, "y": -82 },
+            instructions: "",
+            signs: [
+              { x: 225, y: 220, text: "Welcome to Epsilon's Greatest Ball! Use the arrow keys to move left/right", size: 8, color: 'black' },
+              { x: 600, y: 200, text: "Press space to jump. Double jump by pressing space twice in order to avoid these!", size: 10, color: 'black' },
+              { x: 1250, y: 300, text: "Jump onto the spring to launch yourself in the air!", size: 10, color: 'black' },
+              { x: 1600, y: -90, text: "This checkpoint allows you to respawn here after you die.", size: 10, color: 'black' },
+              { x: 1875, y: -140, text: "Double jump over this hazard and land on the moving platform!", size: 10, color: 'black' },
+              { x: 2900, y: -130, text: "Use the teleporter to bypass this wall.", size: 10, color: 'black' },
+              { x: 3900, y: -140, text: "Go quickly across this platform! It starts disappearing after you touch it!", size: 12, color: 'black' },
+              { x: 4700, y: -170, text: "Congratulations! You will encounter more obstacles as you go along, and check the How To Play menu if you ever forget anything!", size: 12, color: 'black' },
+            ]
+        },
+
+        {
             name: "Level 1",
             theme: "sky", 
             respawnPosition: [500, 150],
@@ -307,7 +367,9 @@ function initializeLevels() {
 
             goalPosition: { x: 5400, y: -1050 }, 
 
-            instructions: ""
+            instructions: "",
+
+            signs: [],
         },
 
         {
@@ -327,7 +389,8 @@ function initializeLevels() {
             teleporter: [],
             blackhole: [],
             goalPosition: { x: 1900, y: 300 }, 
-            instructions: ""
+            instructions: "",
+            signs: [],
         },
 
         // Add more levels here  Be sure to use the template as seen above
@@ -770,6 +833,23 @@ function drawUI() {
 
         
     }
+}
+
+function drawSigns() {
+  const level = levels[currentLevel];
+  if (!level.signs || level.signs.length === 0) return;
+
+  push();
+  textAlign(CENTER, CENTER);
+  noStroke();
+
+  for (let sign of level.signs) {
+    textSize(sign.size || 24);
+    fill(sign.color || 'white');
+    text(sign.text, sign.x, sign.y);
+  }
+  
+  pop();
 }
 
 function explodeAndRespawn() {
@@ -1952,6 +2032,8 @@ function update() {
 
     // Checking if the level is done
     checkLevelCompletion();
+    
+    drawSigns();
     
     drawUI();
 
