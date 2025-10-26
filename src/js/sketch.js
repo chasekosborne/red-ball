@@ -373,18 +373,89 @@ function initializeLevels() {
         },
 
         {
-            name: "Level 2",
-			theme: "space", 
+          name: "Level 2",
+          theme: "space",
+          respawnPosition: [500,150],
+          ballColor: 'red',
+          platforms: [],
+
+          disappearingPlatforms: [
+            {x: 950,y: 390,w: 100,h: 20},
+            {x: 1260,y: 390,w: 80,h: 20},
+          ],
+
+          ground: [
+            {x: 450,  y: 390, w: 580,   h: 20},
+            {x: 1650, y: 390, w: 220,   h: 20},
+            {x: 2260, y: 70,  w: 680,   h: 20},
+            {x: 2600, y: 360, w:  20,   h: 600},
+            {x: 2790, y: 260, w:  20,   h: 400},
+            {x: 3260, y: 650, w:  1300, h: 20},
+            {x: 3190, y: 620, w:  20,   h: 40},
+            {x: 3550, y: 620, w:  20,   h: 40},
+            {x: 4100, y: 260, w:  180,  h: 20},
+            {x: 4560, y: 260, w:  800,  h:20,},
+            {x: 5090, y: 260, w:  260,  h: 20},
+          ],
+        
+          springs: [
+            {x: 1800,y: 390,w: 80,h: 20},
+            {x: 3720,y: 630,w: 80,h: 20}
+          ],
+        
+          spikes: [
+            {x: 2640,y: 615,orientation:"up"},
+            {x: 2880,y: 615,orientation:"up"},
+            {x: 3120,y: 615,orientation:"up"}
+          ],
+        
+          checkpoints: [
+            {x: 1660,y: 360},
+            {x: 2730,y: 610},
+          ],
+        
+          enemies: [
+            {startX: 3240,startY: 615,endX: 3520,endY: 615,speed: 1},
+          ],
+          
+          lasers: [
+            {x: 820,  y: 140, range: 300, speedData:  {speed: 3,bulletSpeed: 8},fwdDir:DOWN},
+            {x: 1100, y: 140, range: 320, speedData: {speed: 3,bulletSpeed: 8},fwdDir: DOWN},
+            {x: 1400, y: 140, range: 320, speedData: {speed: 3,bulletSpeed: 8},fwdDir: DOWN},
+            {x: 1680, y: -60, range: 300, speedData: {speed: 3,bulletSpeed: 8},fwdDir: RIGHT},
+            {x: 2900, y: -60, range: 300, speedData: {speed: 3,bulletSpeed: 8},fwdDir: LEFT},
+            {x: 3020, y: 340, range: 360, speedData: {speed: 3,bulletSpeed: 8},fwdDir: DOWN},
+            {x: 3360, y: 340, range: 360, speedData: {speed: 3,bulletSpeed: 8},fwdDir: DOWN},
+          ],
+
+          asteriodFields: [
+                { x: 4580, y: -300, range: 600, fallSpeed: 4, burstCount: 4, timeInterval: 3 }
+          ],
+
+          swingingHammers: [],
+          teleporter: [],
+          blackhole: [
+            { x: 1950,y: 250,  w: 20,  h: 20 },
+            { x: 3685,y: 250,  w: 80,  h: 20 },
+          ],
+          goalPosition:  { x: 5180, y: 180 },
+          instructions: ""
+        },
+
+        {
+            name: "Level 3",
+			      theme: "sky", 
             respawnPosition: [500, 150],
             ballColor: 'red',
             platforms: [],
+            disappearingPlatforms: [],
             ground: [{"x": 450,"y": 390,"w": 580,"h": 20}],
             springs: [],
             spikes: [],
             checkpoints: [{"x": 260, "y": 340 }],
             enemies: [],
             lasers: [],
-            disappearingPlatforms: [],
+            asteriodFields: [],
             swingingHammers: [],
             teleporter: [],
             blackhole: [],
@@ -392,6 +463,30 @@ function initializeLevels() {
             instructions: "",
             signs: [],
         },
+        
+        /* Add more levels here  Be sure to use the template as seen above
+          {
+            name: "Level 3",
+			      theme: "sky", 
+            respawnPosition: [500, 150],
+            ballColor: 'red',
+            platforms: [],
+            disappearingPlatforms: [],
+            ground: [{"x": 450,"y": 390,"w": 580,"h": 20}],
+            springs: [],
+            spikes: [],
+            checkpoints: [{"x": 260, "y": 340 }],
+            enemies: [],
+            lasers: [],
+            asteriodFields: [],
+            swingingHammers: [],
+            teleporter: [],
+            blackhole: [],
+            goalPosition: { x: 1900, y: 300 }, 
+            instructions: "",
+            signs: [],
+          },
+        */
 
         // Add more levels here  Be sure to use the template as seen above
     ];
