@@ -23,6 +23,9 @@ class Laser {
         this.lifeTime = 0;
         this.alive = true;
     }
+    dtor() {
+        if (this.sprite) this.sprite.remove();
+    }
 
     disable_bullet() {
         this.alive = false;
@@ -132,6 +135,28 @@ class Laserbeam {
         this.bullets = [];
         this.shootDelay = 60 * 1; // shoot every 1 second
         this.shootCoolDown = 0;
+    }
+    dtor() {
+        console.log("Running laserbeam dtor");
+        // destroy rail and anchors
+        if (this.rail)
+            this.rail.remove();
+        if (this.leftAnchor)
+            this.leftAnchor.remove();
+        if (this.rightAnchor)
+            this.rightAnchor.remove();
+        
+        // destroy laser-gun
+        if (this.sprite)
+            this.sprite.remove();
+        if (this.laserBlaster)
+            this.laserBlaster.remove();
+
+        // destroy bullets
+        for (let i = 0; i > this.bullets.length; ++i) {
+            let bullet = this.bullets.pop();
+            if (bullet) bullet.dtor();
+        }
     }
 
     // takes true or false boolean

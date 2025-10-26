@@ -158,9 +158,10 @@
     </div>
     <div id="level-select" style="display: none;">
     <button onclick="startGame(0)">Dev Room</button>
-    <button onclick="startGame(1)">Level 1</button>
-    <button onclick="startGame(2)">Level 2</button>
-    <button onclick="startGame(3)">Level 3</button>
+    <button onclick="startGame(1)">Tutorial</button>
+    <button onclick="startGame(2)">Level 1</button>
+    <button onclick="startGame(3)">Level 2</button>
+    <button onclick="startGame(4)">Level 3</button>
     <button onclick="backToMain()">Back</button>
     </div>
     <div id="options-btn">
@@ -188,10 +189,14 @@
   <script src="https://p5play.org/v3/p5play.js"></script>
 
   <script src="../js/checkpoint.js"></script>
+  <script src="../js/falling_asteriods.js"></script>
   <script src="../js/laserbeam.js"></script>
   <script src="../js/sketch.js"></script>
 
   <script>
+    // need to initialize before loading
+    initializeLevels();
+
     function startGame(level) {
       document.getElementById("menu").style.display="none";
       loadLevel(level);
@@ -225,10 +230,7 @@
       difficulty = window.difficulty;
     }
 
-    function masterVolume(vol) {
-      allSounds.forEach(s => s.setVolume(vol));
-    }
-
+    //Sounds
     function openOptions() {
       document.getElementById("options-menu").style.display = "block";
 
@@ -238,10 +240,8 @@
       volumeValue.innerText = Math.round(volumeSlider.value * 100) + "%";
 
       volumeSlider.oninput = function () {
-        volumeValue.innerText = Math.round(this.value *  100) + "%";
-        if(typeof masterVolume === "function") {
-          masterVolume(value);
-        }
+        globalVolume = parseFloat(this.value);
+        volumeValue.innerText = Math.round(globalVolume *  100) + "%";
       };
     }
 
@@ -265,6 +265,7 @@
     background: rgba(255,255,255,0.3);
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
     z-index: 9999;
+    display: none;
   ">
 </body>
 </html>
