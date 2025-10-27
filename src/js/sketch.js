@@ -117,7 +117,7 @@ function initializeLevels() {
 			      theme: "space", 
             respawnPosition: [500, 150],
             ballColor: 'red',
-
+        ballSkin: '8ball',
             goalPosition: { x: 5000, y: 50 },
 
             platforms: [
@@ -191,6 +191,7 @@ function initializeLevels() {
             theme: "sky",
             respawnPosition: [125, 150],
             ballColor: "red",
+             ballSkin: '8ball',
            platforms: [
                 { "x": 2250, "y": 0, "w": 120, "h": 20, "color": "orange", "moving": true, "speed": 2, "minX": 2231, "maxX": 2683 }
             ],
@@ -250,6 +251,7 @@ function initializeLevels() {
             theme: "sky", 
             respawnPosition: [500, 150],
             ballColor: 'red',
+             ballSkin: '8ball',
             platforms: [
                 // question for later but why are the y's below != to eachothers pair
                 { x: 3150, y: -1000, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
@@ -377,6 +379,7 @@ function initializeLevels() {
           theme: "space",
           respawnPosition: [500,150],
           ballColor: 'red',
+          ballSkin: '8ball',
           platforms: [],
 
           disappearingPlatforms: [
@@ -535,7 +538,16 @@ function drawCloud(x, y, s = 1) {
 
   pop();
 }
-
+function changeBallSkin(skinName) {
+    if (ballSkins[skinName]) {
+        ballSkinImage = ballSkins[skinName];
+        if (ball) {
+            ball.img = ballSkinImage;
+        }
+        // save the skin to the level so it sticks
+        levels[currentLevel].ballSkin = skinName;
+    }
+}
 function explodeAndRespawn() {
   if (!ball) return;
 
@@ -801,6 +813,18 @@ async function loadLevel(levelIndex) {
             scale: hammerData.scale
         });
       }
+
+    if (!ball) {
+        ball = new Sprite();
+        ball.drag = 0.4;
+        ball.diameter = 50;
+    }
+
+    // Apply stored skin or default to 8ball
+    const skinName = level.ballSkin || '8ball';
+    ball.img = ballSkins[skinName];
+    ballSkinImage = ballSkins[skinName];
+
   }
 }
 
@@ -1468,16 +1492,29 @@ function preload() {
     });
    
     
-    ballSkinImage = loadImage("../art/8ball.png", img => {
-        img.resize(125, 125);
-    });
+    // Load all ball skins
+    ballSkins = {
+        '8ball': loadImage("../art/8ball.png", img => {
+            img.resize(125, 125);
+        }),
+        'donut': loadImage("../art/donut.png", img => {
+            img.resize(125, 125);
+        }),
+        'soccer': loadImage("../art/SoccerBall.png", img => {
+            img.resize(125, 125);
+        })
+    };
+
+    // Set default skin
+    ballSkinImage = ballSkins['8ball'];
 }
 
 
 
 
+
 function buildPauseOverlay() {
-  // === Outer overlay ===
+  //overlay
   pauseOverlayEl = document.createElement('div');
   pauseOverlayEl.id = 'pauseOverlay';
   pauseOverlayEl.style.cssText = `
@@ -1492,7 +1529,7 @@ function buildPauseOverlay() {
     font-family: 'Arial', sans-serif;
   `;
 
-  // === Inner glass panel ===
+  // the main panel
   const panel = document.createElement('div');
   panel.style.cssText = `
     width: min(90vw, 900px);
@@ -1506,7 +1543,7 @@ function buildPauseOverlay() {
   `;
   pauseOverlayEl.appendChild(panel);
 
-  // === Title ===
+  //the title
   const h1 = document.createElement('h1');
   h1.textContent = 'Game Paused';
   h1.style.cssText = `
@@ -1516,8 +1553,7 @@ function buildPauseOverlay() {
     text-shadow: 0 0 15px rgba(255,255,255,0.8);
   `;
   panel.appendChild(h1);
-
-  // === Instructions ===
+ // the instructions
   const tip1 = document.createElement('div');
   tip1.textContent = 'Press P to Resume';
   tip1.style.cssText = `
@@ -1536,14 +1572,76 @@ function buildPauseOverlay() {
   `;
   panel.appendChild(tip2);
 
-  // === Color Picker Section ===
+  // skin selection section
+  const skinSection = document.createElement('div');
+  skinSection.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin: 30px 0;
+  `;
+
+  const skinLabel = document.createElement('div');
+  skinLabel.textContent = 'Select Ball Skin';
+  skinLabel.style.cssText = `
+    font-size: 20px;
+    color: rgba(255,255,255,0.95);
+  `;
+  skinSection.appendChild(skinLabel);
+
+  const skinButtons = document.createElement('div');
+  skinButtons.style.cssText = `
+    display: flex;
+    gap: 20px;
+  `;
+
+  // make the skin buttons
+  const skins = ['8ball', 'donut', 'soccer'];
+  skins.forEach(skin => {
+    const btn = document.createElement('button');
+    btn.style.cssText = `
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.2);
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      transition: all 0.2s;
+    `;
+    btn.style.backgroundImage = `url(../art/${skin === 'soccer' ? 'SoccerBall' : skin}.png)`;
+    
+    btn.onmouseenter = () => {
+      btn.style.borderColor = 'rgba(255,255,255,0.8)';
+      btn.style.transform = 'scale(1.1)';
+    };
+    btn.onmouseleave = () => {
+      btn.style.borderColor = 'rgba(255,255,255,0.3)';
+      btn.style.transform = 'scale(1.0)';
+    };
+    btn.onclick = () => {
+      changeBallSkin(skin);
+      skinButtons.querySelectorAll('button').forEach(b => 
+        b.style.borderColor = 'rgba(255,255,255,0.3)');
+      btn.style.borderColor = '#00ff96';
+    };
+
+    skinButtons.appendChild(btn);
+  });
+
+  skinSection.appendChild(skinButtons);
+  panel.appendChild(skinSection);
+
+  // pick color
   const colorSection = document.createElement('div');
   colorSection.style.cssText = `
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    margin-bottom: 50px;
+    margin: 30px 0;
   `;
 
   const colorLabel = document.createElement('div');
@@ -1566,20 +1664,21 @@ function buildPauseOverlay() {
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
   `;
   colorPicker.oninput = (e) => {
-    if (typeof changeBallColor === 'function') {
-      changeBallColor(e.target.value);
+    if (ball) {
+      ball.color = e.target.value;
+      levels[currentLevel].ballColor = e.target.value;
     }
   };
   colorSection.appendChild(colorPicker);
-
   panel.appendChild(colorSection);
 
-  // === Bottom buttons ===
+  // butons on the bottomn
   const bottomButtons = document.createElement('div');
   bottomButtons.style.cssText = `
     display: flex;
     justify-content: center;
     gap: 40px;
+    margin-top: 20px;
   `;
   panel.appendChild(bottomButtons);
 
@@ -1616,10 +1715,10 @@ function buildPauseOverlay() {
   `;
   quitBtn.onmouseenter = () => quitBtn.style.background = 'rgba(255,100,100,0.6)';
   quitBtn.onmouseleave = () => quitBtn.style.background = 'rgba(255,100,100,0.4)';
-  quitBtn.onclick = () => { location.reload(); }; // Back to menu
+  quitBtn.onclick = () => { location.reload(); };
   bottomButtons.appendChild(quitBtn);
 
-  // === Final mount ===
+  // Add overlay to document
   document.body.appendChild(pauseOverlayEl);
 }
 
