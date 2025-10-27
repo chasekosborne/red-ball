@@ -125,7 +125,7 @@ function initializeLevels() {
                 { x: 850, y: 200, w: 120, h: 20, color: 'orange', moving: false, fake: 'true'} // acting oddly
             ],
             disappearingPlatforms: [
-                { x: 1080, y: 0, w: 120, h: 20 },
+                { x: 1080, y: 200, w: 120, h: 20 },
             ],
 
             ground: [
@@ -2036,6 +2036,9 @@ function update() {
         if (ball && ball.colliding(ground)) onGround = true;
     });
     levelObjects.platforms?.forEach(platform => {
+        if (ball && ball.colliding(platform)) onGround = true;
+    });
+    levelObjects.disappearingPlatforms?.forEach(platform => {
         if (ball && ball.colliding(platform)) onGround = true;
     });
     if (onGround) jumpCount = 0;
