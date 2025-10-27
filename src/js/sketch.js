@@ -17,8 +17,14 @@ let ball;
 let respawnPosition = [500, 150];
 let jumpSound;
 let deathSound;
+let springSound;
 let ballSkinImage;
 let teleportSound;
+
+// Music variables
+let landMusic;
+let odysseyMusic;
+let currentMusic;
 let spikes;
 let platform;
 let button;
@@ -119,6 +125,7 @@ function initializeLevels() {
             ballColor: 'red',
         ballSkin: '8ball',
             goalPosition: { x: 5000, y: 50 },
+            music: 'odyssey', // Odyssey.mp3 for Dev Room
 
             platforms: [
                 { x: 600, y: 250, w: 120, h: 20, color: 'orange', moving: true, speed: 2, minX: 200, maxX: 1000 },
@@ -192,6 +199,7 @@ function initializeLevels() {
             respawnPosition: [125, 150],
             ballColor: "red",
              ballSkin: '8ball',
+            music: 'land', // Land.mp3 for Tutorial Level
            platforms: [
                 { "x": 2250, "y": 0, "w": 120, "h": 20, "color": "orange", "moving": true, "speed": 2, "minX": 2231, "maxX": 2683 }
             ],
@@ -252,6 +260,7 @@ function initializeLevels() {
             respawnPosition: [500, 150],
             ballColor: 'red',
              ballSkin: '8ball',
+            music: 'land', // Land.mp3 for Level 1
             platforms: [
                 // question for later but why are the y's below != to eachothers pair
                 { x: 3150, y: -1000, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
@@ -380,6 +389,7 @@ function initializeLevels() {
           respawnPosition: [500,150],
           ballColor: 'red',
           ballSkin: '8ball',
+          music: 'odyssey', // Odyssey.mp3 for Level 2
           platforms: [],
 
           disappearingPlatforms: [
@@ -447,9 +457,10 @@ function initializeLevels() {
 
         {
             name: "Level 3",
-			      theme: "sky", 
+		      theme: "sky", 
             respawnPosition: [500, 150],
             ballColor: 'red',
+            music: 'land', // Land.mp3 for Level 3
             platforms: [],
             disappearingPlatforms: [],
             ground: [{"x": 450,"y": 390,"w": 580,"h": 20}],
@@ -608,10 +619,47 @@ function respawn() {
       explodeAndRespawn();
 
       if(deathSound.isLoaded()) {
-        deathSound.setVolume(globalVolume);
+        deathSound.setVolume(globalVolume * 0.25);
         deathSound.play();
       }
       
+    }
+}
+
+// Music control functions
+function playLevelMusic(level) {
+    // Stop current music if playing
+    if (currentMusic) {
+        currentMusic.stop();
+    }
+    
+    // Play new music based on level
+    if (level.music === 'land' && landMusic && landMusic.isLoaded()) {
+        currentMusic = landMusic;
+        currentMusic.setVolume(globalVolume * 0.3); // Lower volume for background music
+        currentMusic.loop();
+        console.log('Playing Land music for level:', level.name);
+    } else if (level.music === 'odyssey' && odysseyMusic && odysseyMusic.isLoaded()) {
+        currentMusic = odysseyMusic;
+        currentMusic.setVolume(globalVolume * 0.3); // Lower volume for background music
+        currentMusic.loop();
+        console.log('Playing Odyssey music for level:', level.name);
+    } else {
+        console.log('No music specified for level:', level.name);
+    }
+}
+
+function pauseMusic() {
+    if (currentMusic && currentMusic.isPlaying()) {
+        currentMusic.pause();
+        console.log('Music paused');
+    }
+}
+
+function resumeMusic() {
+    if (currentMusic && !currentMusic.isPlaying()) {
+        currentMusic.play();
+        console.log('Music resumed');
     }
 }
 
@@ -625,6 +673,9 @@ async function loadLevel(levelIndex) {
 
   if (level) {
       currentBgTheme = level.theme || BG_SKY;
+      
+      // Play level music
+      playLevelMusic(level);
       
       // set the player reset spawn point based on the level on level-load
       respawnPosition[0] = level.respawnPosition[0];
@@ -1017,7 +1068,7 @@ function teleportation() {
                     ball.x = levelObjects.teleporter[1].x;  //changes ball position to other teleporter
                     ball.y = levelObjects.teleporter[1].y;
                     if(teleportSound && teleportSound.isLoaded()) {
-                      teleportSound.setVolume(globalVolume);
+                      teleportSound.setVolume(globalVolume * 0.25);
                       teleportSound.play(); 
                     } 
 
@@ -1026,7 +1077,10 @@ function teleportation() {
                 } else if (teleporter === levelObjects.teleporter[1] && teleporterActive == true) {
                     ball.x = levelObjects.teleporter[0].x;        
                     ball.y = levelObjects.teleporter[0].y;
-                    if(teleportSound) teleportSound.play(); 
+                    if(teleportSound && teleportSound.isLoaded()) {
+                      teleportSound.setVolume(globalVolume * 0.25);
+                      teleportSound.play(); 
+                    } 
                     teleporterActive = false;
                     beginTime = millis();
                    
@@ -1054,7 +1108,10 @@ function blackholeAttraction() {
             ball.vel.y += forceOnY
           if (distanceBlackhole < 60) {  
             respawn();  //if ball is too close to blackhole, it explodes
-            deathSound.play();
+            if (deathSound && deathSound.isLoaded()) {
+              deathSound.setVolume(globalVolume * 0.25);
+              deathSound.play();
+            }
           }
         }
         
@@ -1449,6 +1506,10 @@ function preload() {
 	deathSound = loadSound('../audio/dead.mp3');
     teleportSound = loadSound('../audio/whoosh.mp3');
 
+    // Load music files
+    landMusic = loadSound('../audio/music/Land.mp3');
+    odysseyMusic = loadSound('../audio/music/Odyssey.mp3');
+
     unclaimedFlagImage = loadImage("../art/unclaimed_checkpoint.png", img => {
         
         img.resize(100, 100);
@@ -1697,7 +1758,11 @@ function buildPauseOverlay() {
   `;
   resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(0,255,150,0.5)';
   resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(0,255,150,0.3)';
-  resumeBtn.onclick = () => { pauseKey = false; hidePauseOverlay(); };
+  resumeBtn.onclick = () => { 
+    pauseKey = false; 
+    hidePauseOverlay(); 
+    resumeMusic(); // Resume music when resume button is clicked
+  };
   bottomButtons.appendChild(resumeBtn);
 
   // Quit Button
@@ -1857,8 +1922,14 @@ function update() {
 
   if (kb.pressed('P')|| presspause) {
     pauseKey = !pauseKey;
-    if (pauseKey) { if (typeof showPauseOverlay === 'function') showPauseOverlay(); }
-    else          { if (typeof hidePauseOverlay === 'function') hidePauseOverlay(); }
+    if (pauseKey) { 
+        if (typeof showPauseOverlay === 'function') showPauseOverlay();
+        pauseMusic(); // Pause music when game is paused
+    }
+    else          { 
+        if (typeof hidePauseOverlay === 'function') hidePauseOverlay();
+        resumeMusic(); // Resume music when game is unpaused
+    }
     presspause = false;
   }
 
@@ -2123,7 +2194,7 @@ function update() {
         if (ball && ball.colliding(spring)) {
             ball.vel.y = -15;
             if (springSound && springSound.isLoaded()) {
-              springSound.setVolume(globalVolume);
+              springSound.setVolume(globalVolume * 0.25);
               springSound.play();
             } 
         }
@@ -2149,7 +2220,7 @@ function update() {
             // we can just increment the vel.y by the jump-strength
             ball.vel.y += -7;
             if (jumpSound && jumpSound.isLoaded()) {
-              jumpSound.setVolume(globalVolume);
+              jumpSound.setVolume(globalVolume * 0.25);
               jumpSound.play();
             }
               
