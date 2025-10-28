@@ -34,7 +34,7 @@ let respawnTimer = 0;
 let jumpCount = 0;
 let maxJumps = 1;
 let spring;
-let pauseKey = false;
+let lastPlayerVel = [0, 0];
 let pausePosition = [0, 0];
 let gameState = "playing"; // start in menu
 let presspause = false;
@@ -579,8 +579,8 @@ function explodeAndRespawn() {
 
   jumpCount = 0;
 
-  ball.x = halfWidth - 200;
-  ball.y = halfHeight - 200;
+  //ball.x = halfWidth - 200;
+  //ball.y = halfHeight - 200;
   respawnTimer = 40;
 }
 
@@ -948,7 +948,7 @@ function drawUI() {
     text(`Level: ${levels[currentLevel].name}`, 20, 20);
 
     
-    if (!pauseKey) {
+    if (!gameHandler.isPaused()) {
         fill(255, 100, 100);
         stroke(0);
         strokeWeight(2);
@@ -1403,7 +1403,7 @@ function mousePressed() {
   }
 
   // --- normal (non-editor) clicks: pause button & pause-menu button ---
-  if (pauseKey) {
+  if (gameHandler.isPaused()) {
     // Example "Random Color" button in pause menu
     const btnX = width/2, btnY = height/2 + 100, btnW = 120, btnH = 40;
     if (mouseX >= btnX - btnW/2 && mouseX <= btnX + btnW/2 &&
@@ -1759,7 +1759,8 @@ function buildPauseOverlay() {
   resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(0,255,150,0.5)';
   resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(0,255,150,0.3)';
   resumeBtn.onclick = () => { 
-    pauseKey = false; 
+    gameHandler.pauseGame();
+    
     hidePauseOverlay(); 
     resumeMusic(); // Resume music when resume button is clicked
   };
@@ -1906,7 +1907,47 @@ function pauseMenu() {
     camera.on();
 }
   
-   
+function pauseObstacles() {
+    levelObjects.laserBlasters?.forEach(laser => {
+        laser.freeze();
+    });
+
+    levelObjects.asteriodFields?.forEach(field => {
+        field.freeze();
+    });
+}
+
+function pressedPause() {
+    return kb.pressed('Escape') || kb.pressed('P') || kb.pressed('p');
+}
+function pressedPause(key) {
+    if (!key) return false;
+    
+    console.log(`Key Pressed -> ${key}`);
+    return key === 'Escape' || key === 'P' || key === 'p';
+}
+
+// p5js predefined callback that triggers per-press
+function keyPressed() {
+    if (pressedPause(key)) {
+        if (!gameHandler.isPaused()) {
+            // track current vel
+            lastPlayerVel = [ ball.vel.x, ball.vel.y ];
+            gameHandler.pauseGame();
+
+            if (typeof showPauseOverlay === 'function') showPauseOverlay();
+            pauseMusic(); // Pause music when game is paused
+        } else {
+            gameHandler.resumeGame();
+
+            ball.vel.x = lastPlayerVel[0];
+            ball.vel.y = lastPlayerVel[1];
+
+            if (typeof hidePauseOverlay === 'function') hidePauseOverlay();
+            resumeMusic(); // Resume music when game is unpaused
+        }
+    }
+}
 
 function update() {
   // --- toggles ---
@@ -1914,27 +1955,18 @@ function update() {
     editor.enabled = !editor.enabled;
 
     // if entering editor while paused, unpause & hide DOM pause overlay
-    if (editor.enabled && pauseKey) {
-      pauseKey = false;
+    if (editor.enabled && gameHandler.isPaused()) {
+      gameHandler.resumeGame()
       if (typeof hidePauseOverlay === 'function') hidePauseOverlay();
     }
   }
 
-  if (kb.pressed('P')|| presspause) {
-    pauseKey = !pauseKey;
-    if (pauseKey) { 
-        if (typeof showPauseOverlay === 'function') showPauseOverlay();
-        pauseMusic(); // Pause music when game is paused
-    }
-    else          { 
-        if (typeof hidePauseOverlay === 'function') hidePauseOverlay();
-        resumeMusic(); // Resume music when game is unpaused
-    }
+  if (pressedPause() || presspause) {
     presspause = false;
   }
 
   // restart level ONLY when not editing and not paused
-  if (!editor.enabled && !pauseKey && kb.pressed('r')) {
+  if (!editor.enabled && !gameHandler.isPaused() && kb.pressed('r')) {
     loadLevel(currentLevel);
   }
 
@@ -2058,20 +2090,18 @@ function update() {
   }
 
   // ===== PAUSED MODE =======
-  if (pauseKey) {
+  if (gameHandler.isPaused()) {
     levelObjects.platforms?.forEach(p => { p.physics = STATIC; });
 
     if (ball) {
-        ball.physics = NONE;
         ball.vel.x = 0; ball.vel.y = 0;
         ball.rotationSpeed = 0; ball.angularVelocity = 0;
     }
 
     drawBackgroundForLevel();
     if (typeof allSprites !== 'undefined') allSprites.draw();
-    
 
-    pauseMenu();            
+    pauseObstacles();
     return;
   }
 
@@ -2214,28 +2244,32 @@ function update() {
     if (onGround) jumpCount = 0;
 
     // Controls
-    if (kb.presses('space')) {
-        if (ball && jumpCount < maxJumps) {
-            // when grounded we can assume vel.y is 0
-            // we can just increment the vel.y by the jump-strength
-            ball.vel.y += -7;
-            if (jumpSound && jumpSound.isLoaded()) {
-              jumpSound.setVolume(globalVolume * 0.25);
-              jumpSound.play(0,1,1,.5,.7);
+    if (ball && ball.visible) {
+        // only give the player control when the player is visible on screen
+        
+        if (kb.presses('space')) {
+            if (ball && jumpCount < maxJumps) {
+                // when grounded we can assume vel.y is 0
+                // we can just increment the vel.y by the jump-strength
+                ball.vel.y += -7;
+                if (jumpSound && jumpSound.isLoaded()) {
+                  jumpSound.setVolume(globalVolume * 0.25);
+                  jumpSound.play(0,1,1,.5,.7);
+                }
+                  
+                jumpCount++;
             }
-              
-            jumpCount++;
         }
-    }
-
-    if (ball && kb.pressing('left')) {
-        if (ball.vel.x > 0) ball.applyForce(-30);
-        else ball.applyForce(-15);
-    }
-
-    if (ball && kb.pressing('right')) {
-        if (ball.vel.x < 0) ball.applyForce(30);
-        else ball.applyForce(15);
+    
+        if (ball && kb.pressing('left')) {
+            if (ball.vel.x > 0) ball.applyForce(-30);
+            else ball.applyForce(-15);
+        }
+    
+        if (ball && kb.pressing('right')) {
+            if (ball.vel.x < 0) ball.applyForce(30);
+            else ball.applyForce(15);
+        }
     }
 
     // Spike collision handeler

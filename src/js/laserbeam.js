@@ -32,6 +32,10 @@ class Laser {
         this.sprite.remove();
     }
 
+    freeze() {
+        this.sprite.vel.x = this.sprite.vel.y = 0;
+    }
+
     update() {
         if (this.alive) {
             if (this.lifeTime < this.maxLifeTime) {
@@ -153,7 +157,7 @@ class Laserbeam {
             this.laserBlaster.remove();
 
         // destroy bullets
-        for (let i = 0; i > this.bullets.length; ++i) {
+        for (let i = 0; i < this.bullets.length; ++i) {
             let bullet = this.bullets.pop();
             if (bullet) bullet.dtor();
         }
@@ -249,6 +253,16 @@ class Laserbeam {
         } else if (this.forward === DOWN) {
             const bullet = new Laser(x, y + offset, this.bulletSpeed, DOWN, this.player);
             this.bullets.push(bullet);
+        }
+    }
+
+    freeze() {
+        this.sprite.vel.x = this.sprite.vel.y = 0;
+
+        // freeze bullets
+        for (let i = 0; i < this.bullets.length; ++i) {
+            let bullet = this.bullets[i];
+            if (bullet) bullet.freeze();
         }
     }
 

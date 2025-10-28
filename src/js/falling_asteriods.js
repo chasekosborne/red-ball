@@ -84,6 +84,10 @@ class Asteriod {
         this.active = false;
     }
 
+    freeze() {
+        this.sprite.vel.x = this.sprite.vel.y = 0;
+    }
+
     update() {
         if (this.active) {
             // travel with vel
@@ -181,6 +185,14 @@ class AsteriodField {
 
             let asteriod = new Asteriod(x,y,this.fallSpeed,this.player);
             this.asteriods.push(asteriod);
+        }
+    }
+
+    freeze() {
+        // freeze asteriods
+        for (let i = this.asteriods.length - 1; i >= 0; i--) {
+            let asteriod = this.asteriods[i];
+            asteriod.freeze();
         }
     }
 
