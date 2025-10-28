@@ -1501,7 +1501,7 @@ function worldMouse() {
 //============================ End Level Editor ======================================
 
 function preload() {
-    jumpSound = loadSound('../audio/jump.mp3');
+    jumpSound = loadSound('../audio/ball.mp3');
     springSound = loadSound('../audio/spring.mp3');
 	deathSound = loadSound('../audio/dead.mp3');
     teleportSound = loadSound('../audio/whoosh.mp3');
@@ -2221,7 +2221,7 @@ function update() {
             ball.vel.y += -7;
             if (jumpSound && jumpSound.isLoaded()) {
               jumpSound.setVolume(globalVolume * 0.25);
-              jumpSound.play();
+              jumpSound.play(0,1,1,.5,.7);
             }
               
             jumpCount++;
