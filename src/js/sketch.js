@@ -42,6 +42,9 @@ let teleporter;
 let teleporterImage;
 let teleporterActive = true;   
 let beginTime = millis();
+let levelElapsedTime = 0;
+let lastFrameTime = 0;
+let savedElapsedTime = 0;
 let pauseOverlayEl;
 let blackhole;
 let blackholeImage;
@@ -612,6 +615,7 @@ function respawn() {
       if (difficulty === 'hard') {
         lives--;
         if (lives <= 0) {
+          savedElapsedTime = levelElapsedTime;
           loadLevel(currentLevel);
           return;
         }
@@ -670,6 +674,18 @@ async function loadLevel(levelIndex) {
   const level = levels[currentLevel];
 
   console.log(`Current Level = ${currentLevel} | levels.length -> ${levels.length}`);
+
+  if (difficulty === 'hard') {
+    lives = 3;
+  } else {
+    lives = Infinity;
+  }
+  
+    levelElapsedTime = 0;
+
+    levelElapsedTime += savedElapsedTime;
+    savedElapsedTime = 0;
+    lastFrameTime=millis();
 
   if (level) {
       currentBgTheme = level.theme || BG_SKY;
@@ -967,7 +983,19 @@ function drawUI() {
       text(`Lives: ${lives}`, 61, 60)
     }
 
-
+    //Drawing the time
+    push();
+    camera.off();
+    if (currentBgTheme == BG_SPACE) {
+      fill(255);
+    } else {
+      fill(0);
+    }
+    noStroke();
+    textSize(24);
+    textAlign(LEFT);
+    text("Time: " + formatTime(levelElapsedTime / 1000), 80, 90);
+    pop();
 
     
     // Instructions (if needed)
@@ -1945,6 +1973,7 @@ function keyPressed() {
 
             if (typeof hidePauseOverlay === 'function') hidePauseOverlay();
             resumeMusic(); // Resume music when game is unpaused
+            lastFrameTime = millis();
         }
     }
 }
@@ -1958,6 +1987,10 @@ function update() {
     if (editor.enabled && gameHandler.isPaused()) {
       gameHandler.resumeGame()
       if (typeof hidePauseOverlay === 'function') hidePauseOverlay();
+    }
+
+    if (!editor.enabled) {
+      lastFrameTime = millis();
     }
   }
 
@@ -2121,6 +2154,16 @@ function update() {
 
 	drawBackgroundForLevel();
 
+  let currentTime = millis();
+  levelElapsedTime += currentTime - lastFrameTime;
+  lastFrameTime = currentTime;
+
+  if (difficulty === 'hard' && lives === Infinity) {
+    lives = 3;
+  } else if (difficulty !== 'hard' && lives !== Infinity) {
+    lives = Infinity;
+  }
+  
     // Ball fall off map respawner
     if (ball && ball.y > 700) {
         respawn();
@@ -2348,4 +2391,10 @@ function update() {
 function randomColor() {
     levels[currentLevel].ballColor = random(['red', 'black', 'purple', 'pink', 'yellow', 'green', 'blue']);
     if (ball) ball.color = levels[currentLevel].ballColor;
+}
+
+function formatTime(totalSeconds) {
+  let minutes = floor(totalSeconds / 60);
+  let seconds = floor(totalSeconds % 60);
+  return nf(minutes, 2) + ":" + nf(seconds, 2);
 }
