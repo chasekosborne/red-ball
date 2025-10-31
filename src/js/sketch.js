@@ -962,17 +962,17 @@ function drawUI() {
     text(`Level: ${levels[currentLevel].name}`, 20, 20);
 
     
-    if (!gameHandler.isPaused()) {
-        fill(255, 100, 100);
-        stroke(0);
-        strokeWeight(2);
-        rect(pauseButtonBounds.x, pauseButtonBounds.y, pauseButtonBounds.w, pauseButtonBounds.h);
+    // if (!gameHandler.isPaused()) {
+    //     fill(255, 100, 100);
+    //     stroke(0);
+    //     strokeWeight(2);
+    //     rect(pauseButtonBounds.x, pauseButtonBounds.y, pauseButtonBounds.w, pauseButtonBounds.h);
         
-        fill(255);
-        textAlign(CENTER, CENTER);
-        textSize(12);
-        text('Pause (P)', pauseButtonBounds.x + pauseButtonBounds.w/2, pauseButtonBounds.y + pauseButtonBounds.h/2);
-    }
+    //     fill(255);
+    //     textAlign(CENTER, CENTER);
+    //     textSize(12);
+    //     text('Pause (P)', pauseButtonBounds.x + pauseButtonBounds.w/2, pauseButtonBounds.y + pauseButtonBounds.h/2);
+    // }
 
     if(difficulty == 'hard') {
       fill(textColor);
@@ -1777,7 +1777,7 @@ function buildPauseOverlay() {
   resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(0,255,150,0.5)';
   resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(0,255,150,0.3)';
   resumeBtn.onclick = () => { 
-    gameHandler.pauseGame();
+    gameHandler.resumeGame();
     
     hidePauseOverlay(); 
     resumeMusic(); // Resume music when resume button is clicked
