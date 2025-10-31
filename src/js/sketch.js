@@ -10,6 +10,7 @@ let spikeImage;
 let laserBlasterImage;
 let hammerImage;
 let asteriod_sprites;
+let springImage;
 
 let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
 let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
@@ -736,7 +737,20 @@ async function loadLevel(levelIndex) {
       for (let springData of level.springs || []) {
         let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
         spring.physics = STATIC;
-        spring.color = 'cyan';
+        //spring.color = 'cyan';
+        // Create a buffer the size of the platform
+  let buffer = createGraphics(springData.w, springData.h);
+
+      // Tile the image to fill the platform area
+      for (let x = 0; x < springData.w; x += springImage.width/2) {
+      for (let y = 0; y < springData.h; y += springImage.height) {
+        buffer.image(springImage, x, y);
+        }
+      }
+
+      // Assign tiled texture to the platform
+      spring.img = buffer;
+        //spring.img = springImage;
         levelObjects.springs.push(spring);
       }
       // Disappearing platforms creator
@@ -1519,9 +1533,13 @@ function preload() {
         img.resize(100, 100);
     });
 
-    spikeImage = loadImage("../art/spike.png", img => {
+    spikeImage = loadImage("../art/spike2.png", img => {
         img.resize(100, 100);
     });
+
+    springImage = loadImage("../art/spring.png", img => {
+      img.resize(75, 75);
+  });
 
     teleporterImage = loadImage("../art/teleportgreener.png", img => {
         img.resize(150, 150);
