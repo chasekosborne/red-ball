@@ -26,6 +26,11 @@ class CheckPoint {
         if (!this.claimed && this.sprite.overlapping(this.player)) {
             console.log("CLAIMED!")
 
+            //Checkpoint sound
+            if(checkSound && checkSound.isLoaded()) {
+                checkSound.setVolume(globalVolume);
+                checkSound.play();
+            }
             // affordance of claimage
             this.sprite.img = claimedFlagImage;
 
