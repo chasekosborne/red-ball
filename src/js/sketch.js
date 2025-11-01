@@ -136,6 +136,7 @@ function preload() {
     springSound = loadSound('../audio/spring.mp3');
     deathSound = loadSound('../audio/dead.mp3');
     teleportSound = loadSound('../audio/whoosh.mp3');
+    checkSound = loadSound('../audio/check.mp3');
 
     // Load music files
     landMusic = loadSound('../audio/music/Land.mp3');
@@ -204,7 +205,6 @@ function preload() {
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    // jumpSound.loop();
     // makes the pixels not blurry
     noSmooth();
 
