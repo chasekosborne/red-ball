@@ -5,43 +5,52 @@ let spikeImage;
 let laserBlasterImage;
 let hammerImage;
 let asteriod_sprites;
+let teleporterImage;
+let blackholeImage;
 
-let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
-let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
+// Player Vars
 let ball;
-let respawnPosition = [500, 150];
-let jumpSound;
-let deathSound;
-let springSound;
-let ballSkinImage;
-let teleportSound;
-
-// Music variables
-let landMusic;
-let odysseyMusic;
-let currentMusic;
-let spikes;
-let platform;
-let button;
 let ballColor;
 let particles = [];
 let respawnTimer = 0;
 let jumpCount = 0;
 let maxJumps = 1;
-let spring;
 let lastPlayerVel = [0, 0];
 let pausePosition = [0, 0];
-let gameState = "playing"; // start in menu
-let presspause = false;
-let teleporter;
-let teleporterImage;
-let teleporterActive = true;   
-let beginTime;
-let pauseOverlayEl;
-let blackhole;
-let blackholeImage;
-let difficulty = 'normal';
 let lives = Infinity;
+let respawnPosition = [500, 150];
+
+// SFX
+let jumpSound;
+let deathSound;
+let springSound;
+let ballSkinImage;
+let teleportSound;
+let checkSound;
+
+// Music variables
+let landMusic;
+let odysseyMusic;
+let currentMusic;
+
+// Game Vars
+let spikes;
+let platform;
+let spring;
+let blackhole;
+let gameState = "playing"; // start in menu
+let teleporter;
+let teleporterActive = true;
+
+// menu globals
+let button;
+let pauseOverlayEl;
+let colorButtonBounds = { x: 20, y: 100, w: 100, h: 30 };
+let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
+
+// level meta data
+let presspause = false;
+let difficulty = 'normal';
 let globalVolume = 0.5;
 
 // === Background themes ===
@@ -62,3 +71,9 @@ let spaceSeed = 1337;
 let currentLevel = 0; // 0 = dev room
 let levels = [];
 let levelObjects = {}; // Will store level platforms and stuff
+
+// ==== Timer variables ====
+let beginTime;
+let levelElapsedTime = 0;
+let lastFrameTime = 0;
+let savedElapsedTime = 0;

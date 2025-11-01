@@ -183,7 +183,7 @@ function buildPauseOverlay() {
     resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(0,255,150,0.5)';
     resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(0,255,150,0.3)';
     resumeBtn.onclick = () => {
-        gameHandler.pauseGame();
+        gameHandler.resumeGame();
 
         hidePauseOverlay();
         resumeMusic(); // Resume music when resume button is clicked

@@ -24,7 +24,12 @@ class CheckPoint {
     // check if the player has collided into the checkpoint and change states
     update() {
         if (!this.claimed && this.sprite.overlapping(this.player)) {
-            console.log("CLAIMED!")
+            console.log("CLAIMED!");
+
+            if(checkSound && checkSound.isLoaded()) {
+                checkSound.setVolume(globalVolume);
+                checkSound.play();
+            }
 
             // affordance of claimage
             this.sprite.img = claimedFlagImage;

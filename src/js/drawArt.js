@@ -243,14 +243,25 @@ function drawUI() {
     }
 
     if(difficulty == 'hard') {
-      fill(textColor);
-      textSize(24);
-      noStroke();
-      text(`Lives: ${lives}`, 61, 60)
+        fill(textColor);
+        textSize(24);
+        noStroke();
+        text(`Lives: ${lives}`, 61, 60)
     }
 
-
-
+    //Drawing the time
+    push();
+    camera.off();
+    if (currentBgTheme == BG_SPACE) {
+        fill(255);
+    } else {
+        fill(0);
+    }
+    noStroke();
+    textSize(24);
+    textAlign(LEFT);
+    text("Time: " + formatTime(levelElapsedTime / 1000), 80, 90);
+    pop();
     
     // Instructions (if needed)
     // Can be used to make fun little quips 
@@ -288,18 +299,18 @@ function drawUI() {
 }
 
 function drawSigns() {
-  const level = levels[currentLevel];
-  if (!level.signs || level.signs.length === 0) return;
+    const level = levels[currentLevel];
+    if (!level.signs || level.signs.length === 0) return;
 
-  push();
-  textAlign(CENTER, CENTER);
-  noStroke();
+    push();
+    textAlign(CENTER, CENTER);
+    noStroke();
 
-  for (let sign of level.signs) {
-    textSize(sign.size || 24);
-    fill(sign.color || 'white');
-    text(sign.text, sign.x, sign.y);
-  }
-  
-  pop();
+    for (let sign of level.signs) {
+        textSize(sign.size || 24);
+        fill(sign.color || 'white');
+        text(sign.text, sign.x, sign.y);
+    }
+
+    pop();
 }

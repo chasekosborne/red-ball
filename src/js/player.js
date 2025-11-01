@@ -36,6 +36,7 @@ function explodeAndRespawn() {
             life: 40
         });
     }
+    
     ball.visible = false;
     ball.collider = 'none';
     ball.vel.x = 0;
@@ -48,19 +49,20 @@ function explodeAndRespawn() {
 
 function respawn() {
     if (respawnTimer === 0) {
-      if (difficulty === 'hard') {
-        lives--;
-        if (lives <= 0) {
-          loadLevel(currentLevel);
-          return;
+        if (difficulty === 'hard') {
+            lives--;
+            if (lives <= 0) {
+                savedElapsedTime = levelElapsedTime;
+                loadLevel(currentLevel);
+                return;
+            }
         }
-      }
-      explodeAndRespawn();
+        explodeAndRespawn();
 
-      if(deathSound.isLoaded()) {
-        deathSound.setVolume(globalVolume * 0.25);
-        deathSound.play();
-      }
-      
+        if (deathSound.isLoaded()) {
+            deathSound.setVolume(globalVolume * 0.25);
+            deathSound.play();
+        }
+
     }
 }
