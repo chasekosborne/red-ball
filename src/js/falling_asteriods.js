@@ -68,6 +68,7 @@ class Asteriod {
     }
 
     spawnImpact() {
+        this.active = false;
         this.sprite.visible = false;
 
         // spawn particle system
@@ -80,8 +81,10 @@ class Asteriod {
                 life: 40
             });
         }
+    }
 
-        this.active = false;
+    freeze() {
+        this.sprite.vel.x = this.sprite.vel.y = 0;
     }
 
     update() {
@@ -108,7 +111,6 @@ class Asteriod {
                 this.spawnImpact();
                 return;
             });
-
         } else {
             this.updateParticles();
 
@@ -153,6 +155,7 @@ class AsteriodField {
         this.y = y;
 
         this.asteriods = [];
+        this.enabled = true;
     }
     dtor() {
         // destroy asteriods
@@ -184,7 +187,25 @@ class AsteriodField {
         }
     }
 
+    freeze() {
+        this.enabled = false;
+        
+        // freeze asteriods
+        for (let i = this.asteriods.length - 1; i >= 0; i--) {
+            let asteriod = this.asteriods[i];
+            asteriod.freeze();
+        }
+    }
+
     update() {
+        // when game is resumed this object is re-enabled
+        this.enabled = !gameHandler.isPaused();
+
+        if (!this.enabled) {
+            // ensure we do not generate more bursts
+            return;
+        }
+
         this.updateAsteriods();
 
         if (this.t === 0) {
