@@ -33,6 +33,9 @@ function updatePlayer() {
     levelObjects.disappearingPlatforms?.forEach(platform => {
         if (ball && ball.colliding(platform)) onGround = true;
     });
+    levelObjects.bricks?.forEach(brick => {
+        if (ball && ball.colliding(brick)) onGround = true;
+    });
     if (onGround) jumpCount = 0;
 
     // Controls
@@ -159,8 +162,28 @@ function preload() {
     });
 
     laserBlasterImage = loadImage('../art/laserMount.png', img => {
-        img.resize(50, 50);
+        img.resize(100, 100);
     })
+    brickImage = loadImage('../art/Tiles2/plainbrick.png', img => {
+        img.resize(50, 50);
+    });
+
+    pinkfullImage = loadImage('../art/Tiles2/pinktop.png', img => {
+        img.resize(50, 50);
+    });
+
+    pinkleftImage = loadImage('../art/Tiles2/pinkleft.png', img => {
+        img.resize(50, 50);
+    });
+    pinkrightImage = loadImage('../art/Tiles2/pinkright.png', img => {
+        img.resize(50, 50);
+    });
+
+    texturedBrickImage = loadImage('../art/Tiles2/texturedtile.png', img => {
+        img.resize(50, 50);
+    });
+
+   
 
     // multiple asteriod sprites
     asteriod_sprites = [];
