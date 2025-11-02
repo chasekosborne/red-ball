@@ -24,6 +24,81 @@ function drawSkyGradient(top = color(0, 150, 255), bottom = color(135, 206, 235)
     noStroke();
 }
 
+function drawlevel1Tiles() {
+if (bricksBuilt && bricksGroup) return; 
+bricksGroup = new Group();
+bricksGroup.physics = 'static';
+bricksGroup.layer = 0;
+bricksGroup.img = brickImage;
+bricksGroup.tile = '=';
+
+pinkfullGroup = new Group();
+pinkfullGroup.physics = 'static';
+pinkfullGroup.layer = 1;
+pinkfullGroup.img = pinkfullImage;
+pinkfullGroup.tile = 't';
+
+pinkleftGroup = new Group();
+pinkleftGroup.physics = 'static';
+pinkleftGroup.layer = 1;
+pinkleftGroup.img = pinkleftImage;
+pinkleftGroup.tile = 'l';
+
+pinkrightGroup = new Group();
+pinkrightGroup.physics = 'static';
+pinkrightGroup.layer = 1;
+pinkrightGroup.img = pinkrightImage;
+pinkrightGroup.tile = 'r';
+
+texturedBrickGroup = new Group();
+texturedBrickGroup.physics = 'static';
+texturedBrickGroup.layer = 1;
+texturedBrickGroup.img = texturedBrickImage;
+texturedBrickGroup.tile = 'x';
+
+  tiles = new Tiles(
+    [
+     '...........................', 
+      '...........................',
+      '...........................',  
+      '...........................',
+      '...........................',
+      '...........................',
+      '...........................',
+      '............................ttttttttttttttttt.',
+      '...........................l==xxx==xxxx==xxxxr',
+      '...........................lx================r',
+      '...........................lx================r',
+      '...........................l=================r',
+      '...........................lx================r',
+      '...........................l=================r',
+      '...........................l=================r',
+      '...........................l=================r',
+      '...........................lx================r',
+      '...........................l=================r',
+      '.tttttttttt................lx================r',
+      'l==x===x=x=r...............lx=================ttttt.',
+      'l=x======x=r...............l=======================r',
+      'lx=========r...............l=x=====================r',
+      'l==========r...............lx======================r',
+      'lx=========r...............lxx=====================r',
+      'l==========r...............l=======================r',
+      'l==========r...............l=======================r',
+      'l===========ttttttttttttttt========================r',
+      'l==================================================tttttttttttttttttttttttttttttt',
+      '===================================================================================',
+      '===================================================================================',
+      '===================================================================================',
+      '==================================================================================='
+    ],
+    30, 57,
+    23, 23
+  );
+
+  bricksBuilt = true;
+}
+
+
 function drawCloud(x, y, s = 1) {
     push();
     noStroke();
@@ -65,6 +140,7 @@ function ensureSpaceAssets() {
     if (!bgStars || bgStars.length === 0 ||
         ensureSpaceAssets._w !== width || ensureSpaceAssets._h !== height) {
         buildBgStarfield();     // (re)create stars for current canvas
+        drawlevel1Tiles();
         ensureSpaceAssets._w = width;
         ensureSpaceAssets._h = height;
     }
@@ -314,3 +390,4 @@ function drawSigns() {
 
     pop();
 }
+

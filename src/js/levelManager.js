@@ -1,76 +1,24 @@
 const LEVELS = [
     {
-        name: "Dev Room",
+         name: "Dev Room",
         theme: "space",
         respawnPosition: [500, 150],
         ballColor: 'red',
-        ballSkin: '8ball',
-        goalPosition: { x: 5000, y: 50 },
-        music: 'odyssey', // Odyssey.mp3 for Dev Room
-
-        platforms: [
-            { x: 600, y: 250, w: 120, h: 20, color: 'orange', moving: true, speed: 2, minX: 200, maxX: 1000 },
-            { x: 850, y: 200, w: 120, h: 20, color: 'orange', moving: false, fake: 'true' } // acting oddly
-        ],
-        disappearingPlatforms: [
-            { x: 1080, y: 200, w: 120, h: 20 },
-        ],
-
-        ground: [
-            { x: 500, y: 350, w: 800, h: 40 },
-            { x: 2000, y: 100, w: 1000, h: 40 },
-            { x: 1800, y: 250, w: 400, h: 40 },
-            { x: 3200, y: 100, w: 1000, h: 40 },
-            { x: 4400, y: 100, w: 1000, h: 40 },
-        ],
-        springs: [
-            { x: 1200, y: 350, w: 200, h: 40 }
-        ],
-        spikes: [
-            { x: 800, y: 306, orientation: "up" }
-        ],
-        checkpoints: [
-            { x: 1800, y: 50 }
-        ],
-
-        enemies: [
-            { startX: 2100, startY: 50, endX: 2200, endY: 50, speed: 1 }
-        ],
-
-        lasers: [
-            { x: 200, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
-            { x: 1500, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
-        ],
-
-        asteriodFields: [
-            { x: 4000, y: -600, range: 400, fallSpeed: 4, burstCount: 4, timeInterval: 3 }
-        ],
-
-        swingingHammers: [
-            {
-                pivotX: 2800,
-                pivotY: -400,
-                length: 200,
-                amplitude: 50,
-                speed: 2,
-                phase: 0,
-                width: 780,
-                height: 800,
-                spikeHeight: 200,
-                scale: 0.3
-            }
-        ],
-        teleporter: [
-            { x: 150, y: 300, w: 60, h: 60 },
-            { x: 1800, y: 200, w: 60, h: 60 },
-        ],
-
-        blackhole: [
-            { x: 2200, y: 250, w: 120, h: 120 },
-            { x: 2600, y: 250, w: 120, h: 120 },
-        ],
-
-        instructions: "Use SPACE to jump and arrow keys to move!",
+        music: 'land', // Land.mp3 for Level 3
+        platforms: [],
+        disappearingPlatforms: [],
+        ground: [{ "x": 450, "y": 390, "w": 580, "h": 20 }],
+        springs: [],
+        spikes: [],
+        checkpoints: [{ "x": 260, "y": 340 }],
+        enemies: [],
+        lasers: [],
+        asteriodFields: [],
+        swingingHammers: [],
+        teleporter: [],
+        blackhole: [],
+        goalPosition: { x: 1900, y: 300 },
+        instructions: "",
         signs: [],
     },
 
@@ -400,78 +348,26 @@ const LEVELS = [
 function initializeLevels() {
     levels = [
         {
-            name: "Dev Room",
-			      theme: "space", 
-            respawnPosition: [500, 150],
-            ballColor: 'red',
-        ballSkin: '8ball',
-            goalPosition: { x: 5000, y: 50 },
-            music: 'odyssey', // Odyssey.mp3 for Dev Room
-
-            platforms: [
-                { x: 600, y: 250, w: 120, h: 20, color: 'orange', moving: true, speed: 2, minX: 200, maxX: 1000 },
-                { x: 850, y: 200, w: 120, h: 20, color: 'orange', moving: false, fake: 'true'} // acting oddly
-            ],
-            disappearingPlatforms: [
-                { x: 1080, y: 200, w: 120, h: 20 },
-            ],
-
-            ground: [
-                { x: 500, y: 350, w: 800, h: 40 },
-                { x: 2000, y: 100, w: 1000, h: 40 },
-                { x: 1800, y: 250, w: 400, h: 40 },
-                { x: 3200, y: 100, w: 1000, h: 40 },
-                { x: 4400, y: 100, w: 1000, h: 40 },
-            ],
-            springs: [
-                { x: 1200, y: 350, w: 200, h: 40 }
-            ],
-            spikes: [
-                { x: 800, y: 306, orientation: "up" }
-            ],
-            checkpoints: [
-                { x: 1800, y: 50 }
-            ],
-
-            enemies: [
-                { startX: 2100, startY: 50, endX: 2200, endY: 50, speed: 1 }
-            ],
-            
-            lasers: [
-                { x: 200, y: 100, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: DOWN },
-                { x: 1500, y: 600, range: 300, speedData: { speed: 3, bulletSpeed: 8 }, fwdDir: UP },
-            ],
-
-            asteriodFields: [
-                { x: 4000, y: -600, range: 400, fallSpeed: 4, burstCount: 4, timeInterval: 3 }
-            ],
-
-            swingingHammers: [
-                {
-                    pivotX: 2800,
-                    pivotY: -400,
-                    length: 200,
-                    amplitude: 50,
-                    speed: 2,
-                    phase: 0,
-                    width: 780,
-                    height: 800,
-                    spikeHeight: 200,
-                    scale: 0.3
-                }
-            ],
-            teleporter: [
-                { x: 150, y: 300, w: 60, h: 60 },
-                { x: 1800, y: 200, w: 60, h: 60 },
-            ],
-              
-            blackhole: [
-              { x: 2200, y: 250, w: 120, h: 120 },
-              { x: 2600, y: 250, w: 120, h: 120 },
-            ],
- 
-            instructions: "Use SPACE to jump and arrow keys to move!",
-            signs: [],
+        name: "Dev Room",
+        theme: "space",
+        respawnPosition: [500, 150],
+        ballColor: 'red',
+        music: 'land', // Land.mp3 for Level 3
+        platforms: [],
+        disappearingPlatforms: [],
+        ground: [{ "x": 450, "y": 390, "w": 580, "h": 20 }],
+        springs: [],
+        spikes: [],
+        checkpoints: [{ "x": 260, "y": 340 }],
+        enemies: [],
+        lasers: [],
+        asteriodFields: [],
+        swingingHammers: [],
+        teleporter: [],
+        blackhole: [],
+        goalPosition: { x: 1900, y: 300 },
+        instructions: "",
+        signs: [],
         },
 
         {
@@ -1060,7 +956,15 @@ async function clearLevel() {
             });
         }
     });
+    if (bricksGroup) {
+    if (Tiles) {
+        Tiles.removeSprites();
+    }
+    bricksGroup.removeSprites();
+    }
 
+    bricksGroup = null;
+    tiles = null;
     levelObjects = {};
     await new Promise(resolve => setTimeout(resolve, 1));
 }

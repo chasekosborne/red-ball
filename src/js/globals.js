@@ -77,3 +77,16 @@ let beginTime;
 let levelElapsedTime = 0;
 let lastFrameTime = 0;
 let savedElapsedTime = 0;
+
+// ==== Tile variables ====
+let bricksGroup = null;
+let bricksBuilt = false;
+let brickImage;
+let pinkfullGroup = null;
+let pinkrightGroup = null;
+let pinkleftGroup = null;
+let pinkleftImage;
+let pinkfullImage;
+let pinkrightImage;
+let texturedBrickImage;
+let texturedBrickGroup = null;
