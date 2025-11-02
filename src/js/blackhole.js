@@ -1,6 +1,9 @@
 function blackholeAttraction() {
     if (!ball) return;
 
+    // Skip ALL black-hole effects in god mode
+    if (godMode) return;
+
     levelObjects.blackhole?.forEach(blackhole => {   //for each blackhole 
         let distanceBlackhole = dist(ball.x, ball.y, blackhole.x, blackhole.y);
         let attractionField = 150;

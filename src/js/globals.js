@@ -90,3 +90,6 @@ let pinkfullImage;
 let pinkrightImage;
 let texturedBrickImage;
 let texturedBrickGroup = null;
+
+// ==== God Mode ====
+let godMode = false;

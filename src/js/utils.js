@@ -126,6 +126,7 @@ function updateObstacles() {
 
     // Spring Handler
     levelObjects.springs?.forEach(spring => {
+        if (godMode) return;
         if (ball && ball.colliding(spring)) {
             ball.vel.y = -15;
             if (springSound && springSound.isLoaded()) {
