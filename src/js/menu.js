@@ -1,8 +1,8 @@
 function buildPauseOverlay() {
-    //overlay
-    pauseOverlayEl = document.createElement('div');
-    pauseOverlayEl.id = 'pauseOverlay';
-    pauseOverlayEl.style.cssText = `
+  // === Outer overlay ===
+  pauseOverlayEl = document.createElement('div');
+  pauseOverlayEl.id = 'pauseOverlay';
+  pauseOverlayEl.style.cssText = `
     position: fixed;
     inset: 0;
     display: none;
@@ -14,9 +14,9 @@ function buildPauseOverlay() {
     font-family: 'Arial', sans-serif;
   `;
 
-    // the main panel
-    const panel = document.createElement('div');
-    panel.style.cssText = `
+  // === Glass panel ===
+  const panel = document.createElement('div');
+  panel.style.cssText = `
     width: min(90vw, 900px);
     padding: 50px 60px;
     border-radius: 24px;
@@ -26,66 +26,64 @@ function buildPauseOverlay() {
     color: white;
     text-align: center;
   `;
-    pauseOverlayEl.appendChild(panel);
+  pauseOverlayEl.appendChild(panel);
 
-    //the title
-    const h1 = document.createElement('h1');
-    h1.textContent = 'Game Paused';
-    h1.style.cssText = `
+  // === Title ===
+  const h1 = document.createElement('h1');
+  h1.textContent = 'Game Paused';
+  h1.style.cssText = `
     font-size: 60px;
     margin: 0 0 25px;
     color: white;
     text-shadow: 0 0 15px rgba(255,255,255,0.8);
   `;
-    panel.appendChild(h1);
-    // the instructions
-    const tip1 = document.createElement('div');
-    tip1.textContent = 'Press P to Resume';
-    tip1.style.cssText = `
+  panel.appendChild(h1);
+
+  // === Instructions ===
+  const tip1 = document.createElement('div');
+  tip1.textContent = 'Press P to Resume';
+  tip1.style.cssText = `
     font-size: 22px;
     margin: 10px 0;
     color: rgba(255,255,255,0.9);
   `;
-    panel.appendChild(tip1);
+  panel.appendChild(tip1);
 
-    const tip2 = document.createElement('div');
-    tip2.textContent = 'Press R to Restart Level';
-    tip2.style.cssText = `
+  const tip2 = document.createElement('div');
+  tip2.textContent = 'Press R to Restart Level';
+  tip2.style.cssText = `
     font-size: 22px;
     margin-bottom: 40px;
     color: rgba(255,255,255,0.9);
   `;
-    panel.appendChild(tip2);
+  panel.appendChild(tip2);
 
-    // skin selection section
-    const skinSection = document.createElement('div');
-    skinSection.style.cssText = `
+  // === Ball Skin Section ===
+  const skinSection = document.createElement('div');
+  skinSection.style.cssText = `
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
     margin: 30px 0;
   `;
-
-    const skinLabel = document.createElement('div');
-    skinLabel.textContent = 'Select Ball Skin';
-    skinLabel.style.cssText = `
+  const skinLabel = document.createElement('div');
+  skinLabel.textContent = 'Select Ball Skin';
+  skinLabel.style.cssText = `
     font-size: 20px;
     color: rgba(255,255,255,0.95);
   `;
-    skinSection.appendChild(skinLabel);
+  skinSection.appendChild(skinLabel);
 
-    const skinButtons = document.createElement('div');
-    skinButtons.style.cssText = `
+  const skinButtons = document.createElement('div');
+  skinButtons.style.cssText = `
     display: flex;
     gap: 20px;
   `;
-
-    // make the skin buttons
-    const skins = ['8ball', 'donut', 'soccer'];
-    skins.forEach(skin => {
-        const btn = document.createElement('button');
-        btn.style.cssText = `
+  const skins = ['8ball', 'donut', 'soccer'];
+  skins.forEach(skin => {
+    const btn = document.createElement('button');
+    btn.style.cssText = `
       width: 80px;
       height: 80px;
       border-radius: 50%;
@@ -96,51 +94,47 @@ function buildPauseOverlay() {
       background-position: center;
       transition: all 0.2s;
     `;
-        btn.style.backgroundImage = `url(../art/${skin === 'soccer' ? 'SoccerBall' : skin}.png)`;
+    btn.style.backgroundImage = `url(../art/${skin === 'soccer' ? 'SoccerBall' : skin}.png)`;
 
-        btn.onmouseenter = () => {
-            btn.style.borderColor = 'rgba(255,255,255,0.8)';
-            btn.style.transform = 'scale(1.1)';
-        };
-        btn.onmouseleave = () => {
-            btn.style.borderColor = 'rgba(255,255,255,0.3)';
-            btn.style.transform = 'scale(1.0)';
-        };
-        btn.onclick = () => {
-            changeBallSkin(skin);
-            skinButtons.querySelectorAll('button').forEach(b =>
-                b.style.borderColor = 'rgba(255,255,255,0.3)');
-            btn.style.borderColor = '#00ff96';
-        };
+    btn.onmouseenter = () => {
+      btn.style.borderColor = 'rgba(255,255,255,0.8)';
+      btn.style.transform = 'scale(1.1)';
+    };
+    btn.onmouseleave = () => {
+      btn.style.borderColor = 'rgba(255,255,255,0.3)';
+      btn.style.transform = 'scale(1.0)';
+    };
+    btn.onclick = () => {
+      changeBallSkin(skin);
+      skinButtons.querySelectorAll('button').forEach(b =>
+        b.style.borderColor = 'rgba(255,255,255,0.3)');
+      btn.style.borderColor = '#00ff96';
+    };
+    skinButtons.appendChild(btn);
+  });
+  skinSection.appendChild(skinButtons);
+  panel.appendChild(skinSection);
 
-        skinButtons.appendChild(btn);
-    });
-
-    skinSection.appendChild(skinButtons);
-    panel.appendChild(skinSection);
-
-    // pick color
-    const colorSection = document.createElement('div');
-    colorSection.style.cssText = `
+  // === Ball Color Picker ===
+  const colorSection = document.createElement('div');
+  colorSection.style.cssText = `
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
     margin: 30px 0;
   `;
-
-    const colorLabel = document.createElement('div');
-    colorLabel.textContent = 'Choose Ball Color';
-    colorLabel.style.cssText = `
+  const colorLabel = document.createElement('div');
+  colorLabel.textContent = 'Choose Ball Color';
+  colorLabel.style.cssText = `
     font-size: 20px;
     color: rgba(255,255,255,0.95);
   `;
-    colorSection.appendChild(colorLabel);
-
-    const colorPicker = document.createElement('input');
-    colorPicker.type = 'color';
-    colorPicker.value = '#ff0000';
-    colorPicker.style.cssText = `
+  colorSection.appendChild(colorLabel);
+  const colorPicker = document.createElement('input');
+  colorPicker.type = 'color';
+  colorPicker.value = '#ff0000';
+  colorPicker.style.cssText = `
     width: 90px;
     height: 45px;
     border: none;
@@ -148,29 +142,29 @@ function buildPauseOverlay() {
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
   `;
-    colorPicker.oninput = (e) => {
-        if (ball) {
-            ball.color = e.target.value;
-            levels[currentLevel].ballColor = e.target.value;
-        }
-    };
-    colorSection.appendChild(colorPicker);
-    panel.appendChild(colorSection);
+  colorPicker.oninput = (e) => {
+    if (ball) {
+      ball.color = e.target.value;
+      levels[currentLevel].ballColor = e.target.value;
+    }
+  };
+  colorSection.appendChild(colorPicker);
+  panel.appendChild(colorSection);
 
-    // butons on the bottomn
-    const bottomButtons = document.createElement('div');
-    bottomButtons.style.cssText = `
+  // === Bottom Buttons (Resume, Options, Quit) ===
+  const bottomButtons = document.createElement('div');
+  bottomButtons.style.cssText = `
     display: flex;
     justify-content: center;
     gap: 40px;
     margin-top: 20px;
   `;
-    panel.appendChild(bottomButtons);
+  panel.appendChild(bottomButtons);
 
-    // Resume Button
-    const resumeBtn = document.createElement('button');
-    resumeBtn.textContent = 'Resume';
-    resumeBtn.style.cssText = `
+  // Resume Button
+  const resumeBtn = document.createElement('button');
+  resumeBtn.textContent = 'Resume';
+  resumeBtn.style.cssText = `
     padding: 14px 28px;
     font-size: 20px;
     border-radius: 12px;
@@ -180,20 +174,40 @@ function buildPauseOverlay() {
     cursor: pointer;
     transition: all 0.2s;
   `;
-    resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(0,255,150,0.5)';
-    resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(0,255,150,0.3)';
-    resumeBtn.onclick = () => {
-        gameHandler.resumeGame();
+  resumeBtn.onmouseenter = () => resumeBtn.style.background = 'rgba(0,255,150,0.5)';
+  resumeBtn.onmouseleave = () => resumeBtn.style.background = 'rgba(0,255,150,0.3)';
+  resumeBtn.onclick = () => {
+    gameHandler.resumeGame();
+    hidePauseOverlay();
+    resumeMusic();
+  };
+  bottomButtons.appendChild(resumeBtn);
 
-        hidePauseOverlay();
-        resumeMusic(); // Resume music when resume button is clicked
-    };
-    bottomButtons.appendChild(resumeBtn);
+  // Options Button
+  const optionsBtn = document.createElement('button');
+  optionsBtn.textContent = 'Options';
+  optionsBtn.style.cssText = `
+    padding: 14px 28px;
+    font-size: 20px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  `;
+  optionsBtn.onmouseenter = () => optionsBtn.style.background = 'rgba(255,255,255,0.4)';
+  optionsBtn.onmouseleave = () => optionsBtn.style.background = 'rgba(255,255,255,0.2)';
+  optionsBtn.onclick = () => {
+    hidePauseOverlay();
+    document.getElementById("options-menu").style.display = "block";
+  };
+  bottomButtons.appendChild(optionsBtn);
 
-    // Quit Button
-    const quitBtn = document.createElement('button');
-    quitBtn.textContent = 'Quit Game';
-    quitBtn.style.cssText = `
+  // Quit Button
+  const quitBtn = document.createElement('button');
+  quitBtn.textContent = 'Quit Game';
+  quitBtn.style.cssText = `
     padding: 14px 28px;
     font-size: 20px;
     border-radius: 12px;
@@ -203,14 +217,15 @@ function buildPauseOverlay() {
     cursor: pointer;
     transition: all 0.2s;
   `;
-    quitBtn.onmouseenter = () => quitBtn.style.background = 'rgba(255,100,100,0.6)';
-    quitBtn.onmouseleave = () => quitBtn.style.background = 'rgba(255,100,100,0.4)';
-    quitBtn.onclick = () => { location.reload(); };
-    bottomButtons.appendChild(quitBtn);
+  quitBtn.onmouseenter = () => quitBtn.style.background = 'rgba(255,100,100,0.6)';
+  quitBtn.onmouseleave = () => quitBtn.style.background = 'rgba(255,100,100,0.4)';
+  quitBtn.onclick = () => { location.reload(); };
+  bottomButtons.appendChild(quitBtn);
 
-    // Add overlay to document
-    document.body.appendChild(pauseOverlayEl);
+  // === Add overlay to document ===
+  document.body.appendChild(pauseOverlayEl);
 }
+
 
 // Show / hide helpers
 function showPauseOverlay() {
