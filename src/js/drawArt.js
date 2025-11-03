@@ -383,6 +383,19 @@ function drawBackgroundForLevel() {
 }
 
 function drawUI() {
+    if (godMode) {
+      camera.off();
+      push();
+      noStroke();
+      fill(255, 80, 80, 200);
+      rect(12, 12, 120, 24, 6);
+      fill(0);
+      textAlign(CENTER, CENTER);
+      textSize(12);
+      text('GOD MODE', 12 + 60, 12 + 12);
+      pop();
+      camera.on();
+    }
     camera.off();
     push();
 

@@ -102,3 +102,6 @@ rightCornerInvertBrickImage2;
 rightCornerBrickGroupInvert2 = null;
 leftCornerInvertBrickImage2;
 leftCornerBrickGroupInvert2 = null;
+
+// ==== God Mode ====
+let godMode = false;

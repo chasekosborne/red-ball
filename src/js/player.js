@@ -26,6 +26,7 @@ function updateParticles() {
 
 function explodeAndRespawn() {
     if (!ball) return;
+    if (godMode) return;
 
     for (let i = 0; i < 20; i++) {
         particles.push({
@@ -48,6 +49,7 @@ function explodeAndRespawn() {
 }
 
 function respawn() {
+    if (godMode) return;
     if (respawnTimer === 0) {
         if (difficulty === 'hard') {
             lives--;

@@ -16,7 +16,7 @@ function cameraFollow() {
 
 function updatePlayer() {
     // Ball fall off map respawner
-    if (ball && ball.y > 700) {
+    if (!godMode && ball && ball.y > 700) {
         respawn();
         updateParticles();
         return;
@@ -45,6 +45,16 @@ function updatePlayer() {
     if (onGround) jumpCount = 0;
 
     // Controls
+    // God mode flying movement
+    if (godMode && ball && ball.visible) {
+      const speed = kb.pressing('shift') ? 8 : 4;
+      if (kb.pressing('left'))  ball.x -= speed;
+      if (kb.pressing('right')) ball.x += speed;
+      if (kb.pressing('up'))    ball.y -= speed;
+      if (kb.pressing('down'))  ball.y += speed;
+      return; // skip normal jump/run controls while flying
+    }
+    
     if (ball && ball.visible) {
         // only give the player control when the player is visible on screen
 
@@ -130,6 +140,22 @@ function keyPressed() {
             // restart level ONLY when not editing and not paused
             if (!editor.enabled && !gameHandler.isPaused()) {
                 loadLevel(currentLevel);
+            }
+        }
+    }
+    if (key === 'g') {
+        godMode = !godMode;
+        if (ball) {
+            if (godMode) {
+                // disable collisions & gravity
+                ball.collider = 'none';
+                ball.vel.x = 0; 
+                ball.vel.y = 0;
+                world.gravity.y = 0;
+            } else {
+                // restore normal physics
+                ball.collider = 'dynamic';
+                world.gravity.y = 10;  
             }
         }
     }
