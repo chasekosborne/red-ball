@@ -200,7 +200,11 @@ function buildPauseOverlay() {
   optionsBtn.onmouseleave = () => optionsBtn.style.background = 'rgba(255,255,255,0.2)';
   optionsBtn.onclick = () => {
     hidePauseOverlay();
-    document.getElementById("options-menu").style.display = "block";
+    if (typeof openOptions === 'function') {
+      openOptions();
+    } else {
+      document.getElementById("options-menu").style.display = "block";
+    }
   };
   bottomButtons.appendChild(optionsBtn);
 

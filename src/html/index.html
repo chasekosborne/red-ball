@@ -171,8 +171,10 @@
 
   <!--Options Menu-->
   <div id = "options-menu">
-    <label for = "volumeSlider" style="font-size: 25px;">Volume: <span id = "volumeValue">50%</span></label><br>
+    <label for = "volumeSlider" style="font-size: 25px;">SFX Volume: <span id = "volumeValue">50%</span></label><br>
     <input type = "range" id = "volumeSlider" min = "0" max = "1" step = "0.01" value = "0.5"><br><br>
+    <label for = "musicVolumeSlider" style="font-size: 25px;">Music Volume: <span id = "musicVolumeValue">30%</span></label><br>
+    <input type = "range" id = "musicVolumeSlider" min = "0" max = "1" step = "0.01" value = "0.3"><br><br>
     <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 25px;">
       Difficulty: <button id="diffBtn" onclick="toggleDifficulty()">Normal</button>
     </div>
@@ -216,6 +218,7 @@
 
     function startGame(level) {
       document.getElementById("menu").style.display="none";
+      if (typeof stopMenuMusic === 'function') stopMenuMusic();
       loadLevel(level);
     }
 
@@ -253,17 +256,39 @@
 
       const slider = document.getElementById("volumeSlider");
       const volumeValue = document.getElementById("volumeValue");
+      const musicSlider = document.getElementById("musicVolumeSlider");
+      const musicVolumeValue = document.getElementById("musicVolumeValue");
 
-      volumeValue.innerText = Math.round(volumeSlider.value * 100) + "%";
+      // Sync sliders with current values
+      slider.value = typeof globalVolume !== 'undefined' ? globalVolume : 0.5;
+      volumeValue.innerText = Math.round(slider.value * 100) + "%";
+      
+      // Sync music volume slider with current musicVolume value
+      musicSlider.value = typeof musicVolume !== 'undefined' ? musicVolume : 0.3;
+      musicVolumeValue.innerText = Math.round(musicSlider.value * 100) + "%";
 
       volumeSlider.oninput = function () {
         globalVolume = parseFloat(this.value);
         volumeValue.innerText = Math.round(globalVolume *  100) + "%";
       };
+
+      musicVolumeSlider.oninput = function () {
+        musicVolume = parseFloat(this.value);
+        musicVolumeValue.innerText = Math.round(musicVolume * 100) + "%";
+        if (typeof updateMusicVolume === 'function') {
+          updateMusicVolume();
+        }
+      };
     }
 
     function closeOptions() {
       document.getElementById("options-menu").style.display = "none";
+      // If game is paused, show pause overlay again
+      if (typeof gameHandler !== 'undefined' && gameHandler.isPaused()) {
+        if (typeof showPauseOverlay === 'function') {
+          showPauseOverlay();
+        }
+      }
     }
 
   </script>
