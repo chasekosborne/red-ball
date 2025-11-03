@@ -36,6 +36,9 @@ function updatePlayer() {
     levelObjects.bricks?.forEach(brick => {
         if (ball && ball.colliding(brick)) onGround = true;
     });
+    pinkfullGroup?.forEach(brick => {
+        if(ball && ball.colliding(brick)) onGround = true;
+    })
     if (onGround) jumpCount = 0;
 
     // Controls
@@ -206,6 +209,30 @@ function preload() {
     });
 
     texturedBrickImage = loadImage('../art/Tiles2/texturedtile.png', img => {
+        img.resize(50, 50);
+    });
+
+    leftCornerBrickImage = loadImage('../art/Tiles2/tile_0070.png', img => {
+        img.resize(50, 50);
+    });
+
+    rightCornerBrickImage = loadImage('../art/Tiles2/tile_0071.png', img => {
+        img.resize(50, 50);
+    });
+
+    leftCornerInvertBrickImage = loadImage('../art/Tiles2/tile_0013.png', img => {
+        img.resize(50, 50);
+    });
+
+    rightCornerInvertBrickImage = loadImage('../art/Tiles2/tile_0014.png', img => {
+        img.resize(50, 50);
+    });
+
+    rightCornerInvertBrickImage2 = loadImage('../art/Tiles2/tile_0029.png', img => {
+        img.resize(50, 50);
+    });
+
+    leftCornerInvertBrickImage2 = loadImage('../art/Tiles2/tile_0028.png', img => {
         img.resize(50, 50);
     });
 
