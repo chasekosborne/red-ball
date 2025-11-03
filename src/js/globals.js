@@ -90,6 +90,18 @@ let pinkfullImage;
 let pinkrightImage;
 let texturedBrickImage;
 let texturedBrickGroup = null;
+leftCornerBrickImage;
+rightCornerBrickImage;
+leftCornerBrickGroup = null;
+rightCornerBrickGroup = null;
+leftCornerInvertBrickImage;
+rightCornerInvertBrickImage;
+leftCornerBrickGroupInvert = null;
+rightCornerBrickGroupInvert = null;
+rightCornerInvertBrickImage2;
+rightCornerBrickGroupInvert2 = null;
+leftCornerInvertBrickImage2;
+leftCornerBrickGroupInvert2 = null;
 
 // ==== God Mode ====
 let godMode = false;
