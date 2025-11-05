@@ -80,6 +80,7 @@ function buildPauseOverlay() {
     display: flex;
     gap: 20px;
   `;
+  // this is where you can easily add skins btw
   const skins = ['8ball', 'donut', 'soccer', 'moon'];
   skins.forEach(skin => {
     const btn = document.createElement('button');
