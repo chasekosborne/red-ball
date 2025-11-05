@@ -80,7 +80,7 @@ function buildPauseOverlay() {
     display: flex;
     gap: 20px;
   `;
-  const skins = ['8ball', 'donut', 'soccer'];
+  const skins = ['8ball', 'donut', 'soccer', 'moon'];
   skins.forEach(skin => {
     const btn = document.createElement('button');
     btn.style.cssText = `

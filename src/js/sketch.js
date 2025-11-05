@@ -271,6 +271,9 @@ function preload() {
         }),
         'soccer': loadImage("../art/SoccerBall.png", img => {
             img.resize(125, 125);
+        }),
+         'moon': loadImage("../art/moon.png", img => {
+            img.resize(125, 125);
         })
     };
 
