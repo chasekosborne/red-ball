@@ -80,7 +80,8 @@ function buildPauseOverlay() {
     display: flex;
     gap: 20px;
   `;
-  const skins = ['8ball', 'donut', 'soccer'];
+  // this is where you can easily add skins btw
+  const skins = ['8ball', 'donut', 'soccer', 'moon'];
   skins.forEach(skin => {
     const btn = document.createElement('button');
     btn.style.cssText = `
@@ -200,7 +201,11 @@ function buildPauseOverlay() {
   optionsBtn.onmouseleave = () => optionsBtn.style.background = 'rgba(255,255,255,0.2)';
   optionsBtn.onclick = () => {
     hidePauseOverlay();
-    document.getElementById("options-menu").style.display = "block";
+    if (typeof openOptions === 'function') {
+      openOptions();
+    } else {
+      document.getElementById("options-menu").style.display = "block";
+    }
   };
   bottomButtons.appendChild(optionsBtn);
 

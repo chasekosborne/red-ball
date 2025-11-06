@@ -31,6 +31,7 @@ let checkSound;
 // Music variables
 let landMusic;
 let odysseyMusic;
+let redballMusic;
 let currentMusic;
 
 // Game Vars
@@ -52,6 +53,7 @@ let pauseButtonBounds = { x: 20, y: 140, w: 100, h: 30 };
 let presspause = false;
 let difficulty = 'normal';
 let globalVolume = 0.5;
+let musicVolume = 0.8;
 
 // === Background themes ===
 const BG_SKY   = "sky";
