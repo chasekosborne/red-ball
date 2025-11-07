@@ -171,8 +171,9 @@ function preload() {
     checkSound = loadSound('../audio/check.mp3');
 
     // Load music files
-    landMusic = loadSound('../audio/music/Land.mp3');
+    landMusic = loadSound('../audio/music/Plains.mp3');
     odysseyMusic = loadSound('../audio/music/Odyssey.mp3');
+    redballMusic = loadSound('../audio/music/Redball.mp3');
 
     unclaimedFlagImage = loadImage("../art/unclaimed_checkpoint.png", img => {
         img.resize(100, 100);
@@ -274,11 +275,37 @@ function preload() {
         }),
         'soccer': loadImage("../art/SoccerBall.png", img => {
             img.resize(125, 125);
+        }),
+         'moon': loadImage("../art/moon.png", img => {
+            img.resize(125, 125);
         })
     };
 
     // Set default skin
     ballSkinImage = ballSkins['8ball'];
+}
+
+// Check if main menu is visible and play menu music accordingly
+function checkAndPlayMenuMusic() {
+    const menuElement = document.getElementById('menu');
+    if (menuElement) {
+        const isMenuVisible = menuElement.style.display !== 'none' && 
+                             window.getComputedStyle(menuElement).display !== 'none';
+        
+        if (isMenuVisible) {
+            // Menu is visible - play menu music if not already playing
+            if (typeof playMenuMusic === 'function' && redballMusic && redballMusic.isLoaded()) {
+                if (!redballMusic.isPlaying()) {
+                    playMenuMusic();
+                }
+            }
+        } else {
+            // Menu is hidden - stop menu music if playing
+            if (typeof stopMenuMusic === 'function' && redballMusic && redballMusic.isPlaying()) {
+                stopMenuMusic();
+            }
+        }
+    }
 }
 
 // initialize game scene
@@ -297,6 +324,9 @@ function setup() {
 
     buildBgStarfield();
     buildPauseOverlay();
+    
+    // Start menu music if menu is visible
+    checkAndPlayMenuMusic();
 
     const picker = document.getElementById('colorPicker');
     picker.addEventListener('input', () => {
@@ -313,6 +343,9 @@ function update() {
     if (pressedPause() || presspause) {
         presspause = false;
     }
+
+    // Check if main menu is visible and play menu music
+    checkAndPlayMenuMusic();
 
     if (editor.enabled) { // level edit mode
         EditorMode();
