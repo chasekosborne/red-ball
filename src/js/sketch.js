@@ -187,8 +187,8 @@ function preload() {
         img.resize(100, 100);
     });
 
-    springImage = loadImage("../art/Tiles/tile_0078.png", img => {
-        img.resize(110, 110);
+    springImage = loadImage("../art/Tiles/newLeaf.png", img => {
+        img.resize(100, 100);
     });
 
     teleporterImage = loadImage("../art/teleportgreener.png", img => {
