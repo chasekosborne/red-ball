@@ -353,10 +353,14 @@ function initializeLevels() {
         respawnPosition: [150, 200],
         ballColor: 'red',
         music: 'land', // Land.mp3 for Level 3
-        platforms: [],
+        platforms: [
+            { "x": 300, "y": 100, "w": 120, "h": 20, "color": "orange", "moving": true, "speed": 2, "minX": 2231, "maxX": 2683 }
+        ],
         disappearingPlatforms: [],
         ground: [],
-        springs: [],
+        springs: [
+            { "x": 400, "y": 300, "w": 200, "h": 40 }
+        ],
         spikes: [],
         checkpoints: [{ "x": 90, "y": 430}],
         enemies: [],
@@ -685,6 +689,8 @@ function initializeLevels() {
 
 async function loadLevel(levelIndex) {
   await clearLevel();
+
+  drawTiles();
   
   currentLevel = levelIndex;
   const level = levels[currentLevel];
@@ -767,7 +773,18 @@ async function loadLevel(levelIndex) {
         for (let springData of level.springs || []) {
             let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
             spring.physics = STATIC;
-            spring.color = 'cyan';
+             // Create a buffer the size of the platform
+        let buffer = createGraphics(springData.w, springData.h);
+
+        // Tile the image to fill the platform area
+        for (let x = 0; x < springData.w; x += springImage.width/2) {
+        for (let y = 0; y < springData.h; y += springImage.height) {
+            buffer.image(springImage, x, y);
+            }
+        }
+
+    // Assign tiled texture to the platform
+        spring.img = buffer;
             levelObjects.springs.push(spring);
         }
 
@@ -956,15 +973,6 @@ async function clearLevel() {
             });
         }
     });
-    if (bricksGroup) {
-    if (Tiles) {
-        Tiles.removeSprites();
-    }
-    bricksGroup.removeSprites();
-    }
-
-    bricksGroup = null;
-    tiles = null;
     levelObjects = {};
     await new Promise(resolve => setTimeout(resolve, 1));
 }

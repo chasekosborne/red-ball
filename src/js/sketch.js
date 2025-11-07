@@ -182,8 +182,12 @@ function preload() {
         img.resize(100, 100);
     });
 
-    spikeImage = loadImage("../art/spike.png", img => {
+    spikeImage = loadImage("../art/Tiles/spike2.png", img => {
         img.resize(100, 100);
+    });
+
+    springImage = loadImage("../art/Tiles/tile_0078.png", img => {
+        img.resize(110, 110);
     });
 
     teleporterImage = loadImage("../art/teleportgreener.png", img => {
