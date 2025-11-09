@@ -15,6 +15,7 @@ const LEVELS = [
         lasers: [],
         asteriodFields: [],
         swingingHammers: [],
+        shrinkpads: [{ x: 460, y: 620 }],
         teleporter: [],
         blackhole: [],
         goalPosition: { x: 1900, y: 300 },
@@ -433,6 +434,7 @@ function initializeLevels() {
         lasers: [],
         asteriodFields: [],
         swingingHammers: [],
+        shrinkpads: [{ x: 460, y: 620 }],
         teleporter: [],
         blackhole: [],
         goalPosition: { x: 3000, y: 250 },
@@ -870,6 +872,18 @@ async function loadLevel(levelIndex) {
         ball.vel.x = 0;
         ball.vel.y = 0;
         jumpCount = 0;
+
+        // --- reset shrink state each level (module handles size + grace + touch set) ---
+        if (typeof ShrinkPad !== 'undefined') {
+          ShrinkPad.reset(ball);
+        } else {
+          // fallback if the script ever fails to load
+          if (ball) {
+            if (ball.baseScale == null) ball.baseScale = 1;
+            ball.sizeState = 'Normal';
+            ball.scale = ball.baseScale;
+          }
+        }
         
         // Handles ground creation
         levelObjects.ground = [];
@@ -1047,6 +1061,21 @@ async function loadLevel(levelIndex) {
                 spikeHeight: spikeHeight,
                 scale: hammerData.scale
             });
+        }
+
+        // === Shrink pads ===
+        levelObjects.shrinkpads = [];
+        const pads = level.shrinkpads || [];
+
+        for (const d of pads) {
+          const pad = new Sprite(d.x, d.y, 150, 150);
+          pad.collider  = 'none';
+          pad.immovable = true;
+          if (shrinkPadImage) pad.img = shrinkPadImage;
+        
+          pad.__triggerR = 40; 
+        
+          levelObjects.shrinkpads.push(pad);
         }
 
         if (!ball) {

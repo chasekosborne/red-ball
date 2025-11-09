@@ -191,6 +191,10 @@ function preload() {
         img.resize(150, 150);
     });
 
+    shrinkPadImage = loadImage("../art/shrink_pad.png", img => {
+        img.resize(150, 150);  
+    });
+
     laserBlasterImage = loadImage('../art/laserMount.png', img => {
         img.resize(100, 100);
     })

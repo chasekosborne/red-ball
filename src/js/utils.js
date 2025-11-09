@@ -26,6 +26,10 @@ function updateObstacles() {
     blackholeAttraction(); // blackhole attraction
     teleportation();       // teleporter check
 
+    if (typeof ShrinkPad !== 'undefined') {
+      ShrinkPad.update(ball, levelObjects.shrinkpads);
+    }
+
     levelObjects.platforms?.forEach(platform => {
         platform.physics = KINEMATIC;
         if (!platform.speed) platform.speed = 2;
