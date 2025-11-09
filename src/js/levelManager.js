@@ -287,25 +287,95 @@ const LEVELS = [
     {
         name: "Level 3",
         theme: "sky",
-        respawnPosition: [500, 150],
-        ballColor: 'red',
-        music: 'land', // Land.mp3 for Level 3
-        platforms: [],
-        disappearingPlatforms: [],
-        ground: [{ "x": 450, "y": 390, "w": 580, "h": 20 }],
-        springs: [],
-        spikes: [],
-        checkpoints: [{ "x": 260, "y": 340 }],
-        enemies: [],
+        respawnPosition: [ 500, 150 ],
+        ballColor: "red",
+        music: "land",
+        platforms: [
+          { x: 2540, y: -900, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2540, maxX: 3520 },
+        ],
+        disappearingPlatforms: [
+            { "x": 4415, "y": -1820, "w": 550, "h": 20 }
+        ],
+        ground: [
+            { "x": 530, "y": 400, "w": 1300, "h": 20 }, //1
+            { "x": -110, "y": 240, "w": 20, "h": 300 }, //2 
+            { "x": 70, "y": 100, "w": 340, "h": 20 },   //3
+            { "x": 250, "y": 220, "w": 20, "h": 260 },  //4
+            { "x": 1680, "y": 190, "w": 280, "h": 20 }, //5
+            { "x": 2680, "y": 350, "w": 1120, "h": 20 },//6
+            { "x": 2490, "y": 160, "w": 740, "h": 20 }, //7
+            { "x": 3380, "y": 160, "w": 760, "h": 20 }, //8
+            { "x": 2319, "y": -40, "w": 360, "h": 20 }, //9
+            { "x": 3180, "y": -40, "w": 1160, "h": 20 },  //10
+            { "x": 2860, "y": -240, "w": 1440, "h": 20 }, //11
+            { "x": 3750, "y": -340, "w": 20, "h": 1020 }, //12
+            { "x": 2130, "y": -430, "w": 20, "h": 1200 },
+            { "x": 2600, "y": -430, "w": 920, "h": 20 },
+            { "x": 2200, "y": -670, "w": 120, "h": 20 },
+            { "x": 3900, "y": -840, "w": 450, "h": 20 },
+            { "x": 3860, "y": -1470, "w": 20, "h": 1000 },
+            { "x": 4130, "y": -1330, "w": 20, "h": 1000 },
+            { "x": 3920, "y": -1020, "w": 100, "h": 20 },
+            { "x": 4070, "y": -1220, "w": 100, "h": 20 },
+            { "x": 3920, "y": -1420, "w": 100, "h": 20 },
+            { "x": 4070, "y": -1620, "w": 100, "h": 20 },
+            { "x": 5730, "y": -1820, "w": 840, "h": 20 },
+            { "x": 5000, "y": -1965, "w": 2300, "h": 20 },
+            { "x": 6140, "y": -1892, "w": 20, "h": 165 },
+            { "x": 2985, "y": -1040, "w": 1730, "h": 20 },
+            { "x": 3230, "y": 255, "w": 20, "h": 210 }
+        ],
+        springs: [
+            { "x": 5000, "y": -1600, "w": 150, "h": 20 }
+        ],
+        spikes: [
+            { "x": 1565, "y": 155, "orientation": "up" },
+            { "x": 1796, "y": 155, "orientation": "up" },
+            { "x": 3995, "y": -875, "orientation": "up" },
+            { "x": 3894, "y": -1072, "orientation": "left" },
+            { "x": 4096, "y": -1272, "orientation": "right" },
+            { "x": 3894, "y": -1472, "orientation": "left" },
+            { "x": 4096, "y": -1672, "orientation": "right" },
+            { "x": 4096, "y": -1770, "orientation": "right" }
+        ],
+        checkpoints: [
+            { "x": 3840, "y": -875 },
+            { "x": 5500, "y": -1855 }
+        ],
+        enemies: [
+            { "startX": 3120, "startY": 124, "endX": 3670, "endY": 124, "speed": 1.5 },
+            { "startX": 2580, "startY": 124, "endX": 2720, "endY": 124, "speed": 1.5 },
+            { "startX": 2180, "startY": 124, "endX": 2540, "endY": 124, "speed": 1.5 },
+            { "startX": 2730, "startY": 315, "endX": 2900, "endY": 315, "speed": 1.5 },
+            { "startX": 3160, "startY": -76, "endX": 3290, "endY": -76, "speed": 1.5 },
+            { "startX": 2970, "startY": -76, "endX": 3105, "endY": -76, "speed": 1.5 },
+            { "startX": 3400, "startY": -76, "endX": 3680, "endY": -76, "speed": 2 },
+            { "startX": 3250, "startY": -276, "endX": 3550, "endY": -276, "speed": 2 }
+        ],
         lasers: [],
         asteriodFields: [],
-        swingingHammers: [],
-        teleporter: [],
+        swingingHammers: [
+            {
+                "pivotX": 2670,
+                "pivotY": -950,
+                "length": 200,
+                "amplitude": 50,
+                "speed": 2,
+                "phase": 0,
+                "width": 780,
+                "height": 800,
+                "spikeHeight": 200,
+                "scale": 0.3
+            },
+        ],
+        teleporter: [
+            { "x": 6000, "y": -1860, "w": 40, "h": 60 }
+        ],
         blackhole: [],
-        goalPosition: { x: 1900, y: 300 },
+        goalPosition: { "x": 75, "y": 250 },
         instructions: "",
-        signs: [],
-    },
+        signs: []
+        }
 
     /* Add more levels here  Be sure to use the template as seen above
       {
@@ -633,27 +703,97 @@ function initializeLevels() {
         },
 
         {
-            name: "Level 3",
-		      theme: "sky", 
-            respawnPosition: [500, 150],
-            ballColor: 'red',
-            music: 'land', // Land.mp3 for Level 3
-            platforms: [],
-            disappearingPlatforms: [],
-            ground: [{"x": 450,"y": 390,"w": 580,"h": 20}],
-            springs: [],
-            spikes: [],
-            checkpoints: [{"x": 260, "y": 340 }],
-            enemies: [],
-            lasers: [],
-            asteriodFields: [],
-            swingingHammers: [],
-            teleporter: [],
-            blackhole: [],
-            goalPosition: { x: 1900, y: 300 }, 
-            instructions: "",
-            signs: [],
-        },
+        name: "Level 3",
+        theme: "sky",
+        respawnPosition: [ 500, 150 ],
+        ballColor: "red",
+        music: "land",
+        platforms: [
+          { x: 2540, y: -900, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2540, maxX: 3520 },
+        ],
+        disappearingPlatforms: [
+            { "x": 4415, "y": -1820, "w": 550, "h": 20 }
+        ],
+        ground: [
+            { "x": 530, "y": 400, "w": 1300, "h": 20 }, //1
+            { "x": -110, "y": 240, "w": 20, "h": 300 }, //2 
+            { "x": 70, "y": 100, "w": 340, "h": 20 },   //3
+            { "x": 250, "y": 220, "w": 20, "h": 260 },  //4
+            { "x": 1680, "y": 190, "w": 280, "h": 20 }, //5
+            { "x": 2680, "y": 350, "w": 1120, "h": 20 },//6
+            { "x": 2490, "y": 160, "w": 740, "h": 20 }, //7
+            { "x": 3380, "y": 160, "w": 760, "h": 20 }, //8
+            { "x": 2319, "y": -40, "w": 360, "h": 20 }, //9
+            { "x": 3180, "y": -40, "w": 1160, "h": 20 },  //10
+            { "x": 2860, "y": -240, "w": 1440, "h": 20 }, //11
+            { "x": 3750, "y": -340, "w": 20, "h": 1020 }, //12
+            { "x": 2130, "y": -430, "w": 20, "h": 1200 },
+            { "x": 2600, "y": -430, "w": 920, "h": 20 },
+            { "x": 2200, "y": -670, "w": 120, "h": 20 },
+            { "x": 3900, "y": -840, "w": 450, "h": 20 },
+            { "x": 3860, "y": -1470, "w": 20, "h": 1000 },
+            { "x": 4130, "y": -1330, "w": 20, "h": 1000 },
+            { "x": 3920, "y": -1020, "w": 100, "h": 20 },
+            { "x": 4070, "y": -1220, "w": 100, "h": 20 },
+            { "x": 3920, "y": -1420, "w": 100, "h": 20 },
+            { "x": 4070, "y": -1620, "w": 100, "h": 20 },
+            { "x": 5730, "y": -1820, "w": 840, "h": 20 },
+            { "x": 5000, "y": -1965, "w": 2300, "h": 20 },
+            { "x": 6140, "y": -1892, "w": 20, "h": 165 },
+            { "x": 2985, "y": -1040, "w": 1730, "h": 20 },
+            { "x": 3230, "y": 255, "w": 20, "h": 210 }
+        ],
+        springs: [
+            { "x": 5000, "y": -1600, "w": 150, "h": 20 }
+        ],
+        spikes: [
+            { "x": 1565, "y": 155, "orientation": "up" },
+            { "x": 1796, "y": 155, "orientation": "up" },
+            { "x": 3995, "y": -875, "orientation": "up" },
+            { "x": 3894, "y": -1072, "orientation": "left" },
+            { "x": 4096, "y": -1272, "orientation": "right" },
+            { "x": 3894, "y": -1472, "orientation": "left" },
+            { "x": 4096, "y": -1672, "orientation": "right" },
+            { "x": 4096, "y": -1770, "orientation": "right" }
+        ],
+        checkpoints: [
+            { "x": 3840, "y": -875 },
+            { "x": 5500, "y": -1855 }
+        ],
+        enemies: [
+            { "startX": 3120, "startY": 124, "endX": 3670, "endY": 124, "speed": 1.5 },
+            { "startX": 2580, "startY": 124, "endX": 2720, "endY": 124, "speed": 1.5 },
+            { "startX": 2180, "startY": 124, "endX": 2540, "endY": 124, "speed": 1.5 },
+            { "startX": 2730, "startY": 315, "endX": 2900, "endY": 315, "speed": 1.5 },
+            { "startX": 3160, "startY": -76, "endX": 3290, "endY": -76, "speed": 1.5 },
+            { "startX": 2970, "startY": -76, "endX": 3105, "endY": -76, "speed": 1.5 },
+            { "startX": 3400, "startY": -76, "endX": 3680, "endY": -76, "speed": 2 },
+            { "startX": 3250, "startY": -276, "endX": 3550, "endY": -276, "speed": 2 }
+        ],
+        lasers: [],
+        asteriodFields: [],
+        swingingHammers: [
+            {
+                "pivotX": 2670,
+                "pivotY": -950,
+                "length": 200,
+                "amplitude": 50,
+                "speed": 2,
+                "phase": 0,
+                "width": 780,
+                "height": 800,
+                "spikeHeight": 200,
+                "scale": 0.3
+            },
+        ],
+        teleporter: [
+            { "x": 6000, "y": -1860, "w": 40, "h": 60 }
+        ],
+        blackhole: [],
+        goalPosition: { "x": 75, "y": 250 },
+        instructions: "",
+        signs: []
+        }
         
         /* Add more levels here  Be sure to use the template as seen above
           {
