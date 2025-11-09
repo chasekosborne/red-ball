@@ -7,6 +7,7 @@ let hammerImage;
 let asteriod_sprites;
 let teleporterImage;
 let blackholeImage;
+let shrinkPadImage;
 
 // Player Vars
 let ball;
