@@ -369,9 +369,8 @@ const LEVELS = [
                 "scale": 0.3
             },
         ],
-        teleporter: [
-            { "x": 6000, "y": -1860, "w": 40, "h": 60 }
-        ],
+        shrinkpads: [{ x: 6000, y: -1860 }],
+        teleporter: [],
         blackhole: [],
         goalPosition: { "x": 75, "y": 250 },
         instructions: "",
@@ -788,9 +787,8 @@ function initializeLevels() {
                 "scale": 0.3
             },
         ],
-        teleporter: [
-            { "x": 6000, "y": -1860, "w": 40, "h": 60 }
-        ],
+        shrinkpads: [{ x: 6000, y: -1860 }],
+        teleporter: [],
         blackhole: [],
         goalPosition: { "x": 75, "y": 250 },
         instructions: "",
