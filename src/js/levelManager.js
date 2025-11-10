@@ -4,7 +4,7 @@ const LEVELS = [
         theme: "space",
         respawnPosition: [500, 150],
         ballColor: 'red',
-        music: 'land', // Land.mp3 for Level 3
+        music: 'land',
         platforms: [],
         disappearingPlatforms: [],
         ground: [{ "x": 450, "y": 390, "w": 580, "h": 20 }],
@@ -1125,15 +1125,61 @@ async function clearLevel() {
             });
         }
     });
+    
+    // Clean up all tile groups (legacy system)
     if (bricksGroup) {
-    if (Tiles) {
-        Tiles.removeSprites();
+        bricksGroup.removeAll();
+        bricksGroup = null;
     }
-    bricksGroup.removeSprites();
+    if (pinkfullGroup) {
+        pinkfullGroup.removeAll();
+        pinkfullGroup = null;
     }
-
-    bricksGroup = null;
+    if (pinkleftGroup) {
+        pinkleftGroup.removeAll();
+        pinkleftGroup = null;
+    }
+    if (pinkrightGroup) {
+        pinkrightGroup.removeAll();
+        pinkrightGroup = null;
+    }
+    if (texturedBrickGroup) {
+        texturedBrickGroup.removeAll();
+        texturedBrickGroup = null;
+    }
+    if (leftCornerBrickGroup) {
+        leftCornerBrickGroup.removeAll();
+        leftCornerBrickGroup = null;
+    }
+    if (rightCornerBrickGroup) {
+        rightCornerBrickGroup.removeAll();
+        rightCornerBrickGroup = null;
+    }
+    if (leftCornerBrickGroupInvert) {
+        leftCornerBrickGroupInvert.removeAll();
+        leftCornerBrickGroupInvert = null;
+    }
+    if (leftCornerBrickGroupInvert2) {
+        leftCornerBrickGroupInvert2.removeAll();
+        leftCornerBrickGroupInvert2 = null;
+    }
+    if (rightCornerBrickGroupInvert) {
+        rightCornerBrickGroupInvert.removeAll();
+        rightCornerBrickGroupInvert = null;
+    }
+    if (rightCornerBrickGroupInvert2) {
+        rightCornerBrickGroupInvert2.removeAll();
+        rightCornerBrickGroupInvert2 = null;
+    }
+    
+    // Clean up optimized tile system using the helper function
+    if (typeof cleanupTileSystem === 'function') {
+        cleanupTileSystem();
+    }
+    
+    // Reset tile-related flags and variables
     tiles = null;
+    
     levelObjects = {};
     await new Promise(resolve => setTimeout(resolve, 1));
 }
