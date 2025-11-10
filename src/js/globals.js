@@ -55,6 +55,7 @@ let presspause = false;
 let difficulty = 'normal';
 let globalVolume = 0.5;
 let musicVolume = 0.8;
+let positionMenuVisible = false;
 
 // === Background themes ===
 const BG_SKY   = "sky";
@@ -105,6 +106,15 @@ let rightCornerInvertBrickImage2;
 let rightCornerBrickGroupInvert2 = null;
 let leftCornerInvertBrickImage2;
 let leftCornerBrickGroupInvert2 = null;
+
+// ==== Tile Optimization ====
+let tileGraphicsCache = null; // Pre-rendered tile graphics buffer
+let tiles = null; // Tiles object (legacy)
+let tileRenderDistance = 1500; // Only render tiles within this distance from camera
+let tileCollisionUpdateCounter = 0; // Counter to throttle collision updates
+let tileCollisionUpdateInterval = 5; // Update collisions every N frames
+let simplifiedTileColliders = []; // Simplified collision boxes instead of individual sprites
+let useLegacyTiles = false; // Flag to switch between old and new tile system
 
 // ==== God Mode ====
 let godMode = false;

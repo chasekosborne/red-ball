@@ -38,7 +38,13 @@ function updatePlayer() {
     });
     pinkfullGroup?.forEach(brick => {
         if(ball && ball.colliding(brick)) onGround = true;
-    })
+    });
+    // Check simplified tile colliders
+    if (simplifiedTileColliders && simplifiedTileColliders.length > 0) {
+        simplifiedTileColliders.forEach(collider => {
+            if (ball && ball.colliding(collider)) onGround = true;
+        });
+    }
     if (onGround) jumpCount = 0;
 
     // Controls
@@ -125,7 +131,9 @@ function keyPressed() {
             lastFrameTime = millis();
         }
     } else {
-        if (key === 'e') {
+        if (keyCode === 192) {
+            positionMenuVisible = !positionMenuVisible;
+        } else if (key === 'e') {
             editor.enabled = !editor.enabled;
 
             // if entering editor while paused, unpause & hide DOM pause overlay
@@ -133,9 +141,16 @@ function keyPressed() {
                 gameHandler.resumeGame()
                 hidePauseOverlay();
             }
+            
+            // Ensure tiles are rebuilt when toggling editor
+            cleanupTileSystem();
+            if (typeof ensureSpaceAssets === 'function') {
+                ensureSpaceAssets();
+            }
         } else if (key === 'r') {
             // restart level ONLY when not editing and not paused
             if (!editor.enabled && !gameHandler.isPaused()) {
+                cleanupTileSystem();
                 loadLevel(currentLevel);
             }
         }
@@ -359,6 +374,12 @@ function update() {
             }
 
             drawBackgroundForLevel();
+            
+            // Draw optimized tiles when paused too
+            if (typeof drawOptimizedTiles === 'function') {
+                drawOptimizedTiles();
+            }
+            
             if (typeof allSprites !== 'undefined') allSprites.draw();
 
             pauseObstacles();
@@ -372,6 +393,14 @@ function update() {
             cameraFollow();
 
             drawBackgroundForLevel();
+            
+            // Draw optimized tiles BEFORE drawing sprites (so they render under everything)
+            if (typeof drawOptimizedTiles === 'function') {
+                drawOptimizedTiles();
+            }
+            
+            // Draw all sprites
+            if (typeof allSprites !== 'undefined') allSprites.draw();
 
             // ------ update the time ------
             let currentTime = millis();

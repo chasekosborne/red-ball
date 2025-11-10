@@ -24,77 +24,121 @@ function drawSkyGradient(top = color(0, 150, 255), bottom = color(135, 206, 235)
     noStroke();
 }
 
+// New optimized tile system - pre-renders tiles to graphics buffer
+function createOptimizedTileSystem(tileData, startX, startY, tileW, tileH) {
+    const tileMapping = {
+        '=': brickImage,
+        't': pinkfullImage,
+        'l': pinkleftImage,
+        'r': pinkrightImage,
+        'x': texturedBrickImage,
+        'c': leftCornerBrickImage,
+        'v': rightCornerBrickImage,
+        'd': leftCornerInvertBrickImage,
+        's': leftCornerInvertBrickImage2,
+        'f': rightCornerInvertBrickImage,
+        'g': rightCornerInvertBrickImage2
+    };
+    
+    // Calculate the total dimensions needed
+    const maxCols = Math.max(...tileData.map(row => row.length));
+    const rows = tileData.length;
+    const bufferWidth = maxCols * tileW;
+    const bufferHeight = rows * tileH;
+    
+    // Create graphics buffer and render all tiles to it
+    const buffer = createGraphics(bufferWidth, bufferHeight);
+    buffer.noSmooth();
+    
+    for (let row = 0; row < tileData.length; row++) {
+        for (let col = 0; col < tileData[row].length; col++) {
+            const char = tileData[row][col];
+            if (char !== '.' && tileMapping[char]) {
+                const img = tileMapping[char];
+                const x = col * tileW;
+                const y = row * tileH;
+                buffer.image(img, x, y, tileW, tileH);
+            }
+        }
+    }
+    
+    // Generate simplified collision boxes
+    const colliders = generateSimplifiedColliders(tileData, startX, startY, tileW, tileH);
+    
+    return { buffer, colliders, startX, startY };
+}
+
+// Generate optimized collision boxes by merging adjacent tiles
+function generateSimplifiedColliders(tileData, startX, startY, tileW, tileH) {
+    const colliders = [];
+    const rows = tileData.length;
+    const maxCols = Math.max(...tileData.map(row => row.length));
+    
+    // Track which tiles we've already processed
+    const processed = Array(rows).fill().map(() => Array(maxCols).fill(false));
+    
+    // Scan for horizontal runs of solid tiles
+    for (let row = 0; row < rows; row++) {
+        let col = 0;
+        while (col < tileData[row].length) {
+            const char = tileData[row][col];
+            
+            // If this is a solid tile and not yet processed
+            if (char !== '.' && !processed[row][col]) {
+                // Find the extent of this horizontal run
+                let endCol = col;
+                while (endCol < tileData[row].length && 
+                       tileData[row][endCol] !== '.' && 
+                       !processed[row][endCol]) {
+                    endCol++;
+                }
+                
+                // Try to extend vertically (create larger boxes)
+                let endRow = row;
+                let canExtend = true;
+                while (canExtend && endRow + 1 < rows) {
+                    // Check if the next row has the same pattern
+                    for (let c = col; c < endCol; c++) {
+                        if (c >= tileData[endRow + 1].length || 
+                            tileData[endRow + 1][c] === '.' || 
+                            processed[endRow + 1][c]) {
+                            canExtend = false;
+                            break;
+                        }
+                    }
+                    if (canExtend) endRow++;
+                }
+                
+                // Mark all tiles in this box as processed
+                for (let r = row; r <= endRow; r++) {
+                    for (let c = col; c < endCol; c++) {
+                        processed[r][c] = true;
+                    }
+                }
+                
+                // Create collision box
+                const width = (endCol - col) * tileW;
+                const height = (endRow - row + 1) * tileH;
+                const x = startX + col * tileW + width / 2;
+                const y = startY + row * tileH + height / 2;
+                
+                colliders.push({ x, y, w: width, h: height });
+                
+                col = endCol;
+            } else {
+                col++;
+            }
+        }
+    }
+    
+    return colliders;
+}
+
 function drawlevel1Tiles() {
-if (bricksBuilt && bricksGroup) return; 
-bricksGroup = new Group();
-bricksGroup.physics = 'static';
-bricksGroup.layer = 0;
-bricksGroup.img = brickImage;
-bricksGroup.tile = '=';
+    // Only skip if tiles are already built
+    if (bricksBuilt) return;
 
-pinkfullGroup = new Group();
-pinkfullGroup.physics = 'static';
-pinkfullGroup.layer = 1;
-pinkfullGroup.img = pinkfullImage;
-pinkfullGroup.tile = 't';
-
-pinkleftGroup = new Group();
-pinkleftGroup.physics = 'static';
-pinkleftGroup.layer = 1;
-pinkleftGroup.img = pinkleftImage;
-pinkleftGroup.tile = 'l';
-
-pinkrightGroup = new Group();
-pinkrightGroup.physics = 'static';
-pinkrightGroup.layer = 1;
-pinkrightGroup.img = pinkrightImage;
-pinkrightGroup.tile = 'r';
-
-texturedBrickGroup = new Group();
-texturedBrickGroup.physics = 'static';
-texturedBrickGroup.layer = 1;
-texturedBrickGroup.img = texturedBrickImage;
-texturedBrickGroup.tile = 'x';
-
-leftCornerBrickGroup = new Group();
-leftCornerBrickGroup.physics = 'static';
-leftCornerBrickGroup.layer = 1;
-leftCornerBrickGroup.img = leftCornerBrickImage;
-leftCornerBrickGroup.tile = 'c';
-
-rightCornerBrickGroup = new Group();
-rightCornerBrickGroup.physics = 'static';
-rightCornerBrickGroup.layer = 1;
-rightCornerBrickGroup.img = rightCornerBrickImage;
-rightCornerBrickGroup.tile = 'v';
-
-leftCornerBrickGroupInvert = new Group();
-leftCornerBrickGroupInvert.physics = 'static';
-leftCornerBrickGroupInvert.layer = 1;
-leftCornerBrickGroupInvert.img = leftCornerInvertBrickImage;
-leftCornerBrickGroupInvert.tile = 'd';
-
-leftCornerBrickGroupInvert2 = new Group();
-leftCornerBrickGroupInvert2.physics = 'static';
-leftCornerBrickGroupInvert2.layer = 1;
-leftCornerBrickGroupInvert2.img = leftCornerInvertBrickImage2;
-leftCornerBrickGroupInvert2.tile = 's';
-
-rightCornerBrickGroupInvert = new Group();
-rightCornerBrickGroupInvert.physics = 'static';
-rightCornerBrickGroupInvert.layer = 1;
-rightCornerBrickGroupInvert.img = rightCornerInvertBrickImage;
-rightCornerBrickGroupInvert.tile = 'f';
-
-rightCornerBrickGroupInvert2 = new Group();
-rightCornerBrickGroupInvert2.physics = 'static';
-rightCornerBrickGroupInvert2.layer = 1;
-rightCornerBrickGroupInvert2.img = rightCornerInvertBrickImage2;
-rightCornerBrickGroupInvert2.tile = 'g';
-
-if(levels[currentLevel].name == "Dev Room"){
-    tiles = new Tiles(
-        [
+const tileData = (levels[currentLevel].name == "Dev Room") ? [
          '...........................', 
           '...........................',
           '...........................',  
@@ -136,14 +180,8 @@ if(levels[currentLevel].name == "Dev Room"){
           'l==========x===================================================xxxx===================================================xx==================r',
           'l================x=============================================xxxx===================================================xx==================r',
           'l=====x=======x====================================xxxx================x=========================xx=======================================r'
-        ],
-        30, 57,
-        23, 23
-      );    
-}
-else if (levels[currentLevel].name == "Level 2"){
-    tiles = new Tiles(
-        [
+        ] :
+[
          '...........................', 
           '...........................',
           '...........................',  
@@ -185,12 +223,61 @@ else if (levels[currentLevel].name == "Level 2"){
           'l=====x========================================================xxxx===================================================xx==================r',
           'l=====x========================================================xxxx===================================================xx==================r',
           'l=====x=======x====================================xxxx================x=========================xx=======================================r'
-        ],
-        30, 57,
-        23, 23
-      ); 
+        ];
+    
+    // Check if this is a tile-based level
+    if (levels[currentLevel].name == "Dev Room" || levels[currentLevel].name == "Level 2") {
+        // Use new optimized tile system
+        const tileSystem = createOptimizedTileSystem(tileData, 30, 57, 23, 23);
+        tileGraphicsCache = tileSystem.buffer;
+        
+        // Create simplified collision sprites
+        simplifiedTileColliders = [];
+        for (const collider of tileSystem.colliders) {
+            const sprite = new Sprite(collider.x, collider.y, collider.w, collider.h);
+            sprite.collider = 'static';
+            sprite.visible = false; // Invisible collision boxes
+            sprite.layer = 0;
+            simplifiedTileColliders.push(sprite);
+        }
+        
+        console.log(`Optimized tiles: ${tileSystem.colliders.length} collision boxes (was hundreds of individual tiles)`);
+        
+        bricksBuilt = true;
+    }
 }
-  bricksBuilt = true;
+
+// Render the pre-rendered tile graphics buffer
+function drawOptimizedTiles() {
+    if (!tileGraphicsCache) return;
+    
+    push();
+    imageMode(CORNER);
+    // Draw the cached tile graphics at the exact tile origin position
+    // The buffer already contains the tiles at the correct relative positions
+    image(tileGraphicsCache, 30, 57, tileGraphicsCache.width, tileGraphicsCache.height);
+    pop();
+}
+
+// Cleanup function for tile system
+function cleanupTileSystem() {
+    bricksBuilt = false;
+    
+    // Remove graphics cache
+    if (tileGraphicsCache) {
+        tileGraphicsCache.remove();
+        tileGraphicsCache = null;
+    }
+    
+    // Remove simplified collision sprites
+    if (simplifiedTileColliders && simplifiedTileColliders.length > 0) {
+        for (const collider of simplifiedTileColliders) {
+            if (collider && collider.remove) {
+                collider.remove();
+            }
+        }
+        simplifiedTileColliders = [];
+    }
 }
 
 
@@ -382,6 +469,9 @@ function drawBackgroundForLevel() {
 }
 
 function drawUI() {
+    if (positionMenuVisible) {
+        drawPositionMenu();
+    }
     if (godMode) {
       camera.off();
       push();
@@ -480,6 +570,62 @@ function drawUI() {
 
         
     }
+}
+
+function drawPositionMenu() {
+    camera.off();
+    push();
+
+    const formatPosition = (x, y) => {
+        if (typeof x !== 'number' || typeof y !== 'number') return 'N/A';
+        return `(${Math.round(x)}, ${Math.round(y)})`;
+    };
+
+    const lines = [];
+    lines.push('Position Menu');
+    lines.push(`Ball: ${ball ? formatPosition(ball.x, ball.y) : 'N/A'}`);
+
+    levels.forEach((level, index) => {
+        lines.push(`${index + 1}. ${level.name}`);
+
+        const checkpoints = Array.isArray(level.checkpoints) ? level.checkpoints : [];
+        if (checkpoints.length === 0) {
+            lines.push('  Checkpoints: None');
+        } else {
+            checkpoints.forEach((checkpoint, cpIndex) => {
+                const label = checkpoints.length > 1 ? `  Checkpoint ${cpIndex + 1}:` : '  Checkpoint:';
+                lines.push(`${label} ${formatPosition(checkpoint.x, checkpoint.y)}`);
+            });
+        }
+
+        const goal = level.goalPosition ? formatPosition(level.goalPosition.x, level.goalPosition.y) : 'N/A';
+        lines.push(`  Goal: ${goal}`);
+    });
+
+    const padding = 12;
+    const lineHeight = 16;
+    const panelWidth = Math.min(340, width - 40);
+    const panelHeight = padding * 2 + lines.length * lineHeight;
+    const panelX = width - panelWidth - 20;
+    const panelY = 20;
+
+    rectMode(CORNER);
+    noStroke();
+    fill(0, 180);
+    rect(panelX, panelY, panelWidth, panelHeight, 8);
+
+    textAlign(LEFT, TOP);
+    textSize(12);
+    fill(255);
+
+    let textY = panelY + padding;
+    lines.forEach(line => {
+        text(line, panelX + padding, textY);
+        textY += lineHeight;
+    });
+
+    pop();
+    camera.on();
 }
 
 function drawSigns() {
