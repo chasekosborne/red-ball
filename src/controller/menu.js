@@ -95,7 +95,7 @@ function buildPauseOverlay() {
       background-position: center;
       transition: all 0.2s;
     `;
-    btn.style.backgroundImage = `url(../art/${skin === 'soccer' ? 'SoccerBall' : skin}.png)`;
+    btn.style.backgroundImage = `url(../view/art/${skin === 'soccer' ? 'SoccerBall' : skin}.png)`;
 
     btn.onmouseenter = () => {
       btn.style.borderColor = 'rgba(255,255,255,0.8)';

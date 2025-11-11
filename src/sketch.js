@@ -179,125 +179,55 @@ function keyPressed() {
 
 // load images and sounds
 function preload() {
-    jumpSound = loadSound('../audio/ball.mp3');
-    springSound = loadSound('../audio/spring.mp3');
-    deathSound = loadSound('../audio/dead.mp3');
-    teleportSound = loadSound('../audio/whoosh.mp3');
-    checkSound = loadSound('../audio/check.mp3');
+  // AUDIO (sfx)
+  jumpSound     = loadSound('../view/audio/ball.mp3');
+  springSound   = loadSound('../view/audio/spring.mp3');
+  deathSound    = loadSound('../view/audio/dead.mp3');
+  teleportSound = loadSound('../view/audio/whoosh.mp3');
+  checkSound    = loadSound('../view/audio/check.mp3');
 
-    // Load music files
-    landMusic = loadSound('../audio/music/Plains.mp3');
-    odysseyMusic = loadSound('../audio/music/Odyssey.mp3');
-    redballMusic = loadSound('../audio/music/Redball.mp3');
+  // AUDIO (music)
+  landMusic    = loadSound('../view/audio/music/Plains.mp3');
+  odysseyMusic = loadSound('../view/audio/music/Odyssey.mp3');
+  redballMusic = loadSound('../view/audio/music/Redball.mp3');
 
-    unclaimedFlagImage = loadImage("../art/unclaimed_checkpoint.png", img => {
-        img.resize(100, 100);
-    });
+  // IMAGES
+  unclaimedFlagImage = loadImage('../view/art/unclaimed_checkpoint.png', img => img.resize(100, 100));
+  claimedFlagImage   = loadImage('../view/art/claimed_checkpoint.png',   img => img.resize(100, 100));
+  spikeImage         = loadImage('../view/art/spike.png',                img => img.resize(100, 100));
+  teleporterImage    = loadImage('../view/art/teleportgreener.png',      img => img.resize(150, 150));
+  shrinkPadImage     = loadImage('../view/art/shrink_pad.png',           img => img.resize(150, 150));
+  laserBlasterImage  = loadImage('../view/art/laserMount.png',           img => img.resize(100, 100));
 
-    claimedFlagImage = loadImage("../art/claimed_checkpoint.png", img => {
-        img.resize(100, 100);
-    });
+  brickImage              = loadImage('../view/art/Tiles2/plainbrick.png',         img => img.resize(50, 50));
+  pinkfullImage           = loadImage('../view/art/Tiles2/pinktop.png',            img => img.resize(50, 50));
+  pinkleftImage           = loadImage('../view/art/Tiles2/pinkleft.png',           img => img.resize(50, 50));
+  pinkrightImage          = loadImage('../view/art/Tiles2/pinkright.png',          img => img.resize(50, 50));
+  texturedBrickImage      = loadImage('../view/art/Tiles2/texturedtile.png',       img => img.resize(50, 50));
+  leftCornerBrickImage    = loadImage('../view/art/Tiles2/tile_0070.png',          img => img.resize(50, 50));
+  rightCornerBrickImage   = loadImage('../view/art/Tiles2/tile_0071.png',          img => img.resize(50, 50));
+  leftCornerInvertBrickImage  = loadImage('../view/art/Tiles2/tile_0013.png',      img => img.resize(50, 50));
+  rightCornerInvertBrickImage = loadImage('../view/art/Tiles2/tile_0014.png',      img => img.resize(50, 50));
+  rightCornerInvertBrickImage2 = loadImage('../view/art/Tiles2/tile_0029.png',     img => img.resize(50, 50));
+  leftCornerInvertBrickImage2  = loadImage('../view/art/Tiles2/tile_0028.png',     img => img.resize(50, 50));
 
-    spikeImage = loadImage("../art/spike.png", img => {
-        img.resize(100, 100);
-    });
+  // asteroid sprites
+  asteriod_sprites = [];
+  asteriod_sprites.push(loadImage('../view/art/pixel_asteriod_sprite.png',   img => img.resize(100, 100)));
+  asteriod_sprites.push(loadImage('../view/art/pixel_asteriod_sprite_2.png', img => img.resize(100, 100)));
 
-    teleporterImage = loadImage("../art/teleportgreener.png", img => {
-        img.resize(150, 150);
-    });
+  hammerImage    = loadImage('../view/art/hammer.png',    () => console.log('hammer loaded'));
+  blackholeImage = loadImage('../view/art/blackhole.png', img => img.resize(300, 200));
 
-    shrinkPadImage = loadImage("../art/shrink_pad.png", img => {
-        img.resize(150, 150);  
-    });
+  // ball skins
+  ballSkins = {
+    '8ball': loadImage('../view/art/8ball.png',      img => img.resize(125, 125)),
+    'donut': loadImage('../view/art/donut.png',      img => img.resize(125, 125)),
+    'soccer':loadImage('../view/art/SoccerBall.png', img => img.resize(125, 125)),
+    'moon':  loadImage('../view/art/moon.png',       img => img.resize(125, 125)),
+  };
 
-    laserBlasterImage = loadImage('../art/laserMount.png', img => {
-        img.resize(100, 100);
-    })
-    brickImage = loadImage('../art/Tiles2/plainbrick.png', img => {
-        img.resize(50, 50);
-    });
-
-    pinkfullImage = loadImage('../art/Tiles2/pinktop.png', img => {
-        img.resize(50, 50);
-    });
-
-    pinkleftImage = loadImage('../art/Tiles2/pinkleft.png', img => {
-        img.resize(50, 50);
-    });
-    pinkrightImage = loadImage('../art/Tiles2/pinkright.png', img => {
-        img.resize(50, 50);
-    });
-
-    texturedBrickImage = loadImage('../art/Tiles2/texturedtile.png', img => {
-        img.resize(50, 50);
-    });
-
-    leftCornerBrickImage = loadImage('../art/Tiles2/tile_0070.png', img => {
-        img.resize(50, 50);
-    });
-
-    rightCornerBrickImage = loadImage('../art/Tiles2/tile_0071.png', img => {
-        img.resize(50, 50);
-    });
-
-    leftCornerInvertBrickImage = loadImage('../art/Tiles2/tile_0013.png', img => {
-        img.resize(50, 50);
-    });
-
-    rightCornerInvertBrickImage = loadImage('../art/Tiles2/tile_0014.png', img => {
-        img.resize(50, 50);
-    });
-
-    rightCornerInvertBrickImage2 = loadImage('../art/Tiles2/tile_0029.png', img => {
-        img.resize(50, 50);
-    });
-
-    leftCornerInvertBrickImage2 = loadImage('../art/Tiles2/tile_0028.png', img => {
-        img.resize(50, 50);
-    });
-
-   
-
-    // multiple asteriod sprites
-    asteriod_sprites = [];
-    asteriod_sprites.push(
-        loadImage("../art/pixel_asteriod_sprite.png", img => {
-            img.resize(100, 100);
-        })
-    );
-    asteriod_sprites.push(
-        loadImage("../art/pixel_asteriod_sprite_2.png", img => {
-            img.resize(100, 100);
-        })
-    );
-
-    hammerImage = loadImage("../art/hammer.png", img => {
-        console.log("hammer loaded");
-    });
-
-    blackholeImage = loadImage("../art/blackhole.png", img => {
-        img.resize(300, 200);
-    });
-
-
-    // Load all ball skins
-    ballSkins = {
-        '8ball': loadImage("../art/8ball.png", img => {
-            img.resize(125, 125);
-        }),
-        'donut': loadImage("../art/donut.png", img => {
-            img.resize(125, 125);
-        }),
-        'soccer': loadImage("../art/SoccerBall.png", img => {
-            img.resize(125, 125);
-        }),
-         'moon': loadImage("../art/moon.png", img => {
-            img.resize(125, 125);
-        })
-    };
-
-    // Set default skin
-    ballSkinImage = ballSkins['8ball'];
+  ballSkinImage = ballSkins['8ball'];
 }
 
 // Check if main menu is visible and play menu music accordingly

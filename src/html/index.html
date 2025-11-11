@@ -184,34 +184,35 @@
   <!-- Game canvas -->
   <main></main>
 
-  <!-- Game scripts -->
+  <!-- Libraries -->
   <script src="https://q5js.org/q5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
   <script src="https://p5play.org/v3/planck.min.js"></script>
   <script src="https://p5play.org/v3/p5play.js"></script>
 
-  <script src="../js/globals.js"></script>
+  <!-- MODEL -->
+  <script src="../model/globals.js"></script>
+  <script src="../model/levelManager.js"></script>
+  <script src="../model/player.js"></script>
 
-  <script src="../js/utils.js"></script>
-  <script src="../js/musicManager.js"></script>
+  <!-- CONTROLLER -->
+  <script src="../controller/gamestate.js"></script>
+  <script src="../controller/utils.js"></script>
+  <script src="../controller/blackhole.js"></script>
+  <script src="../controller/checkpoint.js"></script>
+  <script src="../controller/falling_asteriods.js"></script>
+  <script src="../controller/laserbeam.js"></script>
+  <script src="../controller/shrinkpad.js"></script>
+  <script src="../controller/teleporter.js"></script>
+  <script src="../controller/editor.js"></script>
+  <script src="../controller/menu.js"></script>
 
-  <script src="../js/gamestate.js"></script>
-  <script src="../js/player.js"></script>
-  
-  <script src="../js/checkpoint.js"></script>
-  <script src="../js/falling_asteriods.js"></script>
-  <script src="../js/laserbeam.js"></script>
-  <script src="../js/blackhole.js"></script>
-  <script src="../js/teleporter.js"></script>
-  <script src="../js/shrinkpad.js"></script>
-  
-  <script src="../js/levelManager.js"></script>
+  <!-- VIEW -->
+  <script src="../view/drawArt.js"></script>
+  <script src="../view/musicManager.js"></script>
 
-  <script src="../js/drawArt.js"></script>
-  <script src="../js/menu.js"></script>
-  <script src="../js/editor.js"></script>
-
-  <script src="../js/sketch.js"></script>
+  <!-- ENTRY -->
+  <script src="../sketch.js"></script>
 
   <script>
     // need to initialize before loading
