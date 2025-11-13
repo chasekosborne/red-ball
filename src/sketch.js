@@ -198,6 +198,7 @@ function preload() {
   teleporterImage    = loadImage('../view/art/teleportgreener.png',      img => img.resize(150, 150));
   shrinkPadImage     = loadImage('../view/art/shrink_pad.png',           img => img.resize(150, 150));
   laserBlasterImage  = loadImage('../view/art/laserMount.png',           img => img.resize(100, 100));
+  springImage        = loadImage('../view/art/tile_0042.png',           img => img.resize(50, 50));
 
   brickImage              = loadImage('../view/art/Tiles2/plainbrick.png',         img => img.resize(50, 50));
   pinkfullImage           = loadImage('../view/art/Tiles2/pinktop.png',            img => img.resize(50, 50));
@@ -210,7 +211,10 @@ function preload() {
   rightCornerInvertBrickImage = loadImage('../view/art/Tiles2/tile_0014.png',      img => img.resize(50, 50));
   rightCornerInvertBrickImage2 = loadImage('../view/art/Tiles2/tile_0029.png',     img => img.resize(50, 50));
   leftCornerInvertBrickImage2  = loadImage('../view/art/Tiles2/tile_0028.png',     img => img.resize(50, 50));
-
+  leftCornerGrass         = loadImage('../view/art/tile_0021.png',     img => img.resize(50, 50));
+  rightCornerGrass        = loadImage('../view/art/tile_0023.png',     img => img.resize(50, 50));
+  grassBlock              = loadImage('../view/art/tile_0022.png',     img => img.resize(50, 50));
+  dirtBlock               = loadImage('../view/art/Tiles/tile_0122.png',     img => img.resize(50, 50));
   // asteroid sprites
   asteriod_sprites = [];
   asteriod_sprites.push(loadImage('../view/art/pixel_asteriod_sprite.png',   img => img.resize(100, 100)));

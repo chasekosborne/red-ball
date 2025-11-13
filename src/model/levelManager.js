@@ -543,7 +543,6 @@ function initializeLevels() {
                 
             ],
             ground: [
-                { x: 500, y: 350, w: 800, h: 40 },
                 { x: 1700, y: -600, w: 200, h: 40 },
                 { x: 2300, y: -600, w: 400, h: 40 },
                 { x: 2480, y: -220, w: 40, h: 800 },
@@ -920,7 +919,20 @@ async function loadLevel(levelIndex) {
         for (let springData of level.springs || []) {
             let spring = new Sprite(springData.x, springData.y, springData.w, springData.h);
             spring.physics = STATIC;
-            spring.color = 'cyan';
+
+            let buffer = createGraphics(springData.w, springData.h);
+
+            // Tile the image to fill the platform area
+            for (let x = 0; x < springData.w; x += springImage.width/2) {
+            for (let y = 0; y < springData.h; y += springImage.height) {
+                buffer.image(springImage, x, y);
+                }
+            }
+
+            // Assign tiled texture to the platform
+            spring.img = buffer;
+
+            //spring.color = 'cyan';
             levelObjects.springs.push(spring);
         }
 

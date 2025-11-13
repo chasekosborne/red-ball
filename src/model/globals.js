@@ -8,6 +8,7 @@ let asteriod_sprites;
 let teleporterImage;
 let blackholeImage;
 let shrinkPadImage;
+let springImage;
 
 // Player Vars
 let ball;
@@ -106,6 +107,15 @@ let rightCornerInvertBrickImage2;
 let rightCornerBrickGroupInvert2 = null;
 let leftCornerInvertBrickImage2;
 let leftCornerBrickGroupInvert2 = null;
+
+let leftCornerGrass;
+let leftCornerGrassGroup = null;
+let rightCornerGrass;
+let rightCornerGrassGroup = null;
+let grassBlock;
+let grassBlockGroup = null;
+let dirtBlock;
+let dirtBlockGroup = null;
 
 // ==== Tile Optimization ====
 let tileGraphicsCache = null; // Pre-rendered tile graphics buffer
