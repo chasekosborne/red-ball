@@ -825,6 +825,8 @@ function initializeLevels() {
 
 async function loadLevel(levelIndex) {
   await clearLevel();
+
+  drawTiles();
   
   currentLevel = levelIndex;
   const level = levels[currentLevel];
