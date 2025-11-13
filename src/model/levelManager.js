@@ -761,6 +761,12 @@ function initializeLevels() {
             { "x": 3840, "y": -875 },
             { "x": 5500, "y": -1855 }
         ],
+        backtrackTrigger: {
+            "x": 6000,
+            "y": -1860,
+            "w": 50,
+            "h": 100,
+        },
         enemies: [
             { "startX": 3120, "startY": 124, "endX": 3670, "endY": 124, "speed": 1.5 },
             { "startX": 2580, "startY": 124, "endX": 2720, "endY": 124, "speed": 1.5 },
@@ -994,6 +1000,16 @@ async function loadLevel(levelIndex) {
         for (let checkpointData of level.checkpoints || []) {
             let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
             levelObjects.checkpoints.push(checkpoint);
+        }
+        if (level.backtrackTrigger) {
+            levelObjects.backtrackTrigger = new BacktrackTrigger(
+                level.backtrackTrigger.x,
+                level.backtrackTrigger.y,
+                level.backtrackTrigger.w,
+                level.backtrackTrigger.h,
+                ball,
+            );
+            levelObjects.backtrackTrigger.setCheckpoints(levelObjects.checkpoints);
         }
         
         //Creation of enemies

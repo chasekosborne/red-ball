@@ -21,6 +21,11 @@ class CheckPoint {
             this.sprite.remove();
     }
 
+    reset () {
+        this.claimed = false;
+        this.sprite.img = unclaimedFlagImage;
+    }
+
     // check if the player has collided into the checkpoint and change states
     update() {
         if (!this.claimed && this.sprite.overlapping(this.player)) {
@@ -42,6 +47,44 @@ class CheckPoint {
             let y = this.sprite.y - 10;
             respawnPosition = [x,y];
             console.log(respawnPosition);
+        }
+    }
+}
+
+class BacktrackTrigger {
+    constructor(x,y,w,h,playerRef) {
+        this.sprite = new Sprite(x, y, w, h);
+
+        this.sprite.visible = false;
+        this.sprite.collider = "none";
+        this.sprite.rotationLock = true;
+
+        this.player = playerRef;
+        this.checkpointsReset = false;
+        this.checkpoints = [];
+    }
+    dtor() {
+        console.log("Running BacktrackTrigger dtor");
+
+        if (this.sprite)
+            this.sprite.remove();
+    }
+
+    setCheckpoints(checkpoints) {
+        this.checkpoints = checkpoints;
+    }
+
+    resetCheckpoints() {
+        this.checkpoints?.forEach(checkpoint => {
+            checkpoint.reset();
+        });
+    }
+
+    // check if the player has collided into the checkpoint and change states
+    update() {
+        if (!this.checkpointsReset && this.sprite.overlapping(this.player)) {
+            this.resetCheckpoints();
+            this.checkpointsReset = true;
         }
     }
 }
