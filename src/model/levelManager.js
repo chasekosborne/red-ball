@@ -1124,6 +1124,8 @@ async function clearLevel() {
                 // cleanup method
                 if (obj instanceof CheckPoint) {
                     obj.dtor();
+                } else if (obj instanceof BacktrackTrigger) {
+                    obj.dtor();
                 } else if (obj instanceof Laserbeam) {
                     obj.dtor();
                 } else if (obj instanceof AsteriodField) {
