@@ -572,15 +572,16 @@ function drawBackgroundForLevel() {
     push();
 
     if (currentBgTheme === BG_SPACE) {
-        ensureSpaceAssets();
         background(0);
+        ensureSpaceAssets();
+       // background(0);
 
         drawBgStars();
 
         if (random() < METEOR_RATE) bgMeteors.push(spawnBgMeteor());
         updateBgMeteors();
 
-    } else {
+    } else if (currentBgTheme === BG_SKY){
         drawSkyGradient();
 
         // parallax based on current camera each frame

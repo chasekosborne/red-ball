@@ -825,8 +825,6 @@ function initializeLevels() {
 
 async function loadLevel(levelIndex) {
   await clearLevel();
-
-  drawTiles();
   
   currentLevel = levelIndex;
   const level = levels[currentLevel];
@@ -834,7 +832,8 @@ async function loadLevel(levelIndex) {
   console.log(`Current Level = ${currentLevel} | levels.length -> ${levels.length}`);
 
   if (level) {
-      currentBgTheme = level.theme || BG_SKY;
+      currentBgTheme = level.theme;
+      drawTiles();
 
         if (difficulty === 'hard') {
             lives = 3;

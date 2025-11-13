@@ -322,6 +322,11 @@ function update() {
 
             cameraFollow();
 
+            //making sure the loading in theme is the same as the lvl
+            if (currentBgTheme && levels[currentLevel]?.theme && currentBgTheme !== levels[currentLevel].theme) {
+                currentBgTheme = levels[currentLevel].theme;
+            }
+
             drawBackgroundForLevel();
             
             // Draw optimized tiles BEFORE drawing sprites (so they render under everything)
