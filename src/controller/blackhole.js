@@ -25,3 +25,8 @@ function blackholeAttraction() {
         
     }); 
 }
+
+// Export for Node-based unit tests (no effect in the browser)
+if (typeof module !== 'undefined') {
+  module.exports = { blackholeAttraction };
+}
