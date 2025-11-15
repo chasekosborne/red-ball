@@ -28,9 +28,7 @@ class CheckPoint {
 
             //Checkpoint sound
             if(checkSound && checkSound.isLoaded()) {
-                checkSound.setVolume(globalVolume * 0.5);
-                checkSound.play();
-                checkSound.fade(0.3, 0.5);
+                checkSound.play(0, 1, globalVolume * 0.3, 0.5, 0.7);
             }
             // affordance of claimage
             this.sprite.img = claimedFlagImage;
