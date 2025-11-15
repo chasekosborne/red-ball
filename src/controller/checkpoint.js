@@ -29,7 +29,7 @@ class CheckPoint {
     // check if the player has collided into the checkpoint and change states
     update() {
         if (!this.claimed && this.sprite.overlapping(this.player)) {
-            console.log("CLAIMED!");
+            //console.log("CLAIMED!");
 
             //Checkpoint sound
             if(checkSound && checkSound.isLoaded()) {
@@ -44,7 +44,7 @@ class CheckPoint {
             let x = this.sprite.x;
             let y = this.sprite.y - 10;
             respawnPosition = [x,y];
-            console.log(respawnPosition);
+            //console.log(respawnPosition);
         }
     }
 }
@@ -85,4 +85,9 @@ class BacktrackTrigger {
             this.checkpointsReset = true;
         }
     }
+}
+
+// Export for Node-based unit tests (no effect in the browser)
+if (typeof module !== 'undefined') {
+  module.exports = { CheckPoint, BacktrackTrigger };
 }
