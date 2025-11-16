@@ -925,3 +925,80 @@ function drawSigns() {
     pop();
 }
 
+// lol this makes the confetti its alot of spam of just tiles that fall
+class Confetto {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = random(-5, 5);
+        this.vy = random(-15, -5);
+        this.gravity = 0.5;
+        this.size = random(8, 15);
+        this.rotation = random(TWO_PI);
+        this.rotationSpeed = random(-0.2, 0.2);
+        this.color = random([
+            color(255, 0, 0),     // red
+            color(255, 165, 0),   // orange
+            color(255, 255, 0),   // yellow
+            color(0, 255, 0),     // green
+            color(0, 0, 255),     // blue
+            color(128, 0, 255),   // purple
+            color(255, 192, 203)  // pink
+        ]);
+        this.alpha = 255;
+        this.lifespan = 120; // frames
+    }
+
+    update() {
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.rotation += this.rotationSpeed;
+        this.lifespan--;
+        this.alpha = map(this.lifespan, 0, 120, 0, 255);
+    }
+
+    display() {
+        push();
+        translate(this.x, this.y);
+        rotate(this.rotation);
+        fill(red(this.color), green(this.color), blue(this.color), this.alpha);
+        noStroke();
+        rectMode(CENTER);
+        rect(0, 0, this.size, this.size);
+        pop();
+    }
+// DEATH TO ALL PARTICLES 
+    isDead() {
+        return this.lifespan <= 0;
+    }
+}
+
+// spawn confetti
+function spawnConfetti(x, y, count = 100) {
+    confetti = [];
+    for (let i = 0; i < count; i++) {
+        confetti.push(new Confetto(x, y));
+    }
+    confettiActive = true;
+}
+
+// update and draw confetti
+function updateAndDrawConfetti() {
+    if (!confettiActive) return;
+
+    // Uraw each confetto piexe
+    for (let i = confetti.length - 1; i >= 0; i--) {
+        confetti[i].update();
+        confetti[i].display();
+        
+        if (confetti[i].isDead()) {
+            confetti.splice(i, 1);
+        }
+    }
+
+    // Once all confetti is DEAD it ends the functon 
+    if (confetti.length === 0) {
+        confettiActive = false;
+    }
+}

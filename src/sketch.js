@@ -184,6 +184,7 @@ function preload() {
   deathSound    = loadSound('../view/audio/dead.mp3');
   teleportSound = loadSound('../view/audio/whoosh.mp3');
   checkSound    = loadSound('../view/audio/check.mp3');
+  winSound      = loadSound('../view/audio/winSound.mp3');
 
   // AUDIO (music)
   landMusic    = loadSound('../view/audio/music/Plains.mp3');
@@ -358,6 +359,11 @@ function update() {
             checkLevelCompletion();
 
             drawSigns();
+            
+            // Draw confetti effect
+            if (typeof updateAndDrawConfetti === 'function') {
+                updateAndDrawConfetti();
+            }
 
             drawUI();
 

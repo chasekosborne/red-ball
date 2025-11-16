@@ -807,6 +807,10 @@ async function loadLevel(levelIndex) {
         levelElapsedTime += savedElapsedTime;
         savedElapsedTime = 0;
         lastFrameTime = 0;
+        
+        // Reset goal completion state
+        goalReached = false;
+        goalTimer = 0;
       
         // Play level music
         playLevelMusic(level);
@@ -1166,12 +1170,37 @@ function nextLevel() {
     }
 }
 
+let goalReached = false;
+let goalTimer = 0;
+const GOAL_DELAY = 90; // frame handeller lol
+
 function checkLevelCompletion() {
     const level = levels[currentLevel];
     if (ball && level.goalPosition) {
         let distance = dist(ball.x, ball.y, level.goalPosition.x, level.goalPosition.y);
         if (distance < 60) {
-            nextLevel();
+            if (!goalReached) {
+                // Trigger the celebration if first time reaching goal to prevent spam
+                goalReached = true;
+                goalTimer = 0;
+                
+                // Play win sound
+                if (winSound && winSound.isLoaded()) {
+                    winSound.setVolume(globalVolume * 0.5);
+                    winSound.play();
+                }
+                
+                // Confetti spawn 
+                spawnConfetti(level.goalPosition.x, level.goalPosition.y, 150);
+            }
+            
+            // Frame count
+            goalTimer++;
+            if (goalTimer >= GOAL_DELAY) {
+                goalReached = false;
+                goalTimer = 0;
+                nextLevel();
+            }
         }
     }
 }
