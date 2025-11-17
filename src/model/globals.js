@@ -21,6 +21,10 @@ let pausePosition = [0, 0];
 let lives = Infinity;
 let respawnPosition = [500, 150];
 
+// Confetti variables
+let confetti = [];
+let confettiActive = false;
+
 // SFX
 let jumpSound;
 let deathSound;
@@ -28,6 +32,7 @@ let springSound;
 let ballSkinImage;
 let teleportSound;
 let checkSound;
+let winSound;
 
 // Music variables
 let landMusic;
