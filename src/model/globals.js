@@ -113,7 +113,7 @@ let leftCornerInvertBrickImage2;
 let leftCornerBrickGroupInvert2 = null;
 
 // ==== Tile Optimization ====
-let tileGraphicsCache = null; // Pre-rendered tile graphics buffer
+let tileLayers = []; // Array of tile layers with priority ordering: [{ priority, buffer, startX, startY, hasCollision }]
 let tiles = null; // Tiles object (legacy)
 let tileRenderDistance = 1500; // Only render tiles within this distance from camera
 let tileCollisionUpdateCounter = 0; // Counter to throttle collision updates
