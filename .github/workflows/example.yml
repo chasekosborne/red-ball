@@ -17,16 +17,15 @@ jobs:
           echo $ whoami
           whoami
       - name: fetch keys
-        uses: uname/ssh-key-action/@v2
+        uses: shimataro/ssh-key-action/@v2
         with:
-          key: ${{secrets.ID_RSA}}$
-          name: id_rsa 
+          key: ${{secrets.CASSINI_DEPLOYMENT_KEY}}$
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - name: login
         run : |
-          echo $ ssh uname@cassini.cs.kent.edu
-          ssh uname@cassini.cs.kent.edu
+          echo $ ssh redball@cassini.cs.kent.edu
+          ssh redball@cassini.cs.kent.edu
 
-          echo $ ssh uname@cassini.cs.kent.edu 
-          ssh uname@cassini.cs.kent.edu
+          echo $ ssh redball@cassini.cs.kent.edu 
+          ssh redball@cassini.cs.kent.edu
 
