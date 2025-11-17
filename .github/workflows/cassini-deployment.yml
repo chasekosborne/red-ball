@@ -26,6 +26,6 @@ jobs:
         run: |
           ssh redball@cassini.cs.kent.edu '
             set -e
-            cd redball/    # path to the repo on the server
+            cd red-ball/    # path to the repo on the server
             git pull                      # get latest changes
           '
