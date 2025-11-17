@@ -21,6 +21,7 @@ const LEVELS = [
         goalPosition: { x: 1900, y: 300 },
         instructions: "",
         signs: [],
+        fallDeathY: 700
     },
 
     {
@@ -81,7 +82,8 @@ const LEVELS = [
             { x: 2900, y: -130, text: "Use the teleporter to bypass this wall.", size: 10, color: 'black' },
             { x: 3900, y: -140, text: "Go quickly across this platform! It starts disappearing after you touch it!", size: 12, color: 'black' },
             { x: 4700, y: -170, text: "Congratulations! You will encounter more obstacles as you go along, and check the How To Play menu if you ever forget anything!", size: 12, color: 'black' },
-        ]
+        ],
+        fallDeathY: 700
     },
 
     {
@@ -211,6 +213,8 @@ const LEVELS = [
         instructions: "",
 
         signs: [],
+
+        fallDeathY: 700
     },
 
     {
@@ -228,17 +232,7 @@ const LEVELS = [
         ],
 
         ground: [
-            { x: 450, y: 390, w: 580, h: 20 },
-            { x: 1650, y: 390, w: 220, h: 20 },
-            { x: 2260, y: 70, w: 680, h: 20 },
-            { x: 2600, y: 360, w: 20, h: 600 },
-            { x: 2790, y: 260, w: 20, h: 400 },
-            { x: 3260, y: 650, w: 1300, h: 20 },
-            { x: 3190, y: 620, w: 20, h: 40 },
-            { x: 3550, y: 620, w: 20, h: 40 },
-            { x: 4100, y: 260, w: 180, h: 20 },
-            { x: 4560, y: 260, w: 800, h: 20, },
-            { x: 5090, y: 260, w: 260, h: 20 },
+        
         ],
 
         springs: [
@@ -282,13 +276,14 @@ const LEVELS = [
             { x: 3685, y: 250, w: 80, h: 20 },
         ],
         goalPosition: { x: 5180, y: 180 },
-        instructions: ""
+        instructions: "",
+        fallDeathY: 700
     },
 
     {
         name: "Level 3",
         theme: "sky",
-        respawnPosition: [ 500, 150 ],
+        respawnPosition: [ 1050, 2800 ],
         ballColor: "red",
         music: "land",
         platforms: [
@@ -297,35 +292,7 @@ const LEVELS = [
         disappearingPlatforms: [
             { "x": 4415, "y": -1820, "w": 550, "h": 20 }
         ],
-        ground: [
-            { "x": 530, "y": 400, "w": 1300, "h": 20 }, //1
-            { "x": -110, "y": 240, "w": 20, "h": 300 }, //2 
-            { "x": 70, "y": 100, "w": 340, "h": 20 },   //3
-            { "x": 250, "y": 220, "w": 20, "h": 260 },  //4
-            { "x": 1680, "y": 190, "w": 280, "h": 20 }, //5
-            { "x": 2680, "y": 350, "w": 1120, "h": 20 },//6
-            { "x": 2490, "y": 160, "w": 740, "h": 20 }, //7
-            { "x": 3380, "y": 160, "w": 760, "h": 20 }, //8
-            { "x": 2319, "y": -40, "w": 360, "h": 20 }, //9
-            { "x": 3180, "y": -40, "w": 1160, "h": 20 },  //10
-            { "x": 2860, "y": -240, "w": 1440, "h": 20 }, //11
-            { "x": 3750, "y": -340, "w": 20, "h": 1020 }, //12
-            { "x": 2130, "y": -430, "w": 20, "h": 1200 },
-            { "x": 2600, "y": -430, "w": 920, "h": 20 },
-            { "x": 2200, "y": -670, "w": 120, "h": 20 },
-            { "x": 3900, "y": -840, "w": 450, "h": 20 },
-            { "x": 3860, "y": -1470, "w": 20, "h": 1000 },
-            { "x": 4130, "y": -1330, "w": 20, "h": 1000 },
-            { "x": 3920, "y": -1020, "w": 100, "h": 20 },
-            { "x": 4070, "y": -1220, "w": 100, "h": 20 },
-            { "x": 3920, "y": -1420, "w": 100, "h": 20 },
-            { "x": 4070, "y": -1620, "w": 100, "h": 20 },
-            { "x": 5730, "y": -1820, "w": 840, "h": 20 },
-            { "x": 5000, "y": -1965, "w": 2300, "h": 20 },
-            { "x": 6140, "y": -1892, "w": 20, "h": 165 },
-            { "x": 2985, "y": -1040, "w": 1730, "h": 20 },
-            { "x": 3230, "y": 255, "w": 20, "h": 210 }
-        ],
+        ground: [],
         springs: [
             { "x": 5000, "y": -1600, "w": 150, "h": 20 }
         ],
@@ -374,7 +341,8 @@ const LEVELS = [
         blackhole: [],
         goalPosition: { "x": 75, "y": 250 },
         instructions: "",
-        signs: []
+        signs: [],
+        fallDeathY: 700
         }
 
     /* Add more levels here  Be sure to use the template as seen above
@@ -439,6 +407,7 @@ function initializeLevels() {
         goalPosition: { x: 3000, y: 250 },
         instructions: "",
         signs: [],
+        fallDeathY: 700
         },
 
         {
@@ -499,7 +468,8 @@ function initializeLevels() {
               { x: 2900, y: -130, text: "Use the teleporter to bypass this wall.", size: 10, color: 'black' },
               { x: 3900, y: -140, text: "Go quickly across this platform! It starts disappearing after you touch it!", size: 12, color: 'black' },
               { x: 4700, y: -170, text: "Congratulations! You will encounter more obstacles as you go along, and check the How To Play menu if you ever forget anything!", size: 12, color: 'black' },
-            ]
+            ],
+            fallDeathY: 700
         },
 
         {
@@ -628,6 +598,8 @@ function initializeLevels() {
             instructions: "",
 
             signs: [],
+
+            fallDeathY: 700
         },
 
         {
@@ -645,21 +617,11 @@ function initializeLevels() {
           ],
 
           ground: [
-            {x: 450,  y: 390, w: 580,   h: 20},
-            {x: 1650, y: 390, w: 220,   h: 20},
-            {x: 2260, y: 70,  w: 680,   h: 20},
-            {x: 2600, y: 360, w:  20,   h: 600},
-            {x: 2790, y: 260, w:  20,   h: 400},
-            {x: 3260, y: 650, w:  1300, h: 20},
-            {x: 3190, y: 620, w:  20,   h: 40},
-            {x: 3550, y: 620, w:  20,   h: 40},
-            {x: 4100, y: 260, w:  180,  h: 20},
-            {x: 4560, y: 260, w:  800,  h:20,},
-            {x: 5090, y: 260, w:  260,  h: 20},
+        
           ],
         
           springs: [
-            {x: 1800,y: 390,w: 80,h: 20},
+            {x: 1800,y: 507,w: 80,h: 20},
             {x: 3720,y: 630,w: 80,h: 20}
           ],
         
@@ -670,7 +632,7 @@ function initializeLevels() {
           ],
         
           checkpoints: [
-            {x: 1660,y: 360},
+            {x: 1700,y: 507},
             {x: 2730,y: 610},
           ],
         
@@ -695,17 +657,18 @@ function initializeLevels() {
           swingingHammers: [],
           teleporter: [],
           blackhole: [
-            { x: 1950,y: 250,  w: 20,  h: 20 },
+            { x: 1950,y: 300,  w: 20,  h: 20 },
             { x: 3685,y: 250,  w: 80,  h: 20 },
           ],
           goalPosition:  { x: 5180, y: 180 },
-          instructions: ""
+          instructions: "",
+          fallDeathY: 700
         },
 
         {
         name: "Level 3",
         theme: "sky",
-        respawnPosition: [ 500, 150 ],
+        respawnPosition: [ 1050, 2800 ],
         ballColor: "red",
         music: "land",
         platforms: [
@@ -714,35 +677,7 @@ function initializeLevels() {
         disappearingPlatforms: [
             { "x": 4415, "y": -1820, "w": 550, "h": 20 }
         ],
-        ground: [
-            { "x": 530, "y": 400, "w": 1300, "h": 20 }, //1
-            { "x": -110, "y": 240, "w": 20, "h": 300 }, //2 
-            { "x": 70, "y": 100, "w": 340, "h": 20 },   //3
-            { "x": 250, "y": 220, "w": 20, "h": 260 },  //4
-            { "x": 1680, "y": 190, "w": 280, "h": 20 }, //5
-            { "x": 2680, "y": 350, "w": 1120, "h": 20 },//6
-            { "x": 2490, "y": 160, "w": 740, "h": 20 }, //7
-            { "x": 3380, "y": 160, "w": 760, "h": 20 }, //8
-            { "x": 2319, "y": -40, "w": 360, "h": 20 }, //9
-            { "x": 3180, "y": -40, "w": 1160, "h": 20 },  //10
-            { "x": 2860, "y": -240, "w": 1440, "h": 20 }, //11
-            { "x": 3750, "y": -340, "w": 20, "h": 1020 }, //12
-            { "x": 2130, "y": -430, "w": 20, "h": 1200 },
-            { "x": 2600, "y": -430, "w": 920, "h": 20 },
-            { "x": 2200, "y": -670, "w": 120, "h": 20 },
-            { "x": 3900, "y": -840, "w": 450, "h": 20 },
-            { "x": 3860, "y": -1470, "w": 20, "h": 1000 },
-            { "x": 4130, "y": -1330, "w": 20, "h": 1000 },
-            { "x": 3920, "y": -1020, "w": 100, "h": 20 },
-            { "x": 4070, "y": -1220, "w": 100, "h": 20 },
-            { "x": 3920, "y": -1420, "w": 100, "h": 20 },
-            { "x": 4070, "y": -1620, "w": 100, "h": 20 },
-            { "x": 5730, "y": -1820, "w": 840, "h": 20 },
-            { "x": 5000, "y": -1965, "w": 2300, "h": 20 },
-            { "x": 6140, "y": -1892, "w": 20, "h": 165 },
-            { "x": 2985, "y": -1040, "w": 1730, "h": 20 },
-            { "x": 3230, "y": 255, "w": 20, "h": 210 }
-        ],
+        ground: [],
         springs: [
             { "x": 5000, "y": -1600, "w": 150, "h": 20 }
         ],
@@ -760,6 +695,12 @@ function initializeLevels() {
             { "x": 3840, "y": -875 },
             { "x": 5500, "y": -1855 }
         ],
+        backtrackTrigger: {
+            "x": 6000,
+            "y": -1860,
+            "w": 50,
+            "h": 100,
+        },
         enemies: [
             { "startX": 3120, "startY": 124, "endX": 3670, "endY": 124, "speed": 1.5 },
             { "startX": 2580, "startY": 124, "endX": 2720, "endY": 124, "speed": 1.5 },
@@ -791,7 +732,8 @@ function initializeLevels() {
         blackhole: [],
         goalPosition: { "x": 75, "y": 250 },
         instructions: "",
-        signs: []
+        signs: [],
+        fallDeathY: 700
         }
         
         /* Add more levels here  Be sure to use the template as seen above
@@ -1008,6 +950,16 @@ async function loadLevel(levelIndex) {
             let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
             levelObjects.checkpoints.push(checkpoint);
         }
+        if (level.backtrackTrigger) {
+            levelObjects.backtrackTrigger = new BacktrackTrigger(
+                level.backtrackTrigger.x,
+                level.backtrackTrigger.y,
+                level.backtrackTrigger.w,
+                level.backtrackTrigger.h,
+                ball,
+            );
+            levelObjects.backtrackTrigger.setCheckpoints(levelObjects.checkpoints);
+        }
         
         //Creation of enemies
         levelObjects.enemies = [];
@@ -1120,6 +1072,8 @@ async function clearLevel() {
                 // Check for non-sprite objects and run their
                 // cleanup method
                 if (obj instanceof CheckPoint) {
+                    obj.dtor();
+                } else if (obj instanceof BacktrackTrigger) {
                     obj.dtor();
                 } else if (obj instanceof Laserbeam) {
                     obj.dtor();

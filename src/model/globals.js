@@ -128,3 +128,16 @@ let useLegacyTiles = false; // Flag to switch between old and new tile system
 
 // ==== God Mode ====
 let godMode = false;
+
+// ==== Exports for Node-based unit tests ====
+// This only runs in Node (for tests), not in the browser.
+if (typeof module !== 'undefined') {
+  module.exports = {
+    difficulty,
+    globalVolume,
+    musicVolume,
+    BG_SKY,
+    BG_SPACE,
+    godMode,
+  };
+}

@@ -67,8 +67,7 @@ function updatePlayer() {
                 // we can just increment the vel.y by the jump-strength
                 ball.vel.y += -7;
                 if (jumpSound && jumpSound.isLoaded()) {
-                    jumpSound.setVolume(globalVolume * 0.25);
-                    jumpSound.play(0, 1, .2, .5, .7);
+                    jumpSound.play(0, 1, globalVolume * 0.25, 0.5, 0.7);
                 }
 
                 jumpCount++;
