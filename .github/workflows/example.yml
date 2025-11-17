@@ -1,32 +1,31 @@
-# Example yml file for automation
-name: Example Workflow
+name: Deploy to Cassini
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  example_workflow:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Get our files
-        uses: actions/checkout@v2
-      - name: Check out the VM
-        run: |
-          echo $ ls -la
-          ls -la
-          echo $ whoami
-          whoami
-      - name: fetch keys
-        uses: uname/ssh-key-action/@v2
+      - name: Checkout repo (not strictly needed for remote-only deploy, but harmless)
+        uses: actions/checkout@v4
+
+      # Install SSH key so we can ssh into cassini
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{secrets.ID_RSA}}$
-          name: id_rsa 
+          # private key that can log into cassini (public part is in ~/.ssh/authorized_keys on cassini)
+          key: ${{ secrets.CASSINI_SSH_KEY }}
+          # output of: ssh-keyscan cassini.cs.kent.edu
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
-      - name: login
-        run : |
-          echo $ ssh uname@cassini.cs.kent.edu
-          ssh uname@cassini.cs.kent.edu
 
-          echo $ ssh uname@cassini.cs.kent.edu 
-          ssh uname@cassini.cs.kent.edu
-
+      - name: Update code on remote server
+        run: |
+          ssh redball@cassini.cs.kent.edu '
+            set -e
+            cd redball/    # path to the repo on the server
+            git pull                      # get latest changes
+          '
