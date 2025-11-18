@@ -8,6 +8,9 @@ let asteriod_sprites;
 let teleporterImage;
 let blackholeImage;
 let shrinkPadImage;
+let springImage;
+let springImageL;
+let springImageR;
 
 // Player Vars
 let ball;
@@ -67,7 +70,7 @@ const BG_SKY   = "sky";
 const BG_SPACE = "space";
 
 // Active theme (set this per level)
-let currentBgTheme = BG_SKY;
+let currentBgTheme = null;
 
 // ==== Space assets =====
 let bgStars = [];
@@ -111,6 +114,25 @@ let rightCornerInvertBrickImage2;
 let rightCornerBrickGroupInvert2 = null;
 let leftCornerInvertBrickImage2;
 let leftCornerBrickGroupInvert2 = null;
+
+let leftCornerGrass;
+let leftCornerGrassGroup = null;
+let rightCornerGrass;
+let rightCornerGrassGroup = null;
+let grassBlock;
+let grassBlockGroup = null;
+let dirtBlock;
+let dirtBlockGroup = null;
+let dirtBlockL;
+let dirtBlockGroupL = null;
+let dirtBlockR;
+let dirtBlockGroupR = null;
+let dirtBlockLUnder;
+let dirtBlockLUnderGroup = null;
+let dirtBlockUnder;
+let dirtBlockUnderGroup = null;
+let dirtBlockRUnder;
+let dirtBlockRUnderGroup = null;
 
 // ==== Tile Optimization ====
 let tileLayers = []; // Array of tile layers with priority ordering: [{ priority, buffer, startX, startY, hasCollision }]
