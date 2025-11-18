@@ -209,6 +209,30 @@ function buildPauseOverlay() {
   };
   bottomButtons.appendChild(optionsBtn);
 
+
+  // Change Level Button
+  const changeLevelBtn = document.createElement('button');
+  changeLevelBtn.textContent = 'Change Level';
+  changeLevelBtn.style.cssText = `
+    padding: 14px 28px;
+    font-size: 20px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  `;
+  changeLevelBtn.onmouseenter = () => changeLevelBtn.style.background = 'rgba(255,255,255,0.4)';
+  changeLevelBtn.onmouseleave = () => changeLevelBtn.style.background = 'rgba(255,255,255,0.2)';
+  changeLevelBtn.onclick = () => {
+    console.log('Change Level clicked');
+    showLevelSelectPanel();
+  };
+  bottomButtons.appendChild(changeLevelBtn);
+
+
+
   // Quit Button
   const quitBtn = document.createElement('button');
   quitBtn.textContent = 'Quit Game';
@@ -229,6 +253,7 @@ function buildPauseOverlay() {
 
   // === Add overlay to document ===
   document.body.appendChild(pauseOverlayEl);
+  buildLevelSelectPanel();
 }
 
 
@@ -312,4 +337,107 @@ function pauseMenu() {
 
     pop();
     camera.on();
+}
+
+function buildLevelSelectPanel() {
+  const panel = document.createElement('div');
+  panel.id = 'levelSelectPanel';
+  panel.style.cssText = `
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 10000;
+    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  `;
+
+  // === Title ===
+  const title = document.createElement('h2');
+  title.textContent = "Select a Level";
+  title.style.marginBottom = "20px";
+  title.style.fontSize = "36px";
+  panel.appendChild(title);
+
+  // === Level Buttons Container ===
+  const btnContainer = document.createElement('div');
+  btnContainer.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  `;
+  panel.appendChild(btnContainer);
+
+  // === Level Names (match your game's main menu order)
+  const levelNames = ["Dev Room", "Tutorial", "Level 1", "Level 2", "Level 3"];
+
+  levelNames.forEach((name, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = name;
+    btn.style.cssText = `
+      width: 220px;
+      padding: 12px 24px;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 0, 0, 0.8);
+      background: white;
+      color: black;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+      transition: all 0.2s;
+    `;
+    btn.onmouseenter = () => (btn.style.background = "rgba(255, 200, 200, 1)");
+    btn.onmouseleave = () => (btn.style.background = "white");
+
+    btn.onclick = () => {
+      console.log(`Clicked: ${name}`);
+      hideLevelSelectPanel();
+      gameHandler.resumeGame();
+      resumeMusic();
+      loadLevel(i);
+    };
+
+    btnContainer.appendChild(btn);
+  });
+
+  // === Back Button ===
+  const backBtn = document.createElement("button");
+  backBtn.textContent = "Back";
+  backBtn.style.cssText = `
+    width: 220px;
+    padding: 12px 24px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 0, 0, 0.8);
+    background: white;
+    color: black;
+    cursor: pointer;
+    margin-top: 25px;
+  `;
+  backBtn.onmouseenter = () => (backBtn.style.background = "rgba(255, 200, 200, 1)");
+  backBtn.onmouseleave = () => (backBtn.style.background = "white");
+  backBtn.onclick = () => {
+    hideLevelSelectPanel();
+    showPauseOverlay();
+  };
+
+  panel.appendChild(backBtn);
+  document.body.appendChild(panel);
+}
+
+
+function showLevelSelectPanel() {
+  document.getElementById('pauseOverlay').style.display = 'none';
+  document.getElementById('levelSelectPanel').style.display = 'flex';
+}
+
+function hideLevelSelectPanel() {
+  document.getElementById('levelSelectPanel').style.display = 'none';
 }

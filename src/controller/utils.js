@@ -182,4 +182,5 @@ function updateObstacles() {
     levelObjects.checkpoints?.forEach(checkpoint => {
         checkpoint.update();
     });
+    levelObjects.backtrackTrigger?.update();
 }

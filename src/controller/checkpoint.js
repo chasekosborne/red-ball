@@ -21,16 +21,19 @@ class CheckPoint {
             this.sprite.remove();
     }
 
+    reset () {
+        this.claimed = false;
+        this.sprite.img = unclaimedFlagImage;
+    }
+
     // check if the player has collided into the checkpoint and change states
     update() {
         if (!this.claimed && this.sprite.overlapping(this.player)) {
-            console.log("CLAIMED!");
+            //console.log("CLAIMED!");
 
             //Checkpoint sound
             if(checkSound && checkSound.isLoaded()) {
-                checkSound.setVolume(globalVolume * 0.5);
-                checkSound.play();
-                checkSound.fade(0.3, 0.5);
+                checkSound.play(0, 1, globalVolume * 0.3, 0.5, 0.7);
             }
             // affordance of claimage
             this.sprite.img = claimedFlagImage;
@@ -41,7 +44,50 @@ class CheckPoint {
             let x = this.sprite.x;
             let y = this.sprite.y - 10;
             respawnPosition = [x,y];
-            console.log(respawnPosition);
+            //console.log(respawnPosition);
         }
     }
+}
+
+class BacktrackTrigger {
+    constructor(x,y,w,h,playerRef) {
+        this.sprite = new Sprite(x, y, w, h);
+
+        this.sprite.visible = false;
+        this.sprite.collider = "none";
+        this.sprite.rotationLock = true;
+
+        this.player = playerRef;
+        this.checkpointsReset = false;
+        this.checkpoints = [];
+    }
+    dtor() {
+        console.log("Running BacktrackTrigger dtor");
+
+        if (this.sprite)
+            this.sprite.remove();
+    }
+
+    setCheckpoints(checkpoints) {
+        this.checkpoints = checkpoints;
+    }
+
+    resetCheckpoints() {
+        this.checkpoints?.forEach(checkpoint => {
+            checkpoint.reset();
+        });
+    }
+
+    // check if the player has collided into the checkpoint and change states
+    update() {
+        if (!this.checkpointsReset && this.sprite.overlapping(this.player)) {
+            this.resetCheckpoints();
+            this.checkpointsReset = true;
+        }
+    }
+}
+
+// Export for Node-based unit tests (no effect in the browser)
+if (typeof module !== 'undefined') {
+  module.exports = { CheckPoint, BacktrackTrigger };
 }
