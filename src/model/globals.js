@@ -24,6 +24,10 @@ let pausePosition = [0, 0];
 let lives = Infinity;
 let respawnPosition = [500, 150];
 
+// Confetti variables
+let confetti = [];
+let confettiActive = false;
+
 // SFX
 let jumpSound;
 let deathSound;
@@ -31,6 +35,7 @@ let springSound;
 let ballSkinImage;
 let teleportSound;
 let checkSound;
+let winSound;
 
 // Music variables
 let landMusic;
@@ -130,7 +135,7 @@ let dirtBlockRUnder;
 let dirtBlockRUnderGroup = null;
 
 // ==== Tile Optimization ====
-let tileGraphicsCache = null; // Pre-rendered tile graphics buffer
+let tileLayers = []; // Array of tile layers with priority ordering: [{ priority, buffer, startX, startY, hasCollision }]
 let tiles = null; // Tiles object (legacy)
 let tileRenderDistance = 1500; // Only render tiles within this distance from camera
 let tileCollisionUpdateCounter = 0; // Counter to throttle collision updates

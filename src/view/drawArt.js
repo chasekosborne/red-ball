@@ -25,7 +25,8 @@ function drawSkyGradient(top = color(0, 150, 255), bottom = color(135, 206, 235)
 }
 
 // New optimized tile system - pre-renders tiles to graphics buffer
-function createOptimizedTileSystem(tileData, startX, startY, tileW, tileH) {
+// Supports single layer (backward compatible) or layer array with priorities
+function createOptimizedTileSystem(tileData, startX, startY, tileW, tileH, priority = 0, hasCollision = true) {
     const tileMapping = {
         '=': brickImage,
         't': pinkfullImage,
@@ -72,10 +73,17 @@ function createOptimizedTileSystem(tileData, startX, startY, tileW, tileH) {
         }
     }
     
-    // Generate simplified collision boxes
-    const colliders = generateSimplifiedColliders(tileData, startX, startY, tileW, tileH);
+    // Generate simplified collision boxes only if this layer has collision
+    const colliders = hasCollision ? generateSimplifiedColliders(tileData, startX, startY, tileW, tileH) : [];
     
-    return { buffer, colliders, startX, startY };
+    return { 
+        priority, 
+        buffer, 
+        colliders, 
+        startX, 
+        startY,
+        hasCollision 
+    };
 }
 
 // Generate optimized collision boxes by merging adjacent tiles
@@ -147,6 +155,30 @@ function generateSimplifiedColliders(tileData, startX, startY, tileW, tileH) {
 function drawTiles() {
     // Only skip if tiles are already built
     if (bricksBuilt) return;
+
+    // To use multiple layers with priorities, add a 'tileLayers' array to your level definition:
+    // levels[currentLevel].tileLayers = [
+    //     {
+    //         priority: 0,           // Lower priority = drawn first (behind). Higher = drawn last (in front)
+    //         data: backgroundTiles, // Tile data array (optional, falls back to main tileData if not provided)
+    //         startX: 30,            // X position offset (optional, defaults to 30)
+    //         startY: 57,            // Y position offset (optional, defaults to 57)
+    //         tileW: 23,             // Tile width (optional, defaults to 23)
+    //         tileH: 23,             // Tile height (optional, defaults to 23)
+    //         hasCollision: false    // Whether this layer generates collision (optional, defaults to true)
+    //     },
+    //     {
+    //         priority: 1,           // This layer will be drawn on top of priority 0
+    //         data: groundTiles,
+    //         hasCollision: true     // Only ground layer needs collision
+    //     },
+    //     {
+    //         priority: 2,           // Foreground layer drawn last
+    //         data: foregroundTiles,
+    //         hasCollision: false
+    //     }
+    // ];
+    // If tileLayers is not defined, the system falls back to single-layer mode (backward compatible)
 
     let tileData;
 
@@ -485,35 +517,89 @@ else if(levels[currentLevel].name == "Level 3") {
 }
     // Check if this is a tile-based level
     if (levels[currentLevel].name == "Dev Room" || levels[currentLevel].name == "Level 2" || levels[currentLevel].name == "Level 1" || levels[currentLevel].name == "Level 3") {
-        // Use new optimized tile system
-        const tileSystem = createOptimizedTileSystem(tileData, 30, 57, 23, 23);
-        tileGraphicsCache = tileSystem.buffer;
-        
-        // Create simplified collision sprites
-        simplifiedTileColliders = [];
-        for (const collider of tileSystem.colliders) {
-            const sprite = new Sprite(collider.x, collider.y, collider.w, collider.h);
-            sprite.collider = 'static';
-            sprite.visible = false; // Invisible collision boxes
-            sprite.layer = 0;
-            simplifiedTileColliders.push(sprite);
+        // Check if level has layer definitions, otherwise use single layer (backward compatible)
+        if (levels[currentLevel].tileLayers && Array.isArray(levels[currentLevel].tileLayers)) {
+            // Multi-layer system
+            tileLayers = [];
+            simplifiedTileColliders = [];
+            
+            for (const layerDef of levels[currentLevel].tileLayers) {
+                const layerData = layerDef.data || tileData; // Use layer-specific data or fallback to main tileData
+                const layerPriority = layerDef.priority !== undefined ? layerDef.priority : 0;
+                const layerHasCollision = layerDef.hasCollision !== undefined ? layerDef.hasCollision : true;
+                const layerStartX = layerDef.startX !== undefined ? layerDef.startX : 30;
+                const layerStartY = layerDef.startY !== undefined ? layerDef.startY : 57;
+                const layerTileW = layerDef.tileW !== undefined ? layerDef.tileW : 23;
+                const layerTileH = layerDef.tileH !== undefined ? layerDef.tileH : 23;
+                
+                const tileSystem = createOptimizedTileSystem(
+                    layerData, 
+                    layerStartX, 
+                    layerStartY, 
+                    layerTileW, 
+                    layerTileH,
+                    layerPriority,
+                    layerHasCollision
+                );
+                
+                tileLayers.push(tileSystem);
+                
+                // Add collision sprites from layers that have collision enabled
+                if (layerHasCollision) {
+                    for (const collider of tileSystem.colliders) {
+                        const sprite = new Sprite(collider.x, collider.y, collider.w, collider.h);
+                        sprite.collider = 'static';
+                        sprite.visible = false; // Invisible collision boxes
+                        sprite.layer = 0;
+                        simplifiedTileColliders.push(sprite);
+                    }
+                }
+            }
+            
+            const totalColliders = simplifiedTileColliders.length;
+            console.log(`Multi-layer tiles: ${tileLayers.length} layers, ${totalColliders} collision boxes`);
+        } else {
+            // Single layer (backward compatible)
+            const tileSystem = createOptimizedTileSystem(tileData, 30, 57, 23, 23, 0, true);
+            tileLayers = [tileSystem];
+            
+            // Create simplified collision sprites
+            simplifiedTileColliders = [];
+            for (const collider of tileSystem.colliders) {
+                const sprite = new Sprite(collider.x, collider.y, collider.w, collider.h);
+                sprite.collider = 'static';
+                sprite.visible = false; // Invisible collision boxes
+                sprite.layer = 0;
+                simplifiedTileColliders.push(sprite);
+            }
+            
+            console.log(`Optimized tiles: ${tileSystem.colliders.length} collision boxes (was hundreds of individual tiles)`);
         }
-        
-        console.log(`Optimized tiles: ${tileSystem.colliders.length} collision boxes (was hundreds of individual tiles)`);
         
         bricksBuilt = true;
     }
 }
 
-// Render the pre-rendered tile graphics buffer
+// Render the pre-rendered tile graphics buffers in priority order
+// Lower priority = drawn first (behind), higher priority = drawn last (in front)
 function drawOptimizedTiles() {
-    if (!tileGraphicsCache) return;
+    if (!tileLayers || tileLayers.length === 0) return;
+    
+    // Sort layers by priority (ascending - lower numbers drawn first)
+    const sortedLayers = [...tileLayers].sort((a, b) => a.priority - b.priority);
     
     push();
     imageMode(CORNER);
-    // Draw the cached tile graphics at the exact tile origin position
-    // The buffer already contains the tiles at the correct relative positions
-    image(tileGraphicsCache, 30, 57, tileGraphicsCache.width, tileGraphicsCache.height);
+    
+    // Draw each layer in priority order
+    for (const layer of sortedLayers) {
+        if (layer.buffer) {
+            // Draw the cached tile graphics at the exact tile origin position
+            // The buffer already contains the tiles at the correct relative positions
+            image(layer.buffer, layer.startX, layer.startY, layer.buffer.width, layer.buffer.height);
+        }
+    }
+    
     pop();
 }
 
@@ -521,10 +607,14 @@ function drawOptimizedTiles() {
 function cleanupTileSystem() {
     bricksBuilt = false;
     
-    // Remove graphics cache
-    if (tileGraphicsCache) {
-        tileGraphicsCache.remove();
-        tileGraphicsCache = null;
+    // Remove all layer graphics buffers
+    if (tileLayers && tileLayers.length > 0) {
+        for (const layer of tileLayers) {
+            if (layer.buffer && layer.buffer.remove) {
+                layer.buffer.remove();
+            }
+        }
+        tileLayers = [];
     }
     
     // Remove simplified collision sprites
@@ -903,3 +993,80 @@ function drawSigns() {
     pop();
 }
 
+// lol this makes the confetti its alot of spam of just tiles that fall
+class Confetto {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = random(-5, 5);
+        this.vy = random(-15, -5);
+        this.gravity = 0.5;
+        this.size = random(8, 15);
+        this.rotation = random(TWO_PI);
+        this.rotationSpeed = random(-0.2, 0.2);
+        this.color = random([
+            color(255, 0, 0),     // red
+            color(255, 165, 0),   // orange
+            color(255, 255, 0),   // yellow
+            color(0, 255, 0),     // green
+            color(0, 0, 255),     // blue
+            color(128, 0, 255),   // purple
+            color(255, 192, 203)  // pink
+        ]);
+        this.alpha = 255;
+        this.lifespan = 120; // frames
+    }
+
+    update() {
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.rotation += this.rotationSpeed;
+        this.lifespan--;
+        this.alpha = map(this.lifespan, 0, 120, 0, 255);
+    }
+
+    display() {
+        push();
+        translate(this.x, this.y);
+        rotate(this.rotation);
+        fill(red(this.color), green(this.color), blue(this.color), this.alpha);
+        noStroke();
+        rectMode(CENTER);
+        rect(0, 0, this.size, this.size);
+        pop();
+    }
+// DEATH TO ALL PARTICLES 
+    isDead() {
+        return this.lifespan <= 0;
+    }
+}
+
+// spawn confetti
+function spawnConfetti(x, y, count = 100) {
+    confetti = [];
+    for (let i = 0; i < count; i++) {
+        confetti.push(new Confetto(x, y));
+    }
+    confettiActive = true;
+}
+
+// update and draw confetti
+function updateAndDrawConfetti() {
+    if (!confettiActive) return;
+
+    // Uraw each confetto piexe
+    for (let i = confetti.length - 1; i >= 0; i--) {
+        confetti[i].update();
+        confetti[i].display();
+        
+        if (confetti[i].isDead()) {
+            confetti.splice(i, 1);
+        }
+    }
+
+    // Once all confetti is DEAD it ends the functon 
+    if (confetti.length === 0) {
+        confettiActive = false;
+    }
+}
