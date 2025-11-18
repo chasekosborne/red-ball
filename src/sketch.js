@@ -16,10 +16,20 @@ function cameraFollow() {
 
 function updatePlayer() {
     // Ball fall off map respawner
-    if (!godMode && ball && ball.y > 700) {
-        respawn();
-        updateParticles();
-        return;
+    if (!godMode && ball) {
+        if (currentLevel === 2) {  
+            if (ball.y > 1500) {
+                respawn();
+                updateParticles();
+                return;
+            }
+        } else {
+            if (ball.y > 700) {
+                respawn();
+                updateParticles();
+                return;
+            }
+        }
     }
 
     // Jump reset Handler
@@ -194,11 +204,13 @@ function preload() {
   // IMAGES
   unclaimedFlagImage = loadImage('../view/art/unclaimed_checkpoint.png', img => img.resize(100, 100));
   claimedFlagImage   = loadImage('../view/art/claimed_checkpoint.png',   img => img.resize(100, 100));
-  spikeImage         = loadImage('../view/art/spike.png',                img => img.resize(100, 100));
+  spikeImage         = loadImage('../view/art/Tiles/tile_0068.png',      img => img.resize(100, 100));
   teleporterImage    = loadImage('../view/art/teleportgreener.png',      img => img.resize(150, 150));
   shrinkPadImage     = loadImage('../view/art/shrink_pad.png',           img => img.resize(150, 150));
   laserBlasterImage  = loadImage('../view/art/laserMount.png',           img => img.resize(100, 100));
-  springImage        = loadImage('../view/art/tile_0042.png',           img => img.resize(50, 50));
+  springImage        = loadImage('../view/art/Tiles/tile_0049.png',           img => img.resize(50, 50));
+  springImageL       = loadImage('../view/art/Tiles/tile_0048.png',           img => img.resize(50, 50));  
+  springImageR       = loadImage('../view/art/Tiles/tile_0050.png',           img => img.resize(50, 50));
 
   brickImage              = loadImage('../view/art/Tiles2/plainbrick.png',         img => img.resize(50, 50));
   pinkfullImage           = loadImage('../view/art/Tiles2/pinktop.png',            img => img.resize(50, 50));
@@ -211,10 +223,15 @@ function preload() {
   rightCornerInvertBrickImage = loadImage('../view/art/Tiles2/tile_0014.png',      img => img.resize(50, 50));
   rightCornerInvertBrickImage2 = loadImage('../view/art/Tiles2/tile_0029.png',     img => img.resize(50, 50));
   leftCornerInvertBrickImage2  = loadImage('../view/art/Tiles2/tile_0028.png',     img => img.resize(50, 50));
-  leftCornerGrass         = loadImage('../view/art/tile_0021.png',     img => img.resize(50, 50));
-  rightCornerGrass        = loadImage('../view/art/tile_0023.png',     img => img.resize(50, 50));
-  grassBlock              = loadImage('../view/art/tile_0022.png',     img => img.resize(50, 50));
+  leftCornerGrass         = loadImage('../view/art/Tiles/tile_0021.png',     img => img.resize(50, 50));
+  rightCornerGrass        = loadImage('../view/art/Tiles/tile_0023.png',     img => img.resize(50, 50));
+  grassBlock              = loadImage('../view/art/Tiles/tile_0022.png',     img => img.resize(50, 50));
   dirtBlock               = loadImage('../view/art/Tiles/tile_0122.png',     img => img.resize(50, 50));
+  dirtBlockL               = loadImage('../view/art/Tiles/tile_0121.png',     img => img.resize(50, 50));
+  dirtBlockR               = loadImage('../view/art/Tiles/tile_0123.png',     img => img.resize(50, 50));
+  dirtBlockLUnder          = loadImage('../view/art/Tiles/tile_0141.png',     img => img.resize(50, 50));
+  dirtBlockUnder           = loadImage('../view/art/Tiles/tile_0142.png',     img => img.resize(50, 50));
+  dirtBlockRUnder          = loadImage('../view/art/Tiles/tile_0143.png',     img => img.resize(50, 50));
   // asteroid sprites
   asteriod_sprites = [];
   asteriod_sprites.push(loadImage('../view/art/pixel_asteriod_sprite.png',   img => img.resize(100, 100)));

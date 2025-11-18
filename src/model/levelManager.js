@@ -505,37 +505,37 @@ function initializeLevels() {
         {
             name: "Level 1",
             theme: "sky", 
-            respawnPosition: [500, 150],
+            respawnPosition: [500, 1000],
             ballColor: 'red',
              ballSkin: '8ball',
             music: 'land', // Land.mp3 for Level 1
             platforms: [
                 // question for later but why are the y's below != to eachothers pair
-                { x: 3150, y: -1000, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
-                { x: 3850, y: -996, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
+                { x: 3150, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
+                { x: 3850, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
 
-                { x: 3150, y: -1000 + 400, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
-                { x: 3850, y: -996 + 400, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
+                { x: 3150, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
+                { x: 3850, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
 
-                { x: 3150, y: -1000 + 800, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
-                { x: 3850, y: -996 + 800, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
+                { x: 3150, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
+                { x: 3850, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
 
-                { x: 3150, y: -1000 + 1200, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
-                { x: 3850, y: -996 + 1200, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
+                { x: 3400, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3400, maxX: 3600 },
+                { x: 3900, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3700, maxX: 3900 },
 
 
 
-                { x: 4200, y: -1000, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4200, maxX: 4500 },
-                { x: 4900, y: -996, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4600, maxX: 4900 },
+                { x: 4100, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4100, maxX: 4400 },
+                { x: 4800, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4500, maxX: 4800 },
 
-                { x: 4200, y: -1000 + 400, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4200, maxX: 4500 },
-                { x: 4900, y: -996 + 400, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4600, maxX: 4900 },
+                { x: 4100, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4100, maxX: 4400 },
+                { x: 4800, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4500, maxX: 4800 },
 
-                { x: 4200, y: -1000 + 800, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4200, maxX: 4500 },
-                { x: 4900, y: -996 + 800, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4600, maxX: 4900 },
+                { x: 4100, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4100, maxX: 4400 },
+                { x: 4800, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4500, maxX: 4800 },
 
-                { x: 4200, y: -1000 + 1200, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4200, maxX: 4500 },
-                { x: 4900, y: -996 + 1200, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4600, maxX: 4900 },
+                { x: 4100, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4100, maxX: 4400 },
+                { x: 4800, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4500, maxX: 4800 },
 
 
                 
@@ -543,72 +543,72 @@ function initializeLevels() {
                 
             ],
             ground: [
-                { x: 1700, y: -600, w: 200, h: 40 },
-                { x: 2300, y: -600, w: 400, h: 40 },
-                { x: 2480, y: -220, w: 40, h: 800 },
-                { x: 2680, y: -220, w: 40, h: 800 },
-                { x: 2680, y: -800, w: 40, h: 400 },
-                { x: 2680, y: 400, w: 400, h: 40 },
+                // { x: 1700, y: -600, w: 200, h: 40 },
+                // { x: 2300, y: -600, w: 400, h: 40 },
+                // { x: 2480, y: -220, w: 40, h: 800 },
+                // { x: 2680, y: -220, w: 40, h: 800 },
+                // { x: 2680, y: -800, w: 40, h: 400 },
+                // { x: 2680, y: 400, w: 400, h: 40 },
 
-                { x: 2880, y: -220, w: 40, h: 800 },
-                { x: 2880, y: -800, w: 40, h: 400 },
-                { x: 2880, y: 220, w: 40, h: 400 },
+                // { x: 2880, y: -220, w: 40, h: 800 },
+                // { x: 2880, y: -800, w: 40, h: 400 },
+                // { x: 2880, y: 220, w: 40, h: 400 },
 
-                { x: 2780, y: 50, w: 40, h: 20 },
-                { x: 2780, y: -350, w: 40, h: 20 },
-                { x: 2780, y: -750, w: 40, h: 20 },
+                // { x: 2780, y: 50, w: 40, h: 20 },
+                // { x: 2780, y: -350, w: 40, h: 20 },
+                // { x: 2780, y: -750, w: 40, h: 20 },
 
-                { x: 2960, y: -1000, w: 200, h: 40 },
+                // { x: 2960, y: -1000, w: 200, h: 40 },
 
-                { x: 3980, y: -220, w: 40, h: 800 },
-                { x: 3980, y: -800, w: 40, h: 400 },
-                { x: 3980, y: -1200, w: 40, h: 400 },
+                // { x: 3980, y: -220, w: 40, h: 800 },
+                // { x: 3980, y: -800, w: 40, h: 400 },
+                // { x: 3980, y: -1200, w: 40, h: 400 },
 
-                { x: 3980, y: 300, w: 100, h: 40 },
+                // { x: 3980, y: 300, w: 100, h: 40 },
 
-                { x: 4550, y: -800, w: 100, h: 20 },
-                { x: 4550, y: -400, w: 100, h: 20 },
-                { x: 4550, y: 0, w: 100, h: 20 },
+                // { x: 4550, y: -800, w: 100, h: 20 },
+                // { x: 4550, y: -400, w: 100, h: 20 },
+                // { x: 4550, y: 0, w: 100, h: 20 },
 
-                { x: 5400, y: -1000, w: 300, h: 20 },
+                // { x: 5400, y: -1000, w: 300, h: 20 },
 
             ],
             springs: [
-                { x: 1100, y: 200, w: 200, h: 40 },
-                { x: 1400, y: -200, w: 200, h: 40 },
-                { x: 2780, y: 380, w: 100, h: 20 },
-                { x: 2780, y: 30, w: 40, h: 20 },
-                { x: 2780, y: -370, w: 40, h: 20 },
-                { x: 2780, y: -770, w: 40, h: 20 },
+                { x: 850, y: 1100, w: 200, h: 40 },
+                { x: 1200, y: 600, w: 200, h: 40 },
+                { x: 2810, y: 800, w: 100, h: 20 },
+                { x: 2820, y: 625, w: 40, h: 20 },
+                { x: 2820, y: 425, w: 40, h: 20 },
+                { x: 2820, y: 225, w: 40, h: 20 },
                 
             ],
             spikes: [
 
-                { x: 1900, y: -620, orientation: "up" },
-                { x: 1950, y: -620, orientation: "up" },
-                { x: 2000, y: -620, orientation: "up" },
+                { x: 1950, y: 290, orientation: "up" },
+                { x: 2000, y: 290, orientation: "up" },
+                { x: 2050, y: 290, orientation: "up" },
 
-                { x: 2200, y: -645, orientation: "up" },
-                { x: 2250, y: -645, orientation: "up" },
-                { x: 2300, y: -645, orientation: "up" },
+                { x: 2220, y: 265, orientation: "up" },
+                { x: 2270, y: 265, orientation: "up" },
+                { x: 2320, y: 265, orientation: "up" },
 
-                { x: 2525, y: -590, orientation: "left" },
-                { x: 2525, y: -540, orientation: "left" },
-                { x: 2525, y: -490, orientation: "left" },
+                { x: 2423, y: 350, orientation: "left" },
+                { x: 2423, y: 400, orientation: "left" },
+                { x: 2423, y: 450, orientation: "left" },
 
-                { x: 2635, y: 0, orientation: "right" },
-                { x: 2635, y: 50, orientation: "right" },
-                { x: 2635, y: 100, orientation: "right" },
+                { x: 2515, y: 550, orientation: "right" },
+                { x: 2515, y: 600, orientation: "right" },
+                { x: 2515, y: 650, orientation: "right" },
 
-                { x: 2780, y: 80, orientation: "down" },
-                { x: 2780, y: -320, orientation: "down" },
-                { x: 2780, y: -720, orientation: "down" },
+                { x: 2820, y: 650, orientation: "down" },
+                { x: 2820, y: 450, orientation: "down" },
+                { x: 2820, y: 250, orientation: "down" },
 
         
             ],
 
             checkpoints: [
-                { x: 2960, y: -1045 }
+                { x: 3010, y: 35 }
             ],
             
 		   	enemies: [],
@@ -623,7 +623,7 @@ function initializeLevels() {
 
             blackhole: [], 
 
-            goalPosition: { x: 5400, y: -1050 }, 
+            goalPosition: { x: 5200, y: 40 }, 
 
             instructions: "",
 
@@ -929,6 +929,9 @@ async function loadLevel(levelIndex) {
                 }
             }
 
+            buffer.image(springImageL, 0,0);
+            buffer.image(springImageR, springData.w - 25, 0);
+
             // Assign tiled texture to the platform
             spring.img = buffer;
 
@@ -954,7 +957,7 @@ async function loadLevel(levelIndex) {
         // Spike creator
         levelObjects.spikes = [];
         for (let spikeData of level.spikes || []) {
-            let spike = new Sprite(spikeData.x, spikeData.y, 50, 50);
+            let spike = new Sprite(spikeData.x, spikeData.y, 50, 10);
             spike.img = spikeImage;
             spike.collider = 'static';
             spike.physics = STATIC;
@@ -1193,6 +1196,7 @@ async function clearLevel() {
     
     levelObjects = {};
     await new Promise(resolve => setTimeout(resolve, 1));
+    currentBgTheme = 'null';
 }
 
 function nextLevel() {
