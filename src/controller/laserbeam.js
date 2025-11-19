@@ -24,12 +24,13 @@ class Laser {
         this.alive = true;
     }
     dtor() {
-        if (this.sprite) this.sprite.remove();
+        console.log("Running laser bullet dtor");
+        this.disable_bullet();
     }
 
     disable_bullet() {
         this.alive = false;
-        this.sprite.remove();
+        if (this.sprite) this.sprite.remove();
     }
 
     freeze() {
@@ -157,9 +158,9 @@ class Laserbeam {
             this.laserBlaster.remove();
 
         // destroy bullets
-        for (let i = 0; i < this.bullets.length; ++i) {
-            let bullet = this.bullets.pop();
-            if (bullet) bullet.dtor();
+        while (this.bullets.length > 0) {
+            const bullet = this.bullets.pop();
+            bullet.dtor();
         }
     }
 

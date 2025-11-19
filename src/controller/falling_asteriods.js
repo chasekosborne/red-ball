@@ -159,9 +159,9 @@ class AsteriodField {
     }
     dtor() {
         // destroy asteriods
-        for (let i = 0; i > this.asteriods.length; ++i) {
-            let asteriod = this.asteriods.pop();
-            if (asteriod) asteriod.dtor();
+        while (this.asteriods.length > 0) {
+            const asteriod = this.asteriods.pop();
+            asteriod.dtor();
         }
     }
 
