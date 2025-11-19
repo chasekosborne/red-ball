@@ -1,0 +1,50 @@
+Epsilon's Greatest Ball High-Level Design Document
+
+1. Overview
+
+Purpose: Our team is developing a Red Ball clone using p5.js named Epsilon's Greatest Ball. Red Ball is a single-player 2D platformer in which players control 
+a red ball as they navigate through levels filled with platforming challenges and environmental hazards in order to reach the end and progress further. Our game will be reliant on
+the p5.js Javascript library, and our game will be playable via web browser.
+
+Scope: We seek to make our game roughly comparable in scope to Red Ball, adding some additional features such as a timer for players as they progress through a level.
+
+Our Audience: Anyone acquainted with basic gaming conventions should be capable of playing and completing this game.
+
+2. Core Loop and Needed Features
+
+Summary of Gameplay Loop: Players play as a red ball navigating a 2D space, traversing through a series of pre-made levels that utilize various gameplay features to challenge the player (e.g. momentum, deadly obstacles, mini-puzzles).
+
+List of Needed Game Features:
+Player Character (Red Ball): The player controls a red ball that is capable of interacting with the game world.
+Controls: The Player Character can be controlled via the A/D keys or the Left/Right arrows on one's keyboard, with W or the Up arrow serving as a jump button. The P key pauses the game, the R key restarts the level, and the ESC key quits the game in addition to requiring the user to confirm this choice via the Y key or cancel via the N key.
+Title Screen: When the game has started or when the player exits the game via the ESC key, the player is able to access a menu that displays the various levels, modes, and settings the game contains.
+Camera: When the Player Character moves, the camera should travel with the Player Character.
+Physics Simulation: Momentum, gravity, and bouncing are simulated within the game world to add greater dynamism to gameplay.
+Collision Detection: Interactions between the Player Character and the game world should be logical (e.g. no falling through a solid floor) and certain interactions should trigger certain events (e.g. contact with a hazard should kill the Player Character).
+Level Structure: Multiple levels are presented to the player, each with visually identifiable checkpoints throughout the level, a visually identifiable endpoint to reach, and various challenges that engage the player throughout the level.
+Tutorial Level: The first level/levels will be specifically designed to familiarize the player with the gameplay mechanics of this game.
+Pause Menu: When the player pauses the game, an overlay will communicate to the player that the game is paused.
+Platforms/Terrains: Levels can have unique stylistic and mechanical differences (e.g. different backgrounds and surfaces for the player to use and explore).
+Obstacles and Hazards: Each level contains challenges for the player (e.g. gaps in the floor, spikes, axes that swing back and forth, moving platforms, surfaces that crush the player).
+Visual Effects: When certain events occur, special effects (such as when the Player Character dies) will appear.
+Sound Effects: Certain events like jumping and dying will be accompanied by specific audio cues. 
+Music: While playing, an audio track will play in the background.
+
+Supporting Essential Elements:
+Art Assets: Shapes for the ball, the background, terrain, the hazards, and other interactive elements of the game need to be created.
+Audio Assets: Audio for in-game sound effects and music are needed.
+
+3. Potential Features
+
+A significant limiting factor regarding the creation of this game is time. Some potential features that may be added depending on time are:
+Level Editor: The player could create a level using an in-game level builder, and then the player could play that level.
+Multiplayer: Two players could traverse through the levels of the game together (or levels custom-built for multiplayer) by mapping each ball to a different part of the keyboard.
+Time Trials: Players could compete against themselves or others in timed levels that require reaching the end of the level by a certain time.
+Enemies: Players could encounter enemies within the levels similar to the design of Red Ball 4.
+
+4. General Framework for Development
+    1. Our first priority is to create the background art and the art for the ball itself. 
+    2. Then, we will focus on mastering the p5.js library's p5.play in order to get a grasp on the physics engine we will use. 
+    3. Once that is done, we will begin to create the levels and menus that the player will engage with throughout the game.
+    4. After we are done with that, we will implement any necessary features that are less essential to the gameplay experience - potentially the pause screen or music.
+    5. If time permits, we will consider implementing Potential Features that are listed above.

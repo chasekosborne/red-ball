@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Epsilon’s Greatest Ball</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Main menu overlay */
+    #menu {
+  	position: absolute;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+  	height: 100%;
+
+    background-color: #000;
+
+  	display: flex;
+  	flex-direction: column;
+  	justify-content: center;
+  	align-items: center;
+  	z-index: 10;
+}
+
+
+    @keyframes moveClouds {
+      from { background-position: 0 0; }
+      to   { background-position: -1000px 0; }
+    }
+
+    /* Title style */
+    #menu h1 {
+      font-size: 60px;
+      margin-bottom: 40px;
+      color: red;
+      text-shadow: 2px 2px 0 white;
+    }
+
+    /* Button style*/
+    #main-buttons{
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #main-buttons button{
+      padding: 15px 30px;
+      font-size: 24px;
+      background-color: white;
+      border: 2px solid red;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #level-select{
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #level-select button{
+      padding: 15px 30px;
+      font-size: 24px;
+      background-color: white;
+      border: 2px solid red;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    #menu button:hover {
+      background-color: red;
+      color: white;
+    }
+    /*Option Button*/
+    #options-btn {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+    }
+
+    #options-btn button {
+      padding: 15px 30px;
+      font-size: 24px;
+      background-color: white;
+      border: 2px solid red;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;      
+    }
+
+    #difficulty-toggle {
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-size: 24px;
+    }
+
+    /* Option page */
+    #options-menu {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.8);
+    padding: 30px 40px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    z-index: 20;
+    }
+
+    #options-menu input[type="range"] {
+      width: 300px;
+      margin: 10px 0;
+    }
+    /* Volume slider */
+    #volumeSlider {
+      width: 300px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    #diffBtn {
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: white;
+      border: 2px solid red;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #diffBtn:hover {
+      background-color: red;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu overlay -->
+  <div id="menu">
+    <h1>Epsilon's Greatest Ball</h1>
+    <div id = "main-buttons">
+      <button onclick="newGame()">New Game</button>
+      <button onclick="showLevelSelect()">Level Select</button>
+    </div>
+    <div id="level-select" style="display: none;">
+    <button onclick="startGame(0)">Dev Room</button>
+    <button onclick="startGame(1)">Tutorial</button>
+    <button onclick="startGame(2)">Level 1</button>
+    <button onclick="startGame(3)">Level 2</button>
+    <button onclick="startGame(4)">Level 3</button>
+    <button onclick="backToMain()">Back</button>
+    </div>
+    <div id="options-btn">
+      <button id="openOptions()" onclick="openOptions()">Options</button>
+    </div>
+  </div>
+
+  <!--Options Menu-->
+  <div id = "options-menu">
+    <label for = "volumeSlider" style="font-size: 25px;">SFX Volume: <span id = "volumeValue">50%</span></label><br>
+    <input type = "range" id = "volumeSlider" min = "0" max = "1" step = "0.01" value = "0.5"><br><br>
+    <label for = "musicVolumeSlider" style="font-size: 25px;">Music Volume: <span id = "musicVolumeValue">30%</span></label><br>
+    <input type = "range" id = "musicVolumeSlider" min = "0" max = "1" step = "0.01" value = "0.3"><br><br>
+    <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 25px;">
+      Difficulty: <button id="diffBtn" onclick="toggleDifficulty()">Normal</button>
+    </div>
+    <button onclick = "closeOptions()" style="padding: 10px 15px; font-size:19px; border: 2px solid red; border-radius: 12px">Close</button>
+  </div>
+
+  <!-- Game canvas -->
+  <main></main>
+
+  <!-- Libraries -->
+  <script src="https://q5js.org/q5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+  <script src="https://p5play.org/v3/planck.min.js"></script>
+  <script src="https://p5play.org/v3/p5play.js"></script>
+
+  <!-- MODEL -->
+  <script src="../model/globals.js"></script>
+
+  <!-- CONTROLLER -->
+  <script src="../controller/gamestate.js"></script>
+  <script src="../controller/utils.js"></script>
+  <script src="../controller/blackhole.js"></script>
+  <script src="../controller/checkpoint.js"></script>
+  <script src="../controller/falling_asteriods.js"></script>
+  <script src="../controller/laserbeam.js"></script>
+  <script src="../controller/shrinkpad.js"></script>
+  <script src="../controller/teleporter.js"></script>
+  <script src="../controller/editor.js"></script>
+  <script src="../controller/menu.js"></script>
+
+  <!-- MORE MODEL -->
+  <script src="../model/levelManager.js"></script>
+  <script src="../model/player.js"></script>
+
+  <!-- VIEW -->
+  <script src="../view/drawArt.js"></script>
+  <script src="../view/musicManager.js"></script>
+
+  <!-- ENTRY -->
+  <script src="../sketch.js"></script>
+
+  <script>
+    // need to initialize before loading
+    initializeLevels();
+
+    function startGame(level) {
+      document.getElementById("menu").style.display="none";
+      if (typeof stopMenuMusic === 'function') stopMenuMusic();
+      loadLevel(level);
+    }
+
+    function newGame() {
+      startGame(0);
+    }
+
+    function showLevelSelect() {
+      document.getElementById('main-buttons').style.display = 'none';
+      document.getElementById('options-btn').style.display = 'none';
+      document.getElementById('level-select').style.display = 'flex';
+    }
+
+    function backToMain() {
+      document.getElementById('level-select').style.display = 'none';
+      document.getElementById('main-buttons').style.display = 'flex';
+      document.getElementById('options-btn').style.display = 'flex';
+    }
+
+    function toggleDifficulty() {
+      const diffBtn = document.getElementById('diffBtn');
+      if (window.difficulty === 'normal') {
+        window.difficulty = 'hard';
+        diffBtn.textContent = 'Hard';
+      } else {
+        window.difficulty = 'normal';
+        diffBtn.textContent = 'Normal';
+      }
+      difficulty = window.difficulty;
+    }
+
+    //Sounds
+    function openOptions() {
+      document.getElementById("options-menu").style.display = "block";
+
+      const slider = document.getElementById("volumeSlider");
+      const volumeValue = document.getElementById("volumeValue");
+      const musicSlider = document.getElementById("musicVolumeSlider");
+      const musicVolumeValue = document.getElementById("musicVolumeValue");
+
+      // Sync sliders with current values
+      slider.value = typeof globalVolume !== 'undefined' ? globalVolume : 0.5;
+      volumeValue.innerText = Math.round(slider.value * 100) + "%";
+      
+      // Sync music volume slider with current musicVolume value
+      musicSlider.value = typeof musicVolume !== 'undefined' ? musicVolume : 0.3;
+      musicVolumeValue.innerText = Math.round(musicSlider.value * 100) + "%";
+
+      volumeSlider.oninput = function () {
+        globalVolume = parseFloat(this.value);
+        volumeValue.innerText = Math.round(globalVolume *  100) + "%";
+      };
+
+      musicVolumeSlider.oninput = function () {
+        musicVolume = parseFloat(this.value);
+        musicVolumeValue.innerText = Math.round(musicVolume * 100) + "%";
+        if (typeof updateMusicVolume === 'function') {
+          updateMusicVolume();
+        }
+      };
+    }
+
+    function closeOptions() {
+      document.getElementById("options-menu").style.display = "none";
+      // If game is paused, show pause overlay again
+      if (typeof gameHandler !== 'undefined' && gameHandler.isPaused()) {
+        if (typeof showPauseOverlay === 'function') {
+          showPauseOverlay();
+        }
+      }
+    }
+
+  </script>
+
+
+<input type="color" id="colorPicker" value="#ff0000" style="
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    width: 100px;
+    height: 40px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.3);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+    display: none;
+  ">
+</body>
+</html>
+</html>
