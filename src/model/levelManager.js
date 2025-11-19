@@ -277,13 +277,13 @@ const LEVELS = [
         ],
         goalPosition: { x: 5180, y: 180 },
         instructions: "",
-        fallDeathY: 700
+        fallDeathY: 1500
     },
 
     {
         name: "Level 3",
         theme: "sky",
-        respawnPosition: [ 1050, 2800 ],
+        respawnPosition: [ 1050, 2500 ],
         ballColor: "red",
         music: "land",
         platforms: [
@@ -342,7 +342,7 @@ const LEVELS = [
         goalPosition: { "x": 75, "y": 250 },
         instructions: "",
         signs: [],
-        fallDeathY: 700
+        fallDeathY: 3200
         }
 
     /* Add more levels here  Be sure to use the template as seen above
@@ -662,13 +662,13 @@ function initializeLevels() {
           ],
           goalPosition:  { x: 5180, y: 180 },
           instructions: "",
-          fallDeathY: 700
+          fallDeathY: 1500
         },
 
         {
         name: "Level 3",
         theme: "sky",
-        respawnPosition: [ 1050, 2800 ],
+        respawnPosition: [ 1050, 2500 ],
         ballColor: "red",
         music: "land",
         platforms: [
@@ -733,7 +733,7 @@ function initializeLevels() {
         goalPosition: { "x": 75, "y": 250 },
         instructions: "",
         signs: [],
-        fallDeathY: 700
+        fallDeathY: 3200
         }
         
         /* Add more levels here  Be sure to use the template as seen above
