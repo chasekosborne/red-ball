@@ -916,6 +916,11 @@ function drawUI() {
         text("GOAL", level.goalPosition.x, level.goalPosition.y);
         pop();
 
+        // //Add a collider
+        goalCollider = new Sprite(level.goalPosition.x, level.goalPosition.y);
+        goalCollider.collider = 'overlap';
+        goalCollider.visible = false;
+
         
     }
 }

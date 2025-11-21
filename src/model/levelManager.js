@@ -1167,6 +1167,7 @@ function nextLevel() {
 }
 
 let goalReached = false;
+let celebrationPlay = false;
 let goalTimer = 0;
 const GOAL_DELAY = 90; // frame handeller lol
 
@@ -1177,8 +1178,9 @@ function checkLevelCompletion() {
         if (distance < 60) {
             if (!goalReached) {
                 // Trigger the celebration if first time reaching goal to prevent spam
-                goalReached = true;
                 goalTimer = 0;
+                goalReached = true;
+                celebrationPlay = true;
                 
                 // Play win sound
                 if (winSound && winSound.isLoaded()) {
