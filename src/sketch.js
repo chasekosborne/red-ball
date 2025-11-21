@@ -15,21 +15,12 @@ function cameraFollow() {
 }
 
 function updatePlayer() {
+    const fallDeathY = levels[currentLevel]?.fallDeathY || 700;
     // Ball fall off map respawner
-    if (!godMode && ball) {
-        if (currentLevel === 2) {  
-            if (ball.y > 1500) {
-                respawn();
-                updateParticles();
-                return;
-            }
-        } else {
-            if (ball.y > 700) {
-                respawn();
-                updateParticles();
-                return;
-            }
-        }
+    if (!godMode && ball && ball.y > fallDeathY) {
+        respawn();
+        updateParticles();
+        return;
     }
 
     // Jump reset Handler
