@@ -81,7 +81,8 @@ function buildPauseOverlay() {
     gap: 20px;
   `;
   // this is where you can easily add skins btw
-  const skins = ['8ball', 'donut', 'soccer', 'moon'];
+  const skins = ['default', '8ball', 'donut', 'soccer', 'moon'];
+  
   skins.forEach(skin => {
     const btn = document.createElement('button');
     btn.style.cssText = `
@@ -96,6 +97,14 @@ function buildPauseOverlay() {
       transition: all 0.2s;
     `;
     btn.style.backgroundImage = `url(../view/art/${skin === 'soccer' ? 'SoccerBall' : skin}.png)`;
+    if (skin === 'default') {
+      // Default = 没有图片，只是纯色球
+      btn.style.backgroundImage = 'none';
+      btn.style.background = 'rgba(255, 255, 255, 0.2)';
+  } else {
+      btn.style.backgroundImage = `url(../view/art/${skin === 'soccer' ? 'SoccerBall' : skin}.png)`;
+  }
+  
 
     btn.onmouseenter = () => {
       btn.style.borderColor = 'rgba(255,255,255,0.8)';
@@ -144,11 +153,15 @@ function buildPauseOverlay() {
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
   `;
   colorPicker.oninput = (e) => {
-    if (ball) {
-      ball.color = e.target.value;
-      levels[currentLevel].ballColor = e.target.value;
+    if (!ball) return;
+
+    if (ball.skin === "default") {
+        ball.color = e.target.value;
     }
-  };
+
+    levels[currentLevel].ballColor = e.target.value;
+};
+
   colorSection.appendChild(colorPicker);
   panel.appendChild(colorSection);
 

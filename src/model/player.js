@@ -1,11 +1,14 @@
 function changeBallSkin(skinName) {
-    if (ballSkins[skinName]) {
-        ballSkinImage = ballSkins[skinName];
-        if (ball) {
-            ball.img = ballSkinImage;
-        }
-        // save the skin to the level so it sticks
-        levels[currentLevel].ballSkin = skinName;
+    if (!ball) return;
+
+    ball.skin = skinName;
+
+    if (skinName === "default") {
+        ball.useImage = false;
+        ball.img = null;  
+    } else {
+        ball.useImage = true;
+        ball.img = ballSkins[skinName];
     }
 }
 
