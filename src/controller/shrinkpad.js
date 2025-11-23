@@ -94,3 +94,8 @@ const ShrinkPad = (function () {
   // Public surface
   return { reset, update };
 })();
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+  module.exports = ShrinkPad; // { reset, update }
+}

@@ -221,3 +221,13 @@ class AsteriodField {
         ++this.t;
     }
 };
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+    module.exports = {
+        randRange,
+        rotateVector,
+        Asteriod,
+        AsteriodField
+    };
+}

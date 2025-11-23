@@ -29,3 +29,11 @@ const GameHandler = (function () {
     };
 })();
 const gameHandler = GameHandler.getInstance(); // reference to singleton object
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+    module.exports = {
+        GameHandler,
+        gameHandler
+    };
+}

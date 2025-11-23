@@ -1,4 +1,15 @@
 // tests/test_sample.js
+/*
+  Tests exported values from globals.js:
+
+  - difficulty has the expected default value
+  - globalVolume and musicVolume are within [0, 1]
+  - background constants (BG_SKY, BG_SPACE) match expected strings
+  - godMode default is false
+
+  Simple sanity checks to catch accidental changes to core globals.
+*/
+
 
 const assert = require('node:assert/strict');
 const {
@@ -41,4 +52,4 @@ test('godMode default', () => {
   assert.strictEqual(godMode, false);
 });
 
-console.log('All global tests completed.');
+

@@ -184,3 +184,14 @@ function updateObstacles() {
     });
     levelObjects.backtrackTrigger?.update();
 }
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+  module.exports = {
+    forceClean,
+    randomColor,
+    formatTime,
+    sleep,
+    updateObstacles
+  };
+}

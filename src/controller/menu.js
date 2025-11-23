@@ -454,3 +454,16 @@ function showLevelSelectPanel() {
 function hideLevelSelectPanel() {
   document.getElementById('levelSelectPanel').style.display = 'none';
 }
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+  module.exports = {
+    buildPauseOverlay,
+    showPauseOverlay,
+    hidePauseOverlay,
+    pauseMenu,
+    buildLevelSelectPanel,
+    showLevelSelectPanel,
+    hideLevelSelectPanel
+  };
+}

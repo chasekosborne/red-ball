@@ -284,3 +284,16 @@ class Laserbeam {
         }
     }
 }
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+    module.exports = {
+        laserForward,
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN,
+        Laser,
+        Laserbeam
+    };
+}

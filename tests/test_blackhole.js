@@ -1,4 +1,14 @@
 // tests/test_blackhole.js
+/*
+  Tests blackholeAttraction behavior:
+
+  - No force applied when the ball is outside the attraction radius
+  - Applies a pulling force toward the black hole inside the field
+  - When too close, calls respawn() and plays the death sound
+
+  Uses Node stubs for ball, levelObjects, godMode, sounds, and a p5-like dist().
+*/
+
 
 const assert = require('node:assert/strict');
 const { blackholeAttraction } = require('../src/controller/blackhole.js');
@@ -91,4 +101,4 @@ test('blackholeAttraction: triggers respawn and death sound when too close', () 
   assert.ok(soundPlayed, 'death sound should be played');
 });
 
-console.log('All black hole tests completed.');
+
