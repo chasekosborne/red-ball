@@ -19,20 +19,55 @@
   	left: 0;
   	width: 100%;
   	height: 100%;
-
-    background-color: #000;
-
+    background: linear-gradient(180deg, #87CEEB 0%, #98D8E8 30%, #B0E0E6 70%, #87CEEB 100%);
+    overflow: hidden;
   	display: flex;
   	flex-direction: column;
   	justify-content: center;
   	align-items: center;
   	z-index: 10;
-}
+    }
+    
+    /* the framwork for teh canvas */
+    #menuBackground {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+    
+    /* Animation of the clouds  */
+    #menu::before {
+        content: '';
+        position: absolute;
+
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        background-image: 
+            radial-gradient(ellipse 80px 40px at 20% 20%, rgba(255,255,255,0.8), transparent),
+
+            radial-gradient(ellipse 60px 30px at 60% 15%, rgba(255,255,255,0.6), transparent),
+            
+            radial-gradient(ellipse 100px 50px at 80% 25%, rgba(255,255,255,0.7), transparent),
+            
+            radial-gradient(ellipse 70px 35px at 30% 35%, rgba(255,255,255,0.5), transparent),
+            
+            radial-gradient(ellipse 90px 45px at 90% 30%, rgba(255,255,255,0.6), transparent);
+        background-size: 100% 100%;
+        animation: moveClouds 30s linear infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
 
 
     @keyframes moveClouds {
-      from { background-position: 0 0; }
-      to   { background-position: -1000px 0; }
+      from { transform: translateX(0); }
+      to   { transform: translateX(-100%); }
     }
 
     /* Title style */
@@ -40,6 +75,7 @@
       font-size: 60px;
       margin-bottom: 40px;
       color: red;
+
       text-shadow: 2px 2px 0 white;
     }
 
@@ -47,14 +83,16 @@
     #main-buttons{
       display: flex;
       flex-direction: column;
+
       gap: 15px;
     }
 
     #main-buttons button{
       padding: 15px 30px;
       font-size: 24px;
-      background-color: white;
-      border: 2px solid red;
+      
+      background-color: #ffffff;
+      border: 2px solid rgb(0, 0, 0);
       border-radius: 12px;
       cursor: pointer;
       transition: 0.2s;
@@ -70,14 +108,14 @@
       padding: 15px 30px;
       font-size: 24px;
       background-color: white;
-      border: 2px solid red;
+      border: 2px solid rgb(0, 0, 0);
       border-radius: 12px;
       cursor: pointer;
       transition: 0.2s;
     }
     
     #menu button:hover {
-      background-color: red;
+      background-color: rgb(0, 255, 30);
       color: white;
     }
     /*Option Button*/
@@ -91,7 +129,7 @@
       padding: 15px 30px;
       font-size: 24px;
       background-color: white;
-      border: 2px solid red;
+      border: 2px solid rgb(0, 0, 0);
       border-radius: 12px;
       cursor: pointer;
       transition: 0.2s;      
@@ -136,14 +174,14 @@
       padding: 10px 20px;
       font-size: 20px;
       background-color: white;
-      border: 2px solid red;
+      border: 2px solid rgb(0, 0, 0);
       border-radius: 12px;
       cursor: pointer;
       transition: 0.2s;
     }
 
     #diffBtn:hover {
-      background-color: red;
+      background-color: rgb(0, 255, 30);
       color: white;
     }
   </style>
@@ -151,7 +189,9 @@
 <body>
   <!-- Menu overlay -->
   <div id="menu">
-    <h1>Epsilon's Greatest Ball</h1>
+    <canvas id="menuBackground"></canvas>
+    <div style="position: relative; z-index: 2; text-align: center;">
+      <h1>Epsilon's Greatest Ball</h1>
     <div id = "main-buttons">
       <button onclick="newGame()">New Game</button>
       <button onclick="showLevelSelect()">Level Select</button>
@@ -164,8 +204,9 @@
     <button onclick="startGame(4)">Level 3</button>
     <button onclick="backToMain()">Back</button>
     </div>
-    <div id="options-btn">
-      <button id="openOptions()" onclick="openOptions()">Options</button>
+      <div id="options-btn">
+        <button id="openOptions()" onclick="openOptions()">Options</button>
+      </div>
     </div>
   </div>
 
@@ -313,6 +354,103 @@
     z-index: 9999;
     display: none;
   ">
+
+<script>
+// this is the background animation
+function initMenuBackground() {
+    const canvas = document.getElementById('menuBackground');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Just some globals for the animation only
+    let ballX = -50;
+    let ballRotation = 0;
+    let platformOffset = 0;
+    
+    // Grab the tiles and load them
+    const tiles = {};
+    const tileSize = 64;
+    
+    // using the tiles for the platform grass ones
+    const platformTile = new Image();
+    platformTile.src = '../view/art/Tiles/tile_0001.png';
+    
+    // Ball image THIS CAN BE CHAGED WHEN WE GET A FINAL SKIN BTW
+    const ballImg = new Image();
+    ballImg.src = '../view/art/donut.png';
+    
+    function drawPlatform(ctx, y) {
+        const tilesNeeded = Math.ceil(canvas.width / tileSize) + 2;
+        
+        for (let i = -1; i < tilesNeeded; i++) {
+            const x = (i * tileSize) + (platformOffset % tileSize);
+            ctx.drawImage(platformTile, x, y, tileSize, tileSize);
+        }
+    }
+    
+    function drawBall(ctx, x, y) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(ballRotation);
+        ctx.drawImage(ballImg, -25, -25, 50, 50);
+        ctx.restore();
+    }
+    
+    function animate() {
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Change ball position (since its not actual gameplay its just arbitrary)
+        ballX += 2;
+        ballRotation += 0.1;
+        platformOffset -= 2;
+        
+        // This just tps ball back to start when off creen
+        if (ballX > canvas.width + 50) {
+            ballX = -50;
+        }
+        
+        // platforms for the tiles
+        const platformY = canvas.height - 100;
+        if (platformTile.complete) {
+            drawPlatform(ctx, platformY);
+        }
+        
+        
+        if (ballImg.complete) {
+            drawBall(ctx, ballX, platformY - 25);
+        }
+        
+        requestAnimationFrame(animate);
+    }
+    
+    // this just waits for assets before doing the menu
+    let imagesLoaded = 0;
+    const totalImages = 2;
+    
+    function checkImagesLoaded() {
+        imagesLoaded++;
+        if (imagesLoaded === totalImages) {
+            animate();
+        }
+    }
+    
+    platformTile.onload = checkImagesLoaded;
+    ballImg.onload = checkImagesLoaded;
+    
+    // YES WE HAVE WINDOW RESIZE CHECK LOL ITS SO PEAK
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+}
+
+// And bascially start dat thing when its ready
+document.addEventListener('DOMContentLoaded', initMenuBackground);
+</script>
+
 </body>
-</html>
 </html>
