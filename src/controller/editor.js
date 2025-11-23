@@ -379,3 +379,18 @@ function EditorMode() {
         loadLevel(currentLevel);
     }
 }
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+    module.exports = {
+        editor,
+        TOOL_LIST,
+        PICK_RADIUS,
+        drawEditorBanner,
+        worldMouseRaw,
+        worldMouse,
+        mousePressed,
+        mouseReleased,
+        EditorMode
+    };
+}

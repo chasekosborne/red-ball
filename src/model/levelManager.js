@@ -1206,3 +1206,15 @@ function checkLevelCompletion() {
         }
     }
 }
+
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+  module.exports = {
+    initializeLevels,
+    loadLevel,
+    clearLevel,
+    nextLevel,
+    checkLevelCompletion
+  };
+}

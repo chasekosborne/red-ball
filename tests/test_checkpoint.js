@@ -1,4 +1,21 @@
 // tests/test_checkpoint.js
+/*
+  Tests CheckPoint and BacktrackTrigger logic:
+
+  - CheckPoint:
+    • constructor sets sprite/state correctly
+    • reset() clears claimed state and restores the flag image
+    • update() claims on first overlap, sets respawnPosition, and plays sound
+    • update() does nothing on overlap if already claimed
+
+  - BacktrackTrigger:
+    • constructor initializes sprite and state
+    • resetCheckpoints() calls reset() on each checkpoint
+    • update() resets checkpoints only once on first overlap
+
+  Uses a Sprite stub plus global images, sounds, and respawnPosition.
+*/
+
 
 const assert = require('node:assert/strict');
 const { CheckPoint, BacktrackTrigger } = require('../src/controller/checkpoint.js');
@@ -195,4 +212,4 @@ test('BacktrackTrigger: update resets checkpoints once on overlap', () => {
   assert.strictEqual(resetCount, 1, 'checkpoints should not be reset again');
 });
 
-console.log('All checkpoint tests completed.');
+

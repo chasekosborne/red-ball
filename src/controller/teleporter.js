@@ -31,3 +31,10 @@ function teleportation() {
 
     }); 
 }
+
+// Only for Node-based unit tests
+if (typeof module !== 'undefined') {
+  module.exports = {
+    teleportation
+  };
+}
