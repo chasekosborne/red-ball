@@ -365,10 +365,11 @@ function initMenuBackground() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    // Just some globals for the animation only
+    // Just some globals for the animation 
     let ballX = -50;
     let ballRotation = 0;
     let platformOffset = 0;
+    let currentSkinIndex = 0;
     
     // Grab the tiles and load them
     const tiles = {};
@@ -378,9 +379,23 @@ function initMenuBackground() {
     const platformTile = new Image();
     platformTile.src = '../view/art/Tiles/tile_0001.png';
     
-    // Ball image THIS CAN BE CHAGED WHEN WE GET A FINAL SKIN BTW
-    const ballImg = new Image();
-    ballImg.src = '../view/art/donut.png';
+    // skins
+    const ballSkins = [
+        '../view/art/8ball.png',
+        '../view/art/donut.png',
+        '../view/art/SoccerBall.png'
+    ];
+    
+    // preload them all
+    const ballImages = [];
+    ballSkins.forEach((skinPath, index) => {
+        const img = new Image();
+        img.src = skinPath;
+        ballImages[index] = img;
+    });
+    
+    // the current skin the ball is using
+    let currentBallImg = ballImages[0];
     
     function drawPlatform(ctx, y) {
         const tilesNeeded = Math.ceil(canvas.width / tileSize) + 2;
@@ -395,7 +410,7 @@ function initMenuBackground() {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(ballRotation);
-        ctx.drawImage(ballImg, -25, -25, 50, 50);
+        ctx.drawImage(currentBallImg, -25, -25, 50, 50);
         ctx.restore();
     }
     
@@ -408,9 +423,12 @@ function initMenuBackground() {
         ballRotation += 0.1;
         platformOffset -= 2;
         
-        // This just tps ball back to start when off creen
+        // This just tps ball back to start when off creen and changes skin
         if (ballX > canvas.width + 50) {
             ballX = -50;
+            // next skin
+            currentSkinIndex = (currentSkinIndex + 1) % ballSkins.length;
+            currentBallImg = ballImages[currentSkinIndex];
         }
         
         // platforms for the tiles
@@ -420,7 +438,7 @@ function initMenuBackground() {
         }
         
         
-        if (ballImg.complete) {
+        if (currentBallImg.complete) {
             drawBall(ctx, ballX, platformY - 25);
         }
         
@@ -429,7 +447,7 @@ function initMenuBackground() {
     
     // this just waits for assets before doing the menu
     let imagesLoaded = 0;
-    const totalImages = 2;
+    const totalImages = 1 + ballImages.length; 
     
     function checkImagesLoaded() {
         imagesLoaded++;
@@ -439,7 +457,11 @@ function initMenuBackground() {
     }
     
     platformTile.onload = checkImagesLoaded;
-    ballImg.onload = checkImagesLoaded;
+    
+    // wiaitng for all the load
+    ballImages.forEach(img => {
+        img.onload = checkImagesLoaded;
+    });
     
     // YES WE HAVE WINDOW RESIZE CHECK LOL ITS SO PEAK
     window.addEventListener('resize', () => {
