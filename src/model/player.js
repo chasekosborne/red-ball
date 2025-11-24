@@ -6,6 +6,7 @@ function changeBallSkin(skinName) {
     if (skinName === "default") {
         ball.useImage = false;
         ball.img = null;  
+        ball.strokeWeight= 5;
     } else {
         ball.useImage = true;
         ball.img = ballSkins[skinName];

@@ -324,13 +324,17 @@ function update() {
             
             if (typeof allSprites !== 'undefined') allSprites.draw();
             // === Draw the ball manually when using default skin ===
-        if (ball && ball.skin === "default") {
-            push();
-            noStroke();
-            fill(ball.color || "#ff0000");  
-            circle(ball.x, ball.y, ball.diameter || 50);
-            pop();
-        }
+        // if (ball && ball.skin === "default") {
+        //     push();
+        //     //noStroke();
+
+        //     fill(ball.color || "#ff0000");  
+        //     circle(ball.x, ball.y, ball.diameter || 50);
+
+        //     ball.stroke = color(0,0,0);
+        //     ball.strokeWeight = 10;
+        //     pop();
+        // }
             pauseObstacles();
         } else { // running game
             if (difficulty === 'hard' && lives === Infinity) {
@@ -358,7 +362,8 @@ function update() {
             // === Draw the ball manually when using default skin ===
         if (ball && ball.skin === "default") {
             push();
-            noStroke();
+
+            strokeWeight(2);
             fill(ball.color || "#ff0000");  
             circle(ball.x, ball.y, ball.diameter || 50);
             pop();
