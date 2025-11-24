@@ -202,6 +202,9 @@ function preload() {
   springImage        = loadImage('../view/art/Tiles/tile_0049.png',           img => img.resize(50, 50));
   springImageL       = loadImage('../view/art/Tiles/tile_0048.png',           img => img.resize(50, 50));  
   springImageR       = loadImage('../view/art/Tiles/tile_0050.png',           img => img.resize(50, 50));
+  platformImage      = loadImage('../view/art/Tiles/tile_0042.png',           img => img.resize(50, 50));
+  platformImageL     = loadImage('../view/art/Tiles/tile_0041.png',           img => img.resize(50, 50));
+  platformImageR     = loadImage('../view/art/Tiles/tile_0043.png',           img => img.resize(50, 50));
 
   brickImage              = loadImage('../view/art/Tiles2/plainbrick.png',         img => img.resize(50, 50));
   pinkfullImage           = loadImage('../view/art/Tiles2/pinktop.png',            img => img.resize(50, 50));

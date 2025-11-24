@@ -486,31 +486,31 @@ function initializeLevels() {
             music: 'land', // Land.mp3 for Level 1
             platforms: [
                 // question for later but why are the y's below != to eachothers pair
-                { x: 3150, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
-                { x: 3850, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
+                { x: 3200, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3200, maxX: 3500 },
+                { x: 4000, y: 255, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3700, maxX: 4000 },
 
-                { x: 3150, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
-                { x: 3850, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
+                { x: 3200, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3200, maxX: 3500 },
+                { x: 4000, y: 455, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3700, maxX: 4000 },
 
-                { x: 3150, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3150, maxX: 3450 },
-                { x: 3850, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3550, maxX: 3850 },
+                { x: 3200, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3200, maxX: 3500 },
+                { x: 4000, y: 655, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3700, maxX: 4000 },
 
-                { x: 3400, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3400, maxX: 3600 },
-                { x: 3900, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3700, maxX: 3900 },
+                // { x: 3400, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3400, maxX: 3600 },
+                // { x: 3900, y: 55, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 3700, maxX: 3900 },
 
 
 
-                { x: 4100, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4100, maxX: 4400 },
-                { x: 4800, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4500, maxX: 4800 },
+                { x: 4300, y: 250, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4300, maxX: 4600 },
+                { x: 5000, y: 255, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4700, maxX: 5000 },
 
-                { x: 4100, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4100, maxX: 4400 },
-                { x: 4800, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4500, maxX: 4800 },
+                { x: 4300, y: 450, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4300, maxX: 4600 },
+                { x: 5000, y: 455, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4700, maxX: 5000 },
 
-                { x: 4100, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4100, maxX: 4400 },
-                { x: 4800, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4500, maxX: 4800 },
+                { x: 4300, y: 650, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4300, maxX: 4600 },
+                { x: 5000, y: 655, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4700, maxX: 5000 },
 
-                { x: 4100, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4100, maxX: 4400 },
-                { x: 4800, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4500, maxX: 4800 },
+                { x: 4300, y: 50, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4300, maxX: 4600 },
+                { x: 5000, y: 55, w: 100, h: 20, color: 'orange', moving: true, speed: 2, minX: 4700, maxX: 5000 },
 
 
                 
@@ -551,10 +551,10 @@ function initializeLevels() {
             springs: [
                 { x: 850, y: 1100, w: 200, h: 40 },
                 { x: 1200, y: 600, w: 200, h: 40 },
-                { x: 2810, y: 800, w: 100, h: 20 },
-                { x: 2820, y: 625, w: 40, h: 20 },
-                { x: 2820, y: 425, w: 40, h: 20 },
-                { x: 2820, y: 225, w: 40, h: 20 },
+                { x: 2815, y: 775, w: 100, h: 20 },
+                { x: 2840, y: 625, w: 40, h: 20 },
+                { x: 2840, y: 425, w: 40, h: 20 },
+                { x: 2840, y: 225, w: 40, h: 20 },
                 
             ],
             spikes: [
@@ -575,9 +575,9 @@ function initializeLevels() {
                 { x: 2515, y: 600, orientation: "right" },
                 { x: 2515, y: 650, orientation: "right" },
 
-                { x: 2820, y: 650, orientation: "down" },
-                { x: 2820, y: 450, orientation: "down" },
-                { x: 2820, y: 250, orientation: "down" },
+                { x: 2840, y: 650, orientation: "down" },
+                { x: 2840, y: 450, orientation: "down" },
+                { x: 2840, y: 250, orientation: "down" },
 
         
             ],
@@ -846,6 +846,19 @@ async function loadLevel(levelIndex) {
         levelObjects.platforms = [];
         for (let platformData of level.platforms || []) {
             let platform = new Sprite(platformData.x, platformData.y, platformData.w, platformData.h);
+
+            let buffer = createGraphics(platformData.w, platformData.h);
+            for (let x = 0; x < platformData.w; x += platformImage.width/2) {
+                for (let y = 0; y < platformData.h; y += platformImage.height) {
+                    buffer.image(platformImage, x, y);
+                    }
+                }
+
+                buffer.image(platformImageL, 0,0);
+                buffer.image(platformImageR, platformData.w - 25, 0);
+    
+                // Assign tiled texture to the platform
+                platform.img = buffer;
 
             if (platformData.fake == 'true') {
                 platform.physics = 'none';

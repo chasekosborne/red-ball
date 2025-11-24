@@ -11,6 +11,9 @@ let shrinkPadImage;
 let springImage;
 let springImageL;
 let springImageR;
+let platformImage;
+let platformImageL;
+let platformImageR;
 
 // Player Vars
 let ball;
