@@ -134,6 +134,7 @@ function keyPressed() {
             positionMenuVisible = !positionMenuVisible;
         } else if (key === 'e') {
             editor.enabled = !editor.enabled;
+            loadLevel(currentLevel);
 
             // if entering editor while paused, unpause & hide DOM pause overlay
             if (editor.enabled && gameHandler.isPaused()) {
@@ -142,11 +143,12 @@ function keyPressed() {
             }
             
             // Ensure tiles are rebuilt when toggling editor
-            cleanupTileSystem();
-            if (typeof ensureSpaceAssets === 'function') {
-                ensureSpaceAssets();
-            }
-        } else if (key === 'r') {
+            // cleanupTileSystem();
+            // if (typeof ensureSpaceAssets === 'function') {
+            //     ensureSpaceAssets();
+            // }
+        } 
+        else if (key === 'r') {
             // restart level ONLY when not editing and not paused
             if (!editor.enabled && !gameHandler.isPaused()) {
                 cleanupTileSystem();

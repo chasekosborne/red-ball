@@ -268,6 +268,9 @@ function EditorMode() {
 
     // repaint world so edits show immediately
     drawBackgroundForLevel();
+    if (typeof drawOptimizedTiles === 'function') {
+        drawOptimizedTiles();
+    }
     if (typeof allSprites !== 'undefined') allSprites.draw();
 
     // ===== EDITOR MODE (separate from Pause): freeze + repaint + banner, then return =====
