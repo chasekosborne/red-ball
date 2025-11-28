@@ -348,7 +348,7 @@ const LEVELS = [
         instructions: "",
         signs: [],
         fallDeathY: 3200
-    }
+    },
 
     /* Add more levels here  Be sure to use the template as seen above
       {
@@ -375,6 +375,30 @@ const LEVELS = [
     */
 
     // Add more levels here  Be sure to use the template as seen above
+    {
+        name: "Level 4",
+        theme: "sky",
+        respawnPosition: [500, 150],
+        ballColor: "red",
+        platforms: [
+          { x: 2800, y: 1500, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2900, maxX: 3520 },
+        ],
+        disappearingPlatforms: [],
+        ground: [{"x": 450, "y": 390, "w": 580, "h": 20}],
+        springs: [],
+        spikes: [],
+        checkpoints: [{"x": 260, "y": 340 }],
+        enemies: [],
+        lasers: [],
+        asteriodFields: [],
+        swingingHammers: [],
+        teleporter: [],
+        blackhole: [],
+        goalPosition: { x: 1900, y: 300 }, 
+        instructions: "",
+        signs: [],
+        
+    }
 ];
 
 
@@ -559,25 +583,8 @@ function initializeLevels() {
             ],
             spikes: [
 
-                { x: 1950, y: 290, orientation: "up" },
-                { x: 2000, y: 290, orientation: "up" },
-                { x: 2050, y: 290, orientation: "up" },
-
-                { x: 2220, y: 265, orientation: "up" },
-                { x: 2270, y: 265, orientation: "up" },
-                { x: 2320, y: 265, orientation: "up" },
-
-                { x: 2423, y: 350, orientation: "left" },
-                { x: 2423, y: 400, orientation: "left" },
-                { x: 2423, y: 450, orientation: "left" },
-
-                { x: 2515, y: 550, orientation: "right" },
-                { x: 2515, y: 600, orientation: "right" },
-                { x: 2515, y: 650, orientation: "right" },
-
-                { x: 2840, y: 650, orientation: "down" },
-                { x: 2840, y: 450, orientation: "down" },
-                { x: 2840, y: 250, orientation: "down" },
+            { "x": 1780, "y": 2610, "orientation": "up" },
+            { "x": 1983, "y": 2610, "orientation": "up" },
 
         
             ],
@@ -738,7 +745,7 @@ function initializeLevels() {
         instructions: "",
         signs: [],
         fallDeathY: 3200
-        }
+        },
         
         /* Add more levels here  Be sure to use the template as seen above
           {
@@ -765,6 +772,85 @@ function initializeLevels() {
         */
 
         // Add more levels here  Be sure to use the template as seen above
+
+        {
+            name: "Level 4",
+            theme: "sky",
+            respawnPosition: [125, 800],
+            // respawnPosition: [ 1200, 2600 ],
+            ballColor: "red",
+            music: "land",
+            platforms: [
+              { x: 2800, y: 1500, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2900, maxX: 3520 },
+            ],
+            disappearingPlatforms: [
+                { "x": 1780, "y": 700, "w": 150, "h": 10 },
+                { "x": 1800, "y": 550, "w": 300, "h": 10 },
+                { "x": 1780, "y": 400, "w": 300, "h": 10 },
+                { "x": 1780, "y": 250, "w": 300, "h": 10 },
+            ],
+            ground: [],
+            springs: [
+                { "x": 6000, "y": 800, "w": 150, "h": 20 }
+            ],
+            spikes: [
+                { "x": 1780, "y": 955, "orientation": "up" },
+                { "x": 1730, "y": 955, "orientation": "up" },
+                { "x": 1680, "y": 955, "orientation": "up" },
+
+
+                { "x": 1780, "y": 2610, "orientation": "up" },
+                { "x": 1983, "y": 2610, "orientation": "up" },
+                { "x": 3710, "y": 1145, "orientation": "left" },
+                { "x": 4054, "y": 1008, "orientation": "right" },
+                { "x": 3710, "y": 800, "orientation": "left" },
+                { "x": 4054, "y": 594, "orientation": "right" },
+                { "x": 4096, "y": -1770, "orientation": "right" }
+            ],
+            checkpoints: [
+                { "x": 6580, "y": 494 },
+                { "x": 3900, "y": 1460 }
+            ],
+            backtrackTrigger: {
+                "x": 6000,
+                "y": -1860,
+                "w": 50,
+                "h": 100,
+            },
+            enemies: [
+                { "startX": 3530, "startY": 2516, "endX": 3770, "endY": 2516, "speed": 1.5 },
+                { "startX": 2900, "startY": 2516, "endX": 3200, "endY": 2516, "speed": 1.5 },
+                { "startX": 2580, "startY": 2516, "endX": 2760, "endY": 2516, "speed": 1.5 },
+                { "startX": 3000, "startY": 2723, "endX": 3190, "endY": 2723, "speed": 1.5 },
+                { "startX": 3200, "startY": 2309, "endX": 3490, "endY": 2309, "speed": 1.5 },
+                { "startX": 2670, "startY": 2309, "endX": 2905, "endY": 2309, "speed": 1.5 },
+                { "startX": 3400, "startY": 2309, "endX": 3680, "endY": 2309, "speed": 2 },
+                { "startX": 3320, "startY": 2102, "endX": 3680, "endY": 2102, "speed": 2 }
+            ],
+            lasers: [],
+            asteriodFields: [],
+            swingingHammers: [
+                {
+                    "pivotX": 2990,
+                    "pivotY": 1420,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+            ],
+            shrinkpads: [{ x: 6890, y: 487 }],
+            teleporter: [],
+            blackhole: [],
+            goalPosition: { "x": 950, "y": 2600 },
+            instructions: "",
+            signs: [],
+            fallDeathY: 3200
+        }
     ];
 }
 
