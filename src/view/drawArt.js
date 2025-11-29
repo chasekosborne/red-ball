@@ -1216,3 +1216,18 @@ function updateAndDrawConfetti() {
         confettiActive = false;
     }
 }
+
+// Node/CommonJS exports for testing
+if (typeof module !== 'undefined') {
+  module.exports = {
+    generateSimplifiedColliders,
+    createOptimizedTileSystem,
+    cleanupTileSystem,
+    drawOptimizedTiles,
+    drawBackgroundForLevel,
+    drawPositionMenu,
+    Confetto,
+    spawnConfetti,
+    updateAndDrawConfetti,
+  };
+}

@@ -11,16 +11,31 @@ console.log('----- Commence tests of globals.js.');
 require('./test_globals.js');
 console.log('----- All global tests completed.');
 
-/*
 console.log('----- Commence tests of levelManager.js.');
 require('./test_levelManager.js');
 console.log('----- All levelManager tests completed.');
-*/
+
+console.log('----- Commence tests of player.js.');
+require('./test_player.js');
+console.log('----- All player.js tests completed.');
 
 console.log('----- Completed tests of all model files.');
-//================= View =========================
+
+//================= View ========================
+console.log('----- Commenced tests of all view files.');
+
+console.log('----- Commence tests of drawArt.js.');
+require('./test_drawArt.js');
+console.log('----- All drawArt tests completed.');
+
+console.log('----- Commence tests of musicManager.js.');
+require('./test_musicManager.js');
+console.log('----- All musicManager tests completed.');
+
+console.log('----- Completed tests of all view files.');
 
 //============== Controller ======================
+
 console.log('----- Commenced tests of all controller files.');
 
 console.log('----- Commence tests of blackhole.js.');
@@ -73,4 +88,4 @@ console.log('----- Completed tests of all controller files.');
 
 
 
-console.log('All tests from all files have been run.');
+console.log('All MVC tests from all files have been run.');

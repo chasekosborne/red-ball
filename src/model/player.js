@@ -72,3 +72,12 @@ function respawn() {
 
     }
 }
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    changeBallSkin,
+    updateParticles,
+    explodeAndRespawn,
+    respawn,
+  };
+}
