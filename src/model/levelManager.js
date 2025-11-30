@@ -781,22 +781,59 @@ function initializeLevels() {
             ballColor: "red",
             music: "land",
             platforms: [
-              { x: 2800, y: 1500, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2900, maxX: 3520 },
-            ],
+                { 
+                  x: 2800, 
+                  y: 1500, 
+                  w: 100, 
+                  h: 20, 
+                  color: 'orange', 
+                  moving: true, 
+                  speed: 2.2, 
+                  minX: 2900, 
+                  maxX: 3520 
+                },
+              ],
+              
             disappearingPlatforms: [
-                { "x": 1780, "y": 700, "w": 150, "h": 10 },
-                { "x": 1800, "y": 550, "w": 300, "h": 10 },
-                { "x": 1780, "y": 400, "w": 300, "h": 10 },
-                { "x": 1780, "y": 250, "w": 300, "h": 10 },
-            ],
+                { x: 2000, y: 700, w: 500, h: 10 },
+                { x: 2000, y: 550, w: 350, h: 10 },
+                { x: 2000, y: 400, w: 250, h: 10 },
+                { x: 2000, y: 250, w: 200, h: 10 },
+            ],            
             ground: [],
             springs: [
                 { "x": 6000, "y": 800, "w": 150, "h": 20 }
             ],
             spikes: [
+                { "x": 1830, "y": 955, "orientation": "up" },
                 { "x": 1780, "y": 955, "orientation": "up" },
                 { "x": 1730, "y": 955, "orientation": "up" },
-                { "x": 1680, "y": 955, "orientation": "up" },
+                { "x": 1880, "y": 955, "orientation": "up" },
+                { "x": 1930, "y": 955, "orientation": "up" },
+                { "x": 1980, "y": 955, "orientation": "up" },
+                { "x": 2030, "y": 955, "orientation": "up" },
+                { "x": 2080, "y": 955, "orientation": "up" },
+                { "x": 2130, "y": 955, "orientation": "up" },
+                { "x": 2180, "y": 955, "orientation": "up" },
+
+                { "x": 2100, "y": 670, "orientation": "up" },
+                { "x": 2050, "y": 670, "orientation": "up" },
+                { "x": 2000, "y": 670, "orientation": "up" },
+                { "x": 1950, "y": 670, "orientation": "up" },
+                { "x": 1900, "y": 670, "orientation": "up" },
+                { "x": 1850, "y": 670, "orientation": "up" },
+                { "x": 2150, "y": 670, "orientation": "up" },
+
+                { "x": 2100, "y": 520, "orientation": "up" },
+                { "x": 2050, "y": 520, "orientation": "up" },
+                { "x": 2000, "y": 520, "orientation": "up" },
+                { "x": 1900, "y": 520, "orientation": "up" },
+                { "x": 2000, "y": 520, "orientation": "up" },
+                { "x": 1950, "y": 520, "orientation": "up" },
+
+                { "x": 2000, "y": 370, "orientation": "up" },
+                { "x": 1950, "y": 370, "orientation": "up" },
+                { "x": 2050, "y": 370, "orientation": "up" },
 
 
                 { "x": 1780, "y": 2610, "orientation": "up" },
