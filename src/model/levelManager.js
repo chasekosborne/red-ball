@@ -586,6 +586,23 @@ function initializeLevels() {
             { "x": 1780, "y": 2610, "orientation": "up" },
             { "x": 1983, "y": 2610, "orientation": "up" },
 
+            { "x": 1950, "y": 290, "orientation": "up" },
+            { "x": 2000, "y": 290, "orientation": "up" },
+            { "x": 2050, "y": 290, "orientation": "up" },
+            { "x": 2220, "y": 265, "orientation": "up" },
+            { "x": 2270, "y": 265, "orientation": "up" },
+            { "x": 2320, "y": 265, "orientation": "up" },
+            { "x": 2423, "y": 350, "orientation": "left" },
+            { "x": 2423, "y": 400, "orientation": "left" },
+            { "x": 2423, "y": 450, "orientation": "left" },
+            { "x": 2515, "y": 550, "orientation": "right" },
+            { "x": 2515, "y": 600, "orientation": "right" },
+            { "x": 2515, "y": 650, "orientation": "right" },
+            { "x": 2840, "y": 650, "orientation": "down" },
+            { "x": 2840, "y": 450, "orientation": "down" },
+            { "x": 2840, "y": 250, "orientation": "down" },
+
+
         
             ],
 
