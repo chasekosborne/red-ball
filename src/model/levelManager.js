@@ -646,7 +646,7 @@ function initializeLevels() {
           ],
 
           ground: [
-        
+
           ],
         
           springs: [
@@ -794,22 +794,12 @@ function initializeLevels() {
             name: "Level 4",
             theme: "sky",
             respawnPosition: [125, 800],
-            // respawnPosition: [ 1200, 2600 ],
             ballColor: "red",
             music: "land",
             platforms: [
-                { 
-                  x: 2800, 
-                  y: 1500, 
-                  w: 100, 
-                  h: 20, 
-                  color: 'orange', 
-                  moving: true, 
-                  speed: 2.2, 
-                  minX: 2900, 
-                  maxX: 3520 
-                },
-              ],
+                { x: 3000, y: -50, w: 200, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 3500, maxX: 4520 },
+                { x: 2800, y: 1500, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2900, maxX: 3520 }
+            ],
               
             disappearingPlatforms: [
                 { x: 2000, y: 700, w: 500, h: 10 },
@@ -817,7 +807,8 @@ function initializeLevels() {
                 { x: 2000, y: 400, w: 250, h: 10 },
                 { x: 2000, y: 250, w: 200, h: 10 },
             ],            
-            ground: [],
+            ground: [
+            ],
             springs: [
                 { "x": 6000, "y": 800, "w": 150, "h": 20 }
             ],
@@ -855,11 +846,10 @@ function initializeLevels() {
 
                 { "x": 1780, "y": 2610, "orientation": "up" },
                 { "x": 1983, "y": 2610, "orientation": "up" },
-                { "x": 3710, "y": 1145, "orientation": "left" },
-                { "x": 4054, "y": 1008, "orientation": "right" },
+
                 { "x": 3710, "y": 800, "orientation": "left" },
                 { "x": 4054, "y": 594, "orientation": "right" },
-                { "x": 4096, "y": -1770, "orientation": "right" }
+                { "x": 4196, "y": -1750, "orientation": "right" }
             ],
             checkpoints: [
                 { "x": 6580, "y": 494 },
@@ -882,8 +872,23 @@ function initializeLevels() {
                 { "startX": 3320, "startY": 2102, "endX": 3680, "endY": 2102, "speed": 2 }
             ],
             lasers: [],
-            asteriodFields: [],
+            asteriodFields: [
+                { x: 4080, y: -100, range: 600, fallSpeed: 4, burstCount: 4, timeInterval: 3 }
+            ],
             swingingHammers: [
+                {
+                    "pivotX": 2830,
+                    "pivotY": -500,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+
                 {
                     "pivotX": 2990,
                     "pivotY": 1420,
@@ -897,7 +902,9 @@ function initializeLevels() {
                     "scale": 0.3
                 },
             ],
-            shrinkpads: [{ x: 6890, y: 487 }],
+            shrinkpads: [
+                {x: 5160, y: 490},
+                { x: 6890, y: 487 }],
             teleporter: [],
             blackhole: [],
             goalPosition: { "x": 950, "y": 2600 },
