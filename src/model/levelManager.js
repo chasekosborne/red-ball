@@ -798,7 +798,8 @@ function initializeLevels() {
             music: "land",
             platforms: [
                 { x: 3000, y: -50, w: 200, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 3500, maxX: 4520 },
-                { x: 2800, y: 1500, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2900, maxX: 3520 }
+                { x: 2800, y: 1500, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2900, maxX: 3520 },
+                { x: 1900, y: 3100, w: 1000, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 1800, maxX: 2500 },
             ],
               
             disappearingPlatforms: [
@@ -892,6 +893,19 @@ function initializeLevels() {
                 {
                     "pivotX": 2990,
                     "pivotY": 1420,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+
+                {
+                    "pivotX": 2100,
+                    "pivotY": 2300,
                     "length": 200,
                     "amplitude": 50,
                     "speed": 2,
