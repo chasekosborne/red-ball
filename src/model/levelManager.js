@@ -793,12 +793,11 @@ function initializeLevels() {
         {
             name: "Level 4",
             theme: "sky",
-            respawnPosition: [125, 800],
+            respawnPosition: [905, 800],
             ballColor: "red",
             music: "land",
             platforms: [
                 { x: 3000, y: -50, w: 200, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 3500, maxX: 4520 },
-                { x: 2800, y: 1500, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2900, maxX: 3520 },
                 { x: 1900, y: 3100, w: 1000, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 1800, maxX: 2500 },
             ],
               
@@ -879,7 +878,7 @@ function initializeLevels() {
             swingingHammers: [
                 {
                     "pivotX": 2830,
-                    "pivotY": -500,
+                    "pivotY": -400,
                     "length": 200,
                     "amplitude": 50,
                     "speed": 2,
@@ -916,10 +915,11 @@ function initializeLevels() {
                     "scale": 0.3
                 },
             ],
-            shrinkpads: [
-                {x: 5160, y: 490},
-                { x: 6890, y: 487 }],
-            teleporter: [],
+            shrinkpads: [ {x: 5160, y: 490} ],
+            teleporter: [
+                {"x": 1800, "y": 665, "w": 30, "h": 20},
+                {"x": 4560, "y": 30, "w": 30, "h": 20}
+            ],
             blackhole: [],
             goalPosition: { "x": 950, "y": 2600 },
             instructions: "",
