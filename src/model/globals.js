@@ -87,6 +87,9 @@ let currentLevel = 0; // 0 = dev room
 let levels = [];
 let levelObjects = {}; // Will store level platforms and stuff
 
+// ==== Level Completion Tracking ====
+let completedLevels = []; // Array of completed level indices
+
 // ==== Timer variables ====
 let beginTime;
 let levelElapsedTime = 0;

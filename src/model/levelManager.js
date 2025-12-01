@@ -906,9 +906,65 @@ function initializeLevels() {
             fallDeathY: 3200
         }
     ];
+    
+    // Load completion progress from localStorage
+    loadLevelProgress();
+}
+
+// Save and load level completion progress
+function saveLevelProgress() {
+    try {
+        localStorage.setItem('redBallCompletedLevels', JSON.stringify(completedLevels));
+    } catch (e) {
+        console.error('Failed to save level progress:', e);
+    }
+}
+
+function loadLevelProgress() {
+    try {
+        const saved = localStorage.getItem('redBallCompletedLevels');
+        if (saved) {
+            completedLevels = JSON.parse(saved);
+            console.log('Loaded level progress:', completedLevels);
+        } else {
+            // First time playing - no levels completed yet
+            completedLevels = [];
+        }
+    } catch (e) {
+        console.error('Failed to load level progress:', e);
+        completedLevels = [];
+    }
+}
+
+function isLevelUnlocked(levelIndex) {
+    // Dev Room (index 0) is always unlocked
+    if (levelIndex === 0) return true;
+    
+    // A level is unlocked if the previous level is completed
+    return completedLevels.includes(levelIndex - 1);
+}
+
+function markLevelCompleted(levelIndex) {
+    if (!completedLevels.includes(levelIndex)) {
+        completedLevels.push(levelIndex);
+        saveLevelProgress();
+        console.log(`Level ${levelIndex} marked as completed`);
+    }
+}
+
+function resetLevelProgress() {
+    completedLevels = [];
+    saveLevelProgress();
+    console.log('All level progress has been reset');
 }
 
 async function loadLevel(levelIndex) {
+  // Check if level is unlocked (except when called from nextLevel which already completed previous)
+  if (!isLevelUnlocked(levelIndex)) {
+    console.log(`Level ${levelIndex} is locked. Complete previous levels first.`);
+    return;
+  }
+  
   await clearLevel();
   
   currentLevel = levelIndex;
@@ -1315,6 +1371,9 @@ async function clearLevel() {
 }
 
 function nextLevel() {
+    // Mark current level as completed before moving on
+    markLevelCompleted(currentLevel);
+    
     if (currentLevel < levels.length - 1) {
         console.log("Moving to next Level");
         loadLevel(currentLevel + 1);
