@@ -238,6 +238,43 @@ function drawTiles() {
         ]
     }
 
+    else if(levels[currentLevel].name == "Tutorial"){
+        tileData = [
+         '..................................', 
+         '...............................................................qwwwwwwwwwwwwwwwwwwwwwwwwwwe...............................qwwwwwwwwwwwwwwwwwwwwwwwwwwe.......................................qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',  
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...............................................................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................uyyyyyyyyyyyyyyyyyyyyyyyyyyi...............................uyyyyyyyyyyyyyyyyyyyyyyyyyyi.......................................uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi......................opppppppppppppppppppppppppp[...............................opppppppppppppppppppppppppp[.......................................oppppppppppppppppppppppppppppppp[',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi..',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi..',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi..',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi..',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi..',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi..',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi..',
+         '...uyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyi..'
+
+
+       ]
+   }
+
     else if (levels[currentLevel].name == "Level 1"){
          tileData = [
                 ".............................................................................................................qwwwwwwe..........qwwwwwwwwwwwwwwe..................................qwwwe.........................................qwwwwwwe",
@@ -657,7 +694,7 @@ else if(levels[currentLevel].name == "Level 4") {
 
 }
     // Check if this is a tile-based level
-    if (levels[currentLevel].name == "Dev Room" || levels[currentLevel].name == "Level 2" || levels[currentLevel].name == "Level 1" || levels[currentLevel].name == "Level 3" || levels[currentLevel].name == "Level 4") {
+    if (levels[currentLevel].name == "Dev Room" || levels[currentLevel].name == "Level 2" || levels[currentLevel].name == "Level 1" || levels[currentLevel].name == "Level 3" || levels[currentLevel].name == "Level 4" || levels[currentLevel].name == "Tutorial") {
         // Check if level has layer definitions, otherwise use single layer (backward compatible)
         if (levels[currentLevel].tileLayers && Array.isArray(levels[currentLevel].tileLayers)) {
             // Multi-layer system
