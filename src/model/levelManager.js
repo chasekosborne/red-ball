@@ -986,8 +986,47 @@ function initializeLevels() {
                 },
 
                 {
+                    "pivotX": 3300,
+                    "pivotY": 1420,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+
+                {
+                    "pivotX": 1300,
+                    "pivotY": 2600,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+
+                {
+                    "pivotX": 1700,
+                    "pivotY": 2600,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+
+                {
                     "pivotX": 2100,
-                    "pivotY": 2300,
+                    "pivotY": 2600,
                     "length": 200,
                     "amplitude": 50,
                     "speed": 2,
