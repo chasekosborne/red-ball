@@ -418,61 +418,61 @@ function initializeLevels() {
         {
             name: "Tutorial",
             theme: "sky",
-            respawnPosition: [125, 150],
+            respawnPosition: [130, 150],
             ballColor: "red",
              ballSkin: '8ball',
             music: 'land', // Land.mp3 for Tutorial Level
            platforms: [
-                { "x": 2250, "y": 0, "w": 120, "h": 20, "color": "orange", "moving": true, "speed": 2, "minX": 2231, "maxX": 2683 }
+                { "x": 2250, "y": 75, "w": 120, "h": 20, "color": "orange", "moving": true, "speed": 2, "minX": 2231, "maxX": 2675 }
             ],
            ground: [
-                { "x": 550, "y": 350, "w": 1000, "h": 40 },
-                { "x": 1800, "y": 0, "w": 700, "h": 40 },
-                { "x": 3100, "y": 0, "w": 700, "h": 40 },
-                { "x": 3125, "y": -420, "w": 20, "h": 800 },
-                { "x": 4701, "y": 0, "w": 500, "h": 40 },
-                { "x": 550, "y": 120, "w": 1000, "h": 40 },
-                { "x": 60, "y": 235, "w": 20, "h": 190}
+                //{ "x": 550, "y": 350, "w": 1000, "h": 40 },
+                //{ "x": 1800, "y": 0, "w": 700, "h": 40 },
+               // { "x": 3100, "y": 0, "w": 700, "h": 40},
+                { "x": 3125, "y": -350, "w": 20, "h": 800, "visible" : "no" },
+                //{ "x": 4701, "y": 0, "w": 500, "h": 40 },
+                //{ "x": 550, "y": 120, "w": 1000, "h": 40 },
+                //{ "x": 60, "y": 235, "w": 20, "h": 190}
             ],
             springs: [
                 { "x": 1250, "y": 425, "w": 200, "h": 40 }
             ],
             spikes: [
-                { "x": 780, "y": 307, "orientation": "up" },
-                { "x": 420, "y": 307, "orientation": "up" },
-                { "x": 480, "y": 307, "orientation": "up" },
-                { "x": 540, "y": 307, "orientation": "up" },
-                { "x": 600, "y": 307, "orientation": "up" },
-                { "x": 660, "y": 307, "orientation": "up" },
-                { "x": 720, "y": 307, "orientation": "up" }
+                { "x": 780, "y": 310, "orientation": "up" },
+                { "x": 420, "y": 310, "orientation": "up" },
+                { "x": 480, "y": 310, "orientation": "up" },
+                { "x": 540, "y": 310, "orientation": "up" },
+                { "x": 600, "y": 310, "orientation": "up" },
+                { "x": 660, "y": 310, "orientation": "up" },
+                { "x": 720, "y": 310, "orientation": "up" }
             ],
             checkpoints: [
-                { "x": 1600, "y": -45 }
+                { "x": 1600, "y": 55 }
             ],
             enemies: [
-                { "startX": 2080, "startY": -60, "endX": 2080, "endY": -200, "speed": 30 }
+                { "startX": 2080, "startY": 10, "endX": 2080, "endY": -130, "speed": 30 }
             ],
             lasers: [],
             disappearingPlatforms: [
-                { "x": 3950, "y": 0, "w": 1000, "h": 40 }
+                { "x": 3930, "y": 100, "w": 900, "h": 40 }
             ],
             swingingHammers: [],
             teleporter: [
-                { "x": 3030, "y": -49, "w": 60, "h": 40 },
-                { "x": 3230, "y": -49, "w": 100, "h": 100 }
+                { "x": 3030, "y": 50, "w": 60, "h": 40 },
+                { "x": 3230, "y": 50, "w": 100, "h": 100 }
             ],
             blackhole: [],
-            goalPosition: { "x": 4790, "y": -82 },
+            goalPosition: { "x": 4790, "y": 20 },
             instructions: "",
             signs: [
-              { x: 225, y: 220, text: "Welcome to Epsilon's Greatest Ball! Use the arrow keys to move left/right", size: 8, color: 'black' },
-              { x: 600, y: 200, text: "Press space to jump. Double jump by pressing space twice in order to avoid these!", size: 10, color: 'black' },
-              { x: 1250, y: 300, text: "Jump onto the spring to launch yourself in the air!", size: 10, color: 'black' },
-              { x: 1600, y: -90, text: "This checkpoint allows you to respawn here after you die.", size: 10, color: 'black' },
-              { x: 1875, y: -140, text: "Double jump over this hazard and land on the moving platform!", size: 10, color: 'black' },
-              { x: 2900, y: -130, text: "Use the teleporter to bypass this wall.", size: 10, color: 'black' },
-              { x: 3900, y: -140, text: "Go quickly across this platform! It starts disappearing after you touch it!", size: 12, color: 'black' },
-              { x: 4700, y: -170, text: "Congratulations! You will encounter more obstacles as you go along, and check the How To Play menu if you ever forget anything!", size: 12, color: 'black' },
+              { x: 200, y: 220, text: "Welcome to Epsilon's Greatest Ball! \n Use the arrow keys to move left/right", size: 15, color: 'black' },
+              { x: 600, y: 180, text: "Press space to jump. \n Double jump by pressing space twice in order to avoid these!", size: 15, color: 'black' },
+              { x: 1250, y: 300, text: "Jump onto the spring to launch yourself in the air!", size: 15, color: 'black' },
+              { x: 1600, y: -70, text: "This checkpoint allows you to respawn here after you die.", size: 15, color: 'black' },
+              { x: 1885, y: -140, text: "Double jump over this hazard \n to land on the moving platform!", size: 15, color: 'black' },
+              { x: 2900, y: -100, text: "Use the teleporter to bypass this invisible wall.", size: 15, color: 'black' },
+              { x: 3900, y: -100, text: "Go quickly across this platform! \n It starts disappearing after you touch it!", size: 15, color: 'black' },
+              { x: 4700, y: -140, text: "Congratulations! \n You will encounter more obstacles as you go along. \n Check the How To Play menu if you ever forget anything!", size: 15, color: 'black' },
             ],
             fallDeathY: 700
         },
@@ -838,6 +838,10 @@ async function loadLevel(levelIndex) {
         for (let groundData of level.ground || []) {
             let ground = new Sprite(groundData.x, groundData.y, groundData.w, groundData.h);
             ground.physics = STATIC;
+            if(groundData.visible == "no")
+                ground.visible = false;
+            else   
+                ground.visible = true;
             ground.color = 'green';
             levelObjects.ground.push(ground);
         }
@@ -860,12 +864,12 @@ async function loadLevel(levelIndex) {
                 // Assign tiled texture to the platform
                 platform.img = buffer;
 
-            if (platformData.fake == 'true') {
-                platform.physics = 'none';
-                platform.color = platformData.color || 'orange'
-                platform.stroke = 'black'
-                platform.strokeWeight = 2;
-            } else {
+            // if (platformData.fake == 'true') {
+            //     platform.physics = 'none';
+            //     platform.color = platformData.color || 'orange'
+            //     platform.stroke = 'black'
+            //     platform.strokeWeight = 2;
+            // } else {
                 platform.physics = KINEMATIC;
                 platform.color = platformData.color || 'orange'
                 platform.speed = platformData.speed || 0;
@@ -873,7 +877,7 @@ async function loadLevel(levelIndex) {
                 platform.minX = platformData.minX || platformData.x - 100;
                 platform.maxX = platformData.maxX || platformData.x + 100;
                 platform.moving = platformData.moving || false; 
-            }
+            //}
             levelObjects.platforms.push(platform);
         }
         
@@ -900,21 +904,6 @@ async function loadLevel(levelIndex) {
 
             //spring.color = 'cyan';
             levelObjects.springs.push(spring);
-        }
-
-        // Disappearing platforms creator
-        levelObjects.disappearingPlatforms = [];
-        for (let disappearData of (level.disappearingPlatforms || [])) {
-            let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
-            disappearPlatform.physics = STATIC;
-            disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
-            disappearPlatform.color = disappearPlatform.baseColor;
-            disappearPlatform.isDisappearing = false;
-            disappearPlatform.isReappearing = false;
-            disappearPlatform.fadeTimer = 0;
-            disappearPlatform.playerTouched = false;
-            disappearPlatform.opacity = 255;
-            levelObjects.disappearingPlatforms.push(disappearPlatform);
         }
         
         // Spike creator
@@ -984,6 +973,43 @@ async function loadLevel(levelIndex) {
             );
             levelObjects.backtrackTrigger.setCheckpoints(levelObjects.checkpoints);
         }
+
+
+                // Disappearing platforms creator
+                levelObjects.disappearingPlatforms = [];
+                for (let disappearData of (level.disappearingPlatforms || [])) {
+                    let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
+                    disappearPlatform.physics = STATIC;
+                    //disappearPlatform.collider = 'static';
+                   // disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
+                    //disappearPlatform.color = disappearPlatform.baseColor;
+        
+                    let buffer = createGraphics(disappearData.w, disappearData.h);
+                    for (let x = 0; x < disappearData.w; x += platformImage.width/2) {
+                        for (let y = 0; y < disappearData.h; y += platformImage.height) {
+                            buffer.image(platformImage, x, y);
+                            }
+                        }
+        
+                        buffer.image(platformImageL, 0,0);
+                        buffer.image(platformImageR, disappearData.w - 25, 0);
+            
+                        // Assign tiled texture to the platform
+                        disappearPlatform.img = buffer;
+                        
+                        disappearPlatform.setCollider("rectangle" , 0, 0, disappearData.w, disappearData.h);
+                        disappearPlatform.tile = false;  // prevents resizing
+        
+        
+                       // disappearPlatform.debug = true;
+        
+                    disappearPlatform.isDisappearing = false;
+                    disappearPlatform.isReappearing = false;
+                    disappearPlatform.fadeTimer = 0;
+                    disappearPlatform.playerTouched = false;
+                    disappearPlatform.opacity = 255;
+                    levelObjects.disappearingPlatforms.push(disappearPlatform);
+                }
         
         //Creation of enemies
         levelObjects.enemies = [];
