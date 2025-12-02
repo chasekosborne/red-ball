@@ -1428,7 +1428,7 @@ function nextLevel() {
 let goalReached = false;
 let celebrationPlay = false;
 let goalTimer = 0;
-const GOAL_DELAY = 90; // frame handeller lol
+const GOAL_DELAY = 30; // frame handeller lol
 
 function checkLevelCompletion() {
     const level = levels[currentLevel];
