@@ -38,8 +38,7 @@ function teleportation() {
             teleporterActive = true;     //activates teleporter
         }
 
-    }); 
-}
+    }
 
 // Only for Node-based unit tests
 if (typeof module !== 'undefined') {
