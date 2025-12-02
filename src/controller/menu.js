@@ -391,6 +391,8 @@ function buildLevelSelectPanel() {
 
   levelNames.forEach((name, i) => {
     const btn = document.createElement('button');
+    btn.className = 'level-select-btn'; 
+    btn.dataset.levelIndex = i; 
     btn.textContent = name;
     btn.style.cssText = `
       width: 220px;
@@ -405,10 +407,22 @@ function buildLevelSelectPanel() {
       box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
       transition: all 0.2s;
     `;
-    btn.onmouseenter = () => (btn.style.background = "rgba(255, 200, 200, 1)");
-    btn.onmouseleave = () => (btn.style.background = "white");
+    
+    btn.onmouseenter = () => {
+      if (btn.disabled) return;
+      const isCompleted = completedLevels.includes(i);
+      btn.style.background = isCompleted ? "rgba(200, 255, 200, 1)" : "rgba(255, 200, 200, 1)";
+    };
+    btn.onmouseleave = () => {
+      if (btn.disabled) return;
+      btn.style.background = "white";
+    };
 
     btn.onclick = () => {
+      if (btn.disabled) {
+        console.log(`Level ${name} is locked!`);
+        return;
+      }
       console.log(`Clicked: ${name}`);
       hideLevelSelectPanel();
       gameHandler.resumeGame();
@@ -449,6 +463,29 @@ function buildLevelSelectPanel() {
 function showLevelSelectPanel() {
   document.getElementById('pauseOverlay').style.display = 'none';
   document.getElementById('levelSelectPanel').style.display = 'flex';
+  updateLevelSelectButtons(); 
+}
+
+function updateLevelSelectButtons() {
+  const buttons = document.querySelectorAll('.level-select-btn');
+  const levelNames = ["Dev Room", "Tutorial", "Level 1", "Level 2", "Level 3"];
+  
+  buttons.forEach((btn, index) => {
+    const levelIndex = parseInt(btn.dataset.levelIndex);
+    const isUnlocked = isLevelUnlocked(levelIndex);
+    const isCompleted = completedLevels.includes(levelIndex);
+    
+    
+    btn.textContent = isUnlocked ? levelNames[index] : `🔒 ${levelNames[index]}`;
+    
+    
+    btn.style.border = `2px solid ${isCompleted ? 'rgba(0, 255, 150, 0.8)' : 'rgba(255, 0, 0, 0.8)'}`;
+    btn.style.background = isUnlocked ? 'white' : 'rgba(100, 100, 100, 0.5)';
+    btn.style.color = isUnlocked ? 'black' : 'rgba(150, 150, 150, 1)';
+    btn.style.cursor = isUnlocked ? 'pointer' : 'not-allowed';
+    btn.style.boxShadow = `0 0 10px ${isCompleted ? 'rgba(0, 255, 150, 0.3)' : 'rgba(255, 0, 0, 0.3)'}`;
+    btn.disabled = !isUnlocked;
+  });
 }
 
 function hideLevelSelectPanel() {

@@ -34,12 +34,12 @@ function teleportation() {
           return;
       }
     }
-    if(millis() - beginTime >=3000){  //after a 3 second delay, teleporter can be used again
+        if(millis() - beginTime >=3000){  //after a 3 second delay, teleporter can be used again
             teleporterActive = true;     //activates teleporter
         }
 
-    }
-
+    }); 
+}
 
 // Only for Node-based unit tests
 if (typeof module !== 'undefined') {
