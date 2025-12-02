@@ -348,7 +348,7 @@ const LEVELS = [
         instructions: "",
         signs: [],
         fallDeathY: 3200
-    }
+    },
 
     /* Add more levels here  Be sure to use the template as seen above
       {
@@ -375,6 +375,30 @@ const LEVELS = [
     */
 
     // Add more levels here  Be sure to use the template as seen above
+    {
+        name: "Level 4",
+        theme: "sky",
+        respawnPosition: [500, 150],
+        ballColor: "red",
+        platforms: [
+          { x: 2800, y: 1500, w: 100, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 2900, maxX: 3520 },
+        ],
+        disappearingPlatforms: [],
+        ground: [{"x": 450, "y": 390, "w": 580, "h": 20}],
+        springs: [],
+        spikes: [],
+        checkpoints: [{"x": 260, "y": 340 }],
+        enemies: [],
+        lasers: [],
+        asteriodFields: [],
+        swingingHammers: [],
+        teleporter: [],
+        blackhole: [],
+        goalPosition: { x: 1900, y: 300 }, 
+        instructions: "",
+        signs: [],
+        
+    }
 ];
 
 
@@ -559,25 +583,25 @@ function initializeLevels() {
             ],
             spikes: [
 
-                { x: 1950, y: 290, orientation: "up" },
-                { x: 2000, y: 290, orientation: "up" },
-                { x: 2050, y: 290, orientation: "up" },
+            { "x": 1780, "y": 2610, "orientation": "up" },
+            { "x": 1983, "y": 2610, "orientation": "up" },
 
-                { x: 2220, y: 265, orientation: "up" },
-                { x: 2270, y: 265, orientation: "up" },
-                { x: 2320, y: 265, orientation: "up" },
+            { "x": 1950, "y": 290, "orientation": "up" },
+            { "x": 2000, "y": 290, "orientation": "up" },
+            { "x": 2050, "y": 290, "orientation": "up" },
+            { "x": 2220, "y": 265, "orientation": "up" },
+            { "x": 2270, "y": 265, "orientation": "up" },
+            { "x": 2320, "y": 265, "orientation": "up" },
+            { "x": 2423, "y": 350, "orientation": "left" },
+            { "x": 2423, "y": 400, "orientation": "left" },
+            { "x": 2423, "y": 450, "orientation": "left" },
+            { "x": 2515, "y": 550, "orientation": "right" },
+            { "x": 2515, "y": 600, "orientation": "right" },
+            { "x": 2515, "y": 650, "orientation": "right" },
+            { "x": 2840, "y": 650, "orientation": "down" },
+            { "x": 2840, "y": 450, "orientation": "down" },
+            { "x": 2840, "y": 250, "orientation": "down" },
 
-                { x: 2423, y: 350, orientation: "left" },
-                { x: 2423, y: 400, orientation: "left" },
-                { x: 2423, y: 450, orientation: "left" },
-
-                { x: 2515, y: 550, orientation: "right" },
-                { x: 2515, y: 600, orientation: "right" },
-                { x: 2515, y: 650, orientation: "right" },
-
-                { x: 2840, y: 650, orientation: "down" },
-                { x: 2840, y: 450, orientation: "down" },
-                { x: 2840, y: 250, orientation: "down" },
 
         
             ],
@@ -622,7 +646,7 @@ function initializeLevels() {
           ],
 
           ground: [
-        
+
           ],
         
           springs: [
@@ -738,7 +762,7 @@ function initializeLevels() {
         instructions: "",
         signs: [],
         fallDeathY: 3200
-        }
+        },
         
         /* Add more levels here  Be sure to use the template as seen above
           {
@@ -765,10 +789,203 @@ function initializeLevels() {
         */
 
         // Add more levels here  Be sure to use the template as seen above
+
+        {
+            name: "Level 4",
+            theme: "sky",
+            respawnPosition: [905, 800],
+            ballColor: "red",
+            music: "land",
+            platforms: [
+                { x: 3000, y: -50, w: 200, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 3500, maxX: 4520 },
+                { x: 1900, y: 3100, w: 1000, h: 20, color: 'orange', moving: true, speed: 2.2, minX: 1800, maxX: 2500 },
+            ],
+              
+            disappearingPlatforms: [
+                { x: 2000, y: 700, w: 500, h: 10 },
+                { x: 2000, y: 550, w: 350, h: 10 },
+                { x: 2000, y: 400, w: 250, h: 10 },
+                { x: 2000, y: 250, w: 200, h: 10 },
+            ],            
+            ground: [
+            ],
+            springs: [
+                { "x": 6000, "y": 800, "w": 150, "h": 20 }
+            ],
+            spikes: [
+                { "x": 1830, "y": 955, "orientation": "up" },
+                { "x": 1780, "y": 955, "orientation": "up" },
+                { "x": 1730, "y": 955, "orientation": "up" },
+                { "x": 1880, "y": 955, "orientation": "up" },
+                { "x": 1930, "y": 955, "orientation": "up" },
+                { "x": 1980, "y": 955, "orientation": "up" },
+                { "x": 2030, "y": 955, "orientation": "up" },
+                { "x": 2080, "y": 955, "orientation": "up" },
+                { "x": 2130, "y": 955, "orientation": "up" },
+                { "x": 2180, "y": 955, "orientation": "up" },
+
+                { "x": 2100, "y": 670, "orientation": "up" },
+                { "x": 2050, "y": 670, "orientation": "up" },
+                { "x": 2000, "y": 670, "orientation": "up" },
+                { "x": 1950, "y": 670, "orientation": "up" },
+                { "x": 1900, "y": 670, "orientation": "up" },
+                { "x": 1850, "y": 670, "orientation": "up" },
+                { "x": 2150, "y": 670, "orientation": "up" },
+
+                { "x": 2100, "y": 520, "orientation": "up" },
+                { "x": 2050, "y": 520, "orientation": "up" },
+                { "x": 2000, "y": 520, "orientation": "up" },
+                { "x": 1900, "y": 520, "orientation": "up" },
+                { "x": 2000, "y": 520, "orientation": "up" },
+                { "x": 1950, "y": 520, "orientation": "up" },
+
+                { "x": 2000, "y": 370, "orientation": "up" },
+                { "x": 1950, "y": 370, "orientation": "up" },
+                { "x": 2050, "y": 370, "orientation": "up" },
+
+
+                { "x": 1780, "y": 2610, "orientation": "up" },
+                { "x": 1983, "y": 2610, "orientation": "up" },
+
+                { "x": 3710, "y": 800, "orientation": "left" },
+                { "x": 4054, "y": 594, "orientation": "right" },
+                { "x": 4196, "y": -1750, "orientation": "right" }
+            ],
+            checkpoints: [
+                { "x": 6580, "y": 494 },
+                { "x": 3900, "y": 1460 }
+            ],
+            backtrackTrigger: {
+                "x": 6000,
+                "y": -1860,
+                "w": 50,
+                "h": 100,
+            },
+            enemies: [
+                { "startX": 3530, "startY": 2516, "endX": 3770, "endY": 2516, "speed": 1.5 },
+                { "startX": 2900, "startY": 2516, "endX": 3200, "endY": 2516, "speed": 1.5 },
+                { "startX": 2580, "startY": 2516, "endX": 2760, "endY": 2516, "speed": 1.5 },
+                { "startX": 3000, "startY": 2723, "endX": 3190, "endY": 2723, "speed": 1.5 },
+                { "startX": 3200, "startY": 2309, "endX": 3490, "endY": 2309, "speed": 1.5 },
+                { "startX": 2670, "startY": 2309, "endX": 2905, "endY": 2309, "speed": 1.5 },
+                { "startX": 3400, "startY": 2309, "endX": 3680, "endY": 2309, "speed": 2 },
+                { "startX": 3320, "startY": 2102, "endX": 3680, "endY": 2102, "speed": 2 }
+            ],
+            lasers: [],
+            asteriodFields: [
+                { x: 4080, y: -100, range: 600, fallSpeed: 4, burstCount: 4, timeInterval: 3 }
+            ],
+            swingingHammers: [
+                {
+                    "pivotX": 2830,
+                    "pivotY": -400,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+
+                {
+                    "pivotX": 2990,
+                    "pivotY": 1420,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+
+                {
+                    "pivotX": 2100,
+                    "pivotY": 2300,
+                    "length": 200,
+                    "amplitude": 50,
+                    "speed": 2,
+                    "phase": 0,
+                    "width": 780,
+                    "height": 800,
+                    "spikeHeight": 200,
+                    "scale": 0.3
+                },
+            ],
+            shrinkpads: [ {x: 5160, y: 490} ],
+            teleporter: [
+                {"x": 1800, "y": 665, "w": 30, "h": 20},
+                {"x": 4560, "y": 30, "w": 30, "h": 20}
+            ],
+            blackhole: [],
+            goalPosition: { "x": 950, "y": 2600 },
+            instructions: "",
+            signs: [],
+            fallDeathY: 3200
+        }
     ];
+    
+    // Load completion progress from localStorage
+    loadLevelProgress();
+}
+
+// Save and load level completion progress
+function saveLevelProgress() {
+    try {
+        localStorage.setItem('redBallCompletedLevels', JSON.stringify(completedLevels));
+    } catch (e) {
+        console.error('Failed to save level progress:', e);
+    }
+}
+
+function loadLevelProgress() {
+    try {
+        const saved = localStorage.getItem('redBallCompletedLevels');
+        if (saved) {
+            completedLevels = JSON.parse(saved);
+            console.log('Loaded level progress:', completedLevels);
+        } else {
+            // First time playing - no levels completed yet
+            completedLevels = [];
+        }
+    } catch (e) {
+        console.error('Failed to load level progress:', e);
+        completedLevels = [];
+    }
+}
+
+function isLevelUnlocked(levelIndex) {
+    // Dev Room (index 0) is always unlocked
+    if (levelIndex === 0) return true;
+    
+    // A level is unlocked if the previous level is completed
+    return completedLevels.includes(levelIndex - 1);
+}
+
+function markLevelCompleted(levelIndex) {
+    if (!completedLevels.includes(levelIndex)) {
+        completedLevels.push(levelIndex);
+        saveLevelProgress();
+        console.log(`Level ${levelIndex} marked as completed`);
+    }
+}
+
+function resetLevelProgress() {
+    completedLevels = [];
+    saveLevelProgress();
+    console.log('All level progress has been reset');
 }
 
 async function loadLevel(levelIndex) {
+  // Check if level is unlocked (except when called from nextLevel which already completed previous)
+  if (!isLevelUnlocked(levelIndex)) {
+    console.log(`Level ${levelIndex} is locked. Complete previous levels first.`);
+    return;
+  }
+  
   await clearLevel();
   
   currentLevel = levelIndex;
@@ -1201,6 +1418,9 @@ async function clearLevel() {
 }
 
 function nextLevel() {
+    // Mark current level as completed before moving on
+    markLevelCompleted(currentLevel);
+    
     if (currentLevel < levels.length - 1) {
         console.log("Moving to next Level");
         loadLevel(currentLevel + 1);

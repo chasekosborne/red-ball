@@ -82,3 +82,15 @@ function stopMenuMusic() {
         console.log('Stopped menu music');
     }
 }
+
+// Node/CommonJS exports for testing
+if (typeof module !== 'undefined') {
+  module.exports = {
+    playLevelMusic,
+    pauseMusic,
+    resumeMusic,
+    playMenuMusic,
+    updateMusicVolume,
+    stopMenuMusic,
+  };
+}

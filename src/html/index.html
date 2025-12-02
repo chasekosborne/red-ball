@@ -202,6 +202,7 @@
     <button onclick="startGame(2)">Level 1</button>
     <button onclick="startGame(3)">Level 2</button>
     <button onclick="startGame(4)">Level 3</button>
+    <button onclick="startGame(5)">Level 4</button>
     <button onclick="backToMain()">Back</button>
     </div>
       <div id="options-btn">
@@ -262,6 +263,13 @@
     initializeLevels();
 
     function startGame(level) {
+      // is level unlocks
+      if (!isLevelUnlocked(level)) {
+        console.log(`Level ${level} is locked!`);
+        alert('This level is locked!!!!!!! Complete last levels first.');
+        return;
+      }
+      
       document.getElementById("menu").style.display="none";
       if (typeof stopMenuMusic === 'function') stopMenuMusic();
       loadLevel(level);
@@ -275,6 +283,42 @@
       document.getElementById('main-buttons').style.display = 'none';
       document.getElementById('options-btn').style.display = 'none';
       document.getElementById('level-select').style.display = 'flex';
+      
+      // Update level buttons
+      updateLevelButtons();
+    }
+    
+    function updateLevelButtons() {
+      const levelButtons = document.querySelectorAll('#level-select button');
+      const levelNames = ["Dev Room", "Tutorial", "Level 1", "Level 2", "Level 3", "Level 4"];
+      
+      levelButtons.forEach((btn, index) => {
+        
+        if (index >= levelNames.length) return;
+        
+        const isUnlocked = isLevelUnlocked(index);
+        const isCompleted = completedLevels.includes(index);
+        
+        
+        btn.textContent = isUnlocked ? levelNames[index] : `🔒 ${levelNames[index]}`;
+        
+        
+        if (isUnlocked) {
+          btn.style.backgroundColor = 'white';
+          btn.style.color = 'black';
+          btn.style.cursor = 'pointer';
+          btn.style.border = isCompleted ? '2px solid rgb(0, 255, 30)' : '2px solid rgb(0, 0, 0)';
+          btn.style.boxShadow = isCompleted ? '0 0 10px rgba(0, 255, 30, 0.5)' : 'none';
+          btn.disabled = false;
+        } else {
+          btn.style.backgroundColor = 'rgba(100, 100, 100, 0.5)';
+          btn.style.color = 'rgba(150, 150, 150, 1)';
+          btn.style.cursor = 'not-allowed';
+          btn.style.border = '2px solid rgba(100, 100, 100, 0.8)';
+          btn.style.boxShadow = 'none';
+          btn.disabled = true;
+        }
+      });
     }
 
     function backToMain() {
