@@ -1219,28 +1219,25 @@ async function loadLevel(levelIndex) {
             for (let disappearData of (level.disappearingPlatforms || [])) {
                  let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
                  disappearPlatform.physics = STATIC;
-                 //disappearPlatform.collider = 'static';
-                // disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
-                 //disappearPlatform.color = disappearPlatform.baseColor;
+                 disappearPlatform.collider = 'static';
+                disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
+                 disappearPlatform.color = disappearPlatform.baseColor;
      
-                 let buffer = createGraphics(disappearData.w, disappearData.h);
-                 for (let x = 0; x < disappearData.w; x += platformImage.width/2) {
-                     for (let y = 0; y < disappearData.h; y += platformImage.height) {
-                         buffer.image(platformImage, x, y);
-                         }
-                     }
+                //  let buffer = createGraphics(disappearData.w, disappearData.h);
+                //  for (let x = 0; x < disappearData.w; x += platformImage.width/2) {
+                //      for (let y = 0; y < disappearData.h; y += platformImage.height) {
+                //          buffer.image(platformImage, x, y);
+                //          }
+                //      }
      
-                     buffer.image(platformImageL, 0,0);
-                     buffer.image(platformImageR, disappearData.w - 25, 0);
+                //      buffer.image(platformImageL, 0,0);
+                //      buffer.image(platformImageR, disappearData.w - 25, 0);
          
-                     // Assign tiled texture to the platform
-                     disappearPlatform.img = buffer;
+                //      // Assign tiled texture to the platform
+                //      disappearPlatform.img = buffer;
                      
-                     disappearPlatform.setCollider("rectangle" , 0, 0, disappearData.w, disappearData.h);
-                     disappearPlatform.tile = false;  // prevents resizing
+                //      disappearPlatform.setCollider("rectangle" , 0, 0, disappearData.w, disappearData.h);
      
-     
-                    // disappearPlatform.debug = true;
      
                  disappearPlatform.isDisappearing = false;
                  disappearPlatform.isReappearing = false;
