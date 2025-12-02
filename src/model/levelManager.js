@@ -973,43 +973,6 @@ async function loadLevel(levelIndex) {
             );
             levelObjects.backtrackTrigger.setCheckpoints(levelObjects.checkpoints);
         }
-
-
-                // Disappearing platforms creator
-                levelObjects.disappearingPlatforms = [];
-                for (let disappearData of (level.disappearingPlatforms || [])) {
-                    let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
-                    disappearPlatform.physics = STATIC;
-                    //disappearPlatform.collider = 'static';
-                   // disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
-                    //disappearPlatform.color = disappearPlatform.baseColor;
-        
-                    let buffer = createGraphics(disappearData.w, disappearData.h);
-                    for (let x = 0; x < disappearData.w; x += platformImage.width/2) {
-                        for (let y = 0; y < disappearData.h; y += platformImage.height) {
-                            buffer.image(platformImage, x, y);
-                            }
-                        }
-        
-                        buffer.image(platformImageL, 0,0);
-                        buffer.image(platformImageR, disappearData.w - 25, 0);
-            
-                        // Assign tiled texture to the platform
-                        disappearPlatform.img = buffer;
-                        
-                        disappearPlatform.setCollider("rectangle" , 0, 0, disappearData.w, disappearData.h);
-                        disappearPlatform.tile = false;  // prevents resizing
-        
-        
-                       // disappearPlatform.debug = true;
-        
-                    disappearPlatform.isDisappearing = false;
-                    disappearPlatform.isReappearing = false;
-                    disappearPlatform.fadeTimer = 0;
-                    disappearPlatform.playerTouched = false;
-                    disappearPlatform.opacity = 255;
-                    levelObjects.disappearingPlatforms.push(disappearPlatform);
-                }
         
         //Creation of enemies
         levelObjects.enemies = [];
@@ -1033,6 +996,42 @@ async function loadLevel(levelIndex) {
             }
             levelObjects.enemies.push(enemy);
         }
+
+        // Disappearing platforms creator
+        levelObjects.disappearingPlatforms = [];
+            for (let disappearData of (level.disappearingPlatforms || [])) {
+                 let disappearPlatform = new Sprite(disappearData.x, disappearData.y, disappearData.w, disappearData.h);
+                 disappearPlatform.physics = STATIC;
+                 //disappearPlatform.collider = 'static';
+                // disappearPlatform.baseColor = disappearData.color || color(128, 0, 128); // Purple color
+                 //disappearPlatform.color = disappearPlatform.baseColor;
+     
+                 let buffer = createGraphics(disappearData.w, disappearData.h);
+                 for (let x = 0; x < disappearData.w; x += platformImage.width/2) {
+                     for (let y = 0; y < disappearData.h; y += platformImage.height) {
+                         buffer.image(platformImage, x, y);
+                         }
+                     }
+     
+                     buffer.image(platformImageL, 0,0);
+                     buffer.image(platformImageR, disappearData.w - 25, 0);
+         
+                     // Assign tiled texture to the platform
+                     disappearPlatform.img = buffer;
+                     
+                     disappearPlatform.setCollider("rectangle" , 0, 0, disappearData.w, disappearData.h);
+                     disappearPlatform.tile = false;  // prevents resizing
+     
+     
+                    // disappearPlatform.debug = true;
+     
+                 disappearPlatform.isDisappearing = false;
+                 disappearPlatform.isReappearing = false;
+                 disappearPlatform.fadeTimer = 0;
+                 disappearPlatform.playerTouched = false;
+                 disappearPlatform.opacity = 255;
+                 levelObjects.disappearingPlatforms.push(disappearPlatform);
+             }
         
         //Creation of swinging hammer
         levelObjects.swingingHammers = [];
