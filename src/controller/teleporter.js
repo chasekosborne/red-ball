@@ -1,36 +1,45 @@
 function teleportation() {
     if (!ball) return;
 
-    levelObjects.teleporter?.forEach(teleporter => {   //for each teleporter 
-        if (dist(ball.x, ball.y, teleporter.x, teleporter.y) < 45 && teleporterActive == true) {    //if ball is 45 pixes from teleporter and the teleporter is activated
-                if (teleporter === levelObjects.teleporter[0]) {
-                    ball.x = levelObjects.teleporter[1].x;  //changes ball position to other teleporter
-                    ball.y = levelObjects.teleporter[1].y;
-                    if(teleportSound && teleportSound.isLoaded()) {
-                      teleportSound.setVolume(globalVolume * 0.25);
-                      teleportSound.play(); 
-                    } 
+    for (let teleporterNumber = 0; teleporterNumber < level.Objects.teleporters.length; teleporterNumber+=2) {   
+      let teleport1 = level.Objects.teleporters[teleporterNumber];
+      let teleport2 = level.Objects.teleporters[teleporterNumber + 1];
 
-                    teleporterActive = false;     //deactivates teleporter temporarily
-                    beginTime = millis();         //logs the milliseconds when teleportation occured
-                } else if (teleporter === levelObjects.teleporter[1] && teleporterActive == true) {
-                    ball.x = levelObjects.teleporter[0].x;        
-                    ball.y = levelObjects.teleporter[0].y;
-                    if(teleportSound && teleportSound.isLoaded()) {
-                      teleportSound.setVolume(globalVolume * 0.25);
-                      teleportSound.play(); 
-                    } 
-                    teleporterActive = false;
-                    beginTime = millis();
-                   
-            } 
+      if (!teleport1 || !teleport2) continue;  //skip if teleporter pair is incomplete
+
+      if (dist(ball.x, ball.y, teleport1.x, teleport1.y) < 45 && teleporterActive) {
+          ball.x = teleport2.x;   //teleport to paired teleporter
+          ball.y = teleport2.y;
+          
+          if(teleportSound?.isLoaded()){
+            teleportSound.setVolume(globalVolume * 0.25);  //play sound effect
+            teleportSound.play();
+          }
+
+          teleporterActive = false;  //deactivate teleporter
+          beginTime = millis();      //start delay timer
+          return;
+      }
+
+      if(dist(ball.x, ball.y, teleport2.x, teleport2.y) < 45 && teleporterActive) {
+          ball.x = teleport1.x;
+          ball.y = teleport1.y;
+          
+          if(teleportSound?.isLoaded()){
+            teleportSound.setVolume(globalVolume * 0.25);
+            teleportSound.play();
+          }
+          teleporterActive = false;
+          beginTime = millis();
+          return;
+      }
     }
-        if(millis() - beginTime >=3000){  //after a 3 second delay, teleporter can be used again
+    if(millis() - beginTime >=3000){  //after a 3 second delay, teleporter can be used again
             teleporterActive = true;     //activates teleporter
         }
 
-    }); 
-}
+    }
+
 
 // Only for Node-based unit tests
 if (typeof module !== 'undefined') {
