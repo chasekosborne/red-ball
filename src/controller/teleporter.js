@@ -1,9 +1,9 @@
 function teleportation() {
     if (!ball) return;
 
-    for (let teleporterNumber = 0; teleporterNumber < level.Objects.teleporters.length; teleporterNumber+=2) {   
-      let teleport1 = level.Objects.teleporters[teleporterNumber];
-      let teleport2 = level.Objects.teleporters[teleporterNumber + 1];
+    for (let teleporterNumber = 0; teleporterNumber < levelObjects.teleporter.length; teleporterNumber+=2) {   
+      let teleport1 = levelObjects.teleporter[teleporterNumber];
+      let teleport2 = levelObjects.teleporter[teleporterNumber + 1];
 
       if (!teleport1 || !teleport2) continue;  //skip if teleporter pair is incomplete
 

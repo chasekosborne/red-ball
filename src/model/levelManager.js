@@ -675,7 +675,7 @@ function initializeLevels() {
       "x": 3200,
       "y": 700,
       "orientation": "up"
-    },
+    }
    
  
            
@@ -831,7 +831,7 @@ function initializeLevels() {
       "w": 20,
       "h": 40
     }
-,
+
  
     
           ],
