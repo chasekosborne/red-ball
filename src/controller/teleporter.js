@@ -1,32 +1,45 @@
 function teleportation() {
     if (!ball) return;
 
-    levelObjects.teleporter?.forEach((teleporter, index) => {  
-        if (dist(ball.x, ball.y, teleporter.x, teleporter.y) < 45 && teleporterActive == true) {   
-                let pairIndex;
-                if (index % 2 === 0) {
-                    pairIndex = index + 1;
-                } else {
-                    pairIndex = index - 1;
-                }
-                if (pairIndex >= 0 && pairIndex < levelObjects.teleporter.length) {
-                    ball.x = levelObjects.teleporter[pairIndex].x;  
-                    ball.y = levelObjects.teleporter[pairIndex].y;
-                    if(teleportSound && teleportSound.isLoaded()) {
-                      teleportSound.setVolume(globalVolume * 0.25);
-                      teleportSound.play(); 
-                    } 
+    for (let teleporterNumber = 0; teleporterNumber < level.Objects.teleporters.length; teleporterNumber+=2) {   
+      let teleport1 = level.Objects.teleporters[teleporterNumber];
+      let teleport2 = level.Objects.teleporters[teleporterNumber + 1];
 
-                    teleporterActive = false;     
-                    beginTime = millis();         
-                }
-        }
-        if(millis() - beginTime >=3000){  
-            teleporterActive = true;    
+      if (!teleport1 || !teleport2) continue;  //skip if teleporter pair is incomplete
+
+      if (dist(ball.x, ball.y, teleport1.x, teleport1.y) < 45 && teleporterActive) {
+          ball.x = teleport2.x;   //teleport to paired teleporter
+          ball.y = teleport2.y;
+          
+          if(teleportSound?.isLoaded()){
+            teleportSound.setVolume(globalVolume * 0.25);  //play sound effect
+            teleportSound.play();
+          }
+
+          teleporterActive = false;  //deactivate teleporter
+          beginTime = millis();      //start delay timer
+          return;
+      }
+
+      if(dist(ball.x, ball.y, teleport2.x, teleport2.y) < 45 && teleporterActive) {
+          ball.x = teleport1.x;
+          ball.y = teleport1.y;
+          
+          if(teleportSound?.isLoaded()){
+            teleportSound.setVolume(globalVolume * 0.25);
+            teleportSound.play();
+          }
+          teleporterActive = false;
+          beginTime = millis();
+          return;
+      }
+    }
+    if(millis() - beginTime >=3000){  //after a 3 second delay, teleporter can be used again
+            teleporterActive = true;     //activates teleporter
         }
 
-    }); 
-}
+    }
+
 
 // Only for Node-based unit tests
 if (typeof module !== 'undefined') {
