@@ -641,23 +641,8 @@ function initializeLevels() {
           platforms: [],
 
           disappearingPlatforms: [
-            {
-      "x": 1180,
-      "y": 530,
-      "w": 160,
-      "h": 20,
-      "color": "orange",
-      "moving": false
-    },
-    {
-      "x": 1510,
-      "y": 530,
-      "w": 140,
-      "h": 20,
-      "color": "orange",
-      "moving": false
-    }
-          
+            {x: 950,y: 390,w: 100,h: 20},
+            {x: 1260,y: 390,w: 80,h: 20},
           ],
 
           ground: [
@@ -665,120 +650,33 @@ function initializeLevels() {
           ],
         
           springs: [
-             {
-      "x": 1840,
-      "y": 510,
-      "w": 120,
-      "h": 20
-    }
-       
+            {x: 1800,y: 507,w: 80,h: 20},
+            {x: 3720,y: 630,w: 80,h: 20}
           ],
         
           spikes: [
-             
-   
-    {
-      "x": 2780,
-      "y": 700,
-      "orientation": "up"
-    },
-    
-    {
-      "x": 2960,
-      "y": 700,
-      "orientation": "up"
-    },
-    {
-      "x": 3200,
-      "y": 700,
-      "orientation": "up"
-    },
-   
- 
-           
+            {x: 2640,y: 615,orientation:"up"},
+            {x: 2880,y: 615,orientation:"up"},
+            {x: 3120,y: 615,orientation:"up"}
           ],
         
           checkpoints: [
-        {
-      "x": 1780,
-      "y": 500
-    },
-    {
-      "x": 5140,
-      "y": 540
-    },
-    {
-      "x": 2880,
-      "y": 700
-    }
-
-        
+            {x: 1700,y: 507},
+            {x: 2730,y: 610},
           ],
         
           enemies: [
-      
-    {
-      "startX": 4620,
-      "startY": 740,
-      "endX": 4580,
-      "endY": 740,
-      "speed": 1
-    },
-    
-    {
-      "startX": 5440,
-      "startY": 540,
-      "endX": 5220,
-      "endY": 540,
-      "speed": 1
-    }
-
+            {startX: 3240,startY: 615,endX: 3520,endY: 615,speed: 1},
           ],
           
           lasers: [
-            
-          {
-      "x": 1680,
-      "y": -60,
-      "range": 300,
-      "speedData": {
-        "speed": 3,
-        "bulletSpeed": 8
-      },
-      "fwdDir": "RIGHT"
-    },
-    {
-      "x": 2900,
-      "y": -60,
-      "range": 300,
-      "speedData": {
-        "speed": 3,
-        "bulletSpeed": 8
-      },
-      "fwdDir": "LEFT"
-    },
-    
-    {
-      "x": 1500,
-      "y": 140,
-      "range": 300,
-      "speedData": {
-        "speed": 3,
-        "bulletSpeed": 8
-      },
-      "fwdDir": "DOWN"
-    },
-    {
-      "x": 1160,
-      "y": 140,
-      "range": 300,
-      "speedData": {
-        "speed": 3,
-        "bulletSpeed": 8
-      },
-      "fwdDir": "DOWN"
-    }
-            
+            {x: 820,  y: 140, range: 300, speedData:  {speed: 3,bulletSpeed: 8},fwdDir:DOWN},
+            {x: 1100, y: 140, range: 320, speedData: {speed: 3,bulletSpeed: 8},fwdDir: DOWN},
+            {x: 1400, y: 140, range: 320, speedData: {speed: 3,bulletSpeed: 8},fwdDir: DOWN},
+            {x: 1680, y: -60, range: 300, speedData: {speed: 3,bulletSpeed: 8},fwdDir: RIGHT},
+            {x: 2900, y: -60, range: 300, speedData: {speed: 3,bulletSpeed: 8},fwdDir: LEFT},
+            {x: 3020, y: 340, range: 360, speedData: {speed: 3,bulletSpeed: 8},fwdDir: DOWN},
+            {x: 3360, y: 340, range: 360, speedData: {speed: 3,bulletSpeed: 8},fwdDir: DOWN},
           ],
 
           asteriodFields: [
@@ -786,78 +684,12 @@ function initializeLevels() {
           ],
 
           swingingHammers: [],
-           teleporter: [
-      {
-      "x": 5420,
-      "y": 530,
-      "w": 80,
-      "h": 20
-    },
-    {
-      "x": 6260,
-      "y": 790,
-      "w": 120,
-      "h": 20
-    },
-    {
-      "x": 5810,
-      "y": 790,
-      "w": 100,
-      "h": 20
-    },
-    {
-      "x": 6570,
-      "y": 290,
-      "w": 100,
-      "h": 20
-    },
-    {
-      "x": 7030,
-      "y": 290,
-      "w": 60,
-      "h": 20
-    },
-    {
-      "x": 8060,
-      "y": 570,
-      "w": 40,
-      "h": 20
-    },
-    {
-      "x": 7570,
-      "y": 550,
-      "w": 20,
-      "h": 20
-    },
-  
-    {
-      "x": 7170,
-      "y": 1140,
-      "w": 60,
-      "h": 40
-    },
-    {
-      "x": 8060,
-      "y": 1170,
-      "w": 40,
-      "h": 20
-    },
-    {
-      "x": 8190,
-      "y": 1160,
-      "w": 20,
-      "h": 40
-    }
-,
- 
-    
-          ],
+          teleporter: [],
           blackhole: [
-          
+            { x: 1950,y: 300,  w: 20,  h: 20 },
+            { x: 3685,y: 250,  w: 80,  h: 20 },
           ],
-
-         
-          goalPosition:  { x: 7000, y: 1140 },
+          goalPosition:  { x: 5180, y: 180 },
           instructions: "",
           fallDeathY: 1500
         },
