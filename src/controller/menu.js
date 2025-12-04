@@ -386,8 +386,8 @@ function buildLevelSelectPanel() {
   `;
   panel.appendChild(btnContainer);
 
-  // === Level Names (match your game's main menu order)
-  const levelNames = ["Dev Room", "Tutorial", "Level 1", "Level 2", "Level 3"];
+  // should match our levels in order now
+  const levelNames = ["Tutorial", "Level 1", "Level 2", "Level 3", "Level 4"];
 
   levelNames.forEach((name, i) => {
     const btn = document.createElement('button');
@@ -468,7 +468,7 @@ function showLevelSelectPanel() {
 
 function updateLevelSelectButtons() {
   const buttons = document.querySelectorAll('.level-select-btn');
-  const levelNames = ["Dev Room", "Tutorial", "Level 1", "Level 2", "Level 3"];
+  const levelNames = ["Tutorial", "Level 1", "Level 2", "Level 3", "Level 4"];
   
   buttons.forEach((btn, index) => {
     const levelIndex = parseInt(btn.dataset.levelIndex);

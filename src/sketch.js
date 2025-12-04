@@ -199,6 +199,7 @@ function preload() {
   claimedFlagImage   = loadImage('../view/art/claimed_checkpoint.png',   img => img.resize(100, 100));
   spikeImage         = loadImage('../view/art/Tiles/tile_0068.png',      img => img.resize(100, 100));
   teleporterImage    = loadImage('../view/art/teleportgreener.png',      img => img.resize(150, 150));
+  enemyImage         = loadImage('../view/art/enemyalien.png',          img => img.resize(100, 100));
   shrinkPadImage     = loadImage('../view/art/shrink_pad.png',           img => img.resize(150, 150));
   laserBlasterImage  = loadImage('../view/art/laserMount.png',           img => img.resize(100, 100));
   springImage        = loadImage('../view/art/Tiles/tile_0049.png',           img => img.resize(50, 50));

@@ -1,30 +1,5 @@
 const LEVELS = [
     {
-         name: "Dev Room",
-        theme: "space",
-        respawnPosition: [500, 150],
-        ballColor: 'red',
-        music: 'land',
-        platforms: [],
-        disappearingPlatforms: [],
-        ground: [{ "x": 450, "y": 390, "w": 580, "h": 20 }],
-        springs: [],
-        spikes: [],
-        checkpoints: [{ "x": 260, "y": 340 }],
-        enemies: [],
-        lasers: [],
-        asteriodFields: [],
-        swingingHammers: [],
-        shrinkpads: [{ x: 460, y: 620 }],
-        teleporter: [],
-        blackhole: [],
-        goalPosition: { x: 1900, y: 300 },
-        instructions: "",
-        signs: [],
-        fallDeathY: 700
-    },
-
-    {
         name: "Tutorial",
         theme: "sky",
         respawnPosition: [125, 150],
@@ -74,14 +49,14 @@ const LEVELS = [
         goalPosition: { "x": 4790, "y": -82 },
         instructions: "",
         signs: [
-            { x: 225, y: 220, text: "Welcome to Epsilon's Greatest Ball! Use the arrow keys to move left/right", size: 8, color: 'black' },
-            { x: 600, y: 200, text: "Press space to jump. Double jump by pressing space twice in order to avoid these!", size: 10, color: 'black' },
-            { x: 1250, y: 300, text: "Jump onto the spring to launch yourself in the air!", size: 10, color: 'black' },
-            { x: 1600, y: -90, text: "This checkpoint allows you to respawn here after you die.", size: 10, color: 'black' },
-            { x: 1875, y: -140, text: "Double jump over this hazard and land on the moving platform!", size: 10, color: 'black' },
-            { x: 2900, y: -130, text: "Use the teleporter to bypass this wall.", size: 10, color: 'black' },
-            { x: 3900, y: -140, text: "Go quickly across this platform! It starts disappearing after you touch it!", size: 12, color: 'black' },
-            { x: 4700, y: -170, text: "Congratulations! You will encounter more obstacles as you go along, and check the How To Play menu if you ever forget anything!", size: 12, color: 'black' },
+            { x: 200, y: 220, text: "Welcome to Epsilon's Greatest Ball! \n Use the arrow keys to move left/right", size: 15, color: 'black' },
+            { x: 600, y: 180, text: "Press space to jump. \n Double jump by pressing space twice in order to avoid these!", size: 15, color: 'black' },
+            { x: 1250, y: 300, text: "Jump onto the spring to launch yourself in the air!", size: 15, color: 'black' },
+            { x: 1600, y: -70, text: "This checkpoint allows you to respawn here after you die.", size: 15, color: 'black' },
+            { x: 1885, y: -140, text: "Double jump over this frenzied enemy \n to land on the moving platform!", size: 15, color: 'black' },
+            { x: 2900, y: -100, text: "Use the teleporter to bypass this invisible wall.", size: 15, color: 'black' },
+            { x: 3900, y: -100, text: "Go quickly across this platform! \n It starts disappearing after you touch it!", size: 15, color: 'black' },
+            { x: 4700, y: -140, text: "Congratulations! \n You will encounter more obstacles as you go along. \n Have fun playing Epsilon's Greatest Ball!", size: 15, color: 'black' },
         ],
         fallDeathY: 700
     },
@@ -208,7 +183,7 @@ const LEVELS = [
 
         blackhole: [],
 
-        goalPosition: { x: 5400, y: -1050 },
+        goalPosition: { x: 5254, y: -4 },
 
         instructions: "",
 
@@ -319,12 +294,7 @@ const LEVELS = [
             { "x": 6580, "y": 494 },
             { "x": 3900, "y": 1460 }
         ],
-        backtrackTrigger: {
-            "x": 6000,
-            "y": -1860,
-            "w": 50,
-            "h": 100,
-        },
+        backtrackTrigger: {},
         enemies: [
             { "startX": 3530, "startY": 2516, "endX": 3770, "endY": 2516, "speed": 1.5 },
             { "startX": 2900, "startY": 2516, "endX": 3200, "endY": 2516, "speed": 1.5 },
@@ -425,31 +395,6 @@ const LEVELS = [
 function initializeLevels() {
     levels = [
         {
-        name: "Dev Room",
-        theme: "space",
-        respawnPosition: [150, 200],
-        ballColor: 'red',
-        music: 'land', // Land.mp3 for Level 3
-        platforms: [],
-        disappearingPlatforms: [],
-        ground: [],
-        springs: [],
-        spikes: [],
-        checkpoints: [{ "x": 90, "y": 430}],
-        enemies: [],
-        lasers: [],
-        asteriodFields: [],
-        swingingHammers: [],
-        shrinkpads: [{ x: 460, y: 620 }],
-        teleporter: [],
-        blackhole: [],
-        goalPosition: { x: 3000, y: 250 },
-        instructions: "",
-        signs: [],
-        fallDeathY: 700
-        },
-
-        {
             name: "Tutorial",
             theme: "sky",
             respawnPosition: [130, 150],
@@ -503,10 +448,10 @@ function initializeLevels() {
               { x: 600, y: 180, text: "Press space to jump. \n Double jump by pressing space twice in order to avoid these!", size: 15, color: 'black' },
               { x: 1250, y: 300, text: "Jump onto the spring to launch yourself in the air!", size: 15, color: 'black' },
               { x: 1600, y: -70, text: "This checkpoint allows you to respawn here after you die.", size: 15, color: 'black' },
-              { x: 1885, y: -140, text: "Double jump over this hazard \n to land on the moving platform!", size: 15, color: 'black' },
+              { x: 1885, y: -140, text: "Double jump over this frenzied enemy \n to land on the moving platform!", size: 15, color: 'black' },
               { x: 2900, y: -100, text: "Use the teleporter to bypass this invisible wall.", size: 15, color: 'black' },
               { x: 3900, y: -100, text: "Go quickly across this platform! \n It starts disappearing after you touch it!", size: 15, color: 'black' },
-              { x: 4700, y: -140, text: "Congratulations! \n You will encounter more obstacles as you go along. \n Check the How To Play menu if you ever forget anything!", size: 15, color: 'black' },
+              { x: 4700, y: -140, text: "Congratulations! \n You will encounter more obstacles as you go along. \n Have fun playing Epsilon's Greatest Ball!", size: 15, color: 'black' },
             ],
             fallDeathY: 700
         },
@@ -552,6 +497,7 @@ function initializeLevels() {
                 
             ],
             ground: [
+                { "x": 2600, "y": -4600, "w": 20, "h": 10000, "visible" : "no" },
                 // { x: 1700, y: -600, w: 200, h: 40 },
                 // { x: 2300, y: -600, w: 400, h: 40 },
                 // { x: 2480, y: -220, w: 40, h: 800 },
@@ -632,7 +578,7 @@ function initializeLevels() {
 
             blackhole: [], 
 
-            goalPosition: { x: 5200, y: 40 }, 
+            goalPosition: { x: 5254, y: -4 }, 
 
             instructions: "",
 
@@ -875,12 +821,7 @@ function initializeLevels() {
                 { "x": 6580, "y": 494 },
                 { "x": 3900, "y": 1460 }
             ],
-            backtrackTrigger: {
-                "x": 6000,
-                "y": -1860,
-                "w": 50,
-                "h": 100,
-            },
+            backtrackTrigger: {},
             enemies: [
                 { "startX": 3530, "startY": 2516, "endX": 3770, "endY": 2516, "speed": 1.5 },
                 { "startX": 2900, "startY": 2516, "endX": 3200, "endY": 2516, "speed": 1.5 },
@@ -892,9 +833,7 @@ function initializeLevels() {
                 { "startX": 3320, "startY": 2102, "endX": 3680, "endY": 2102, "speed": 2 }
             ],
             lasers: [],
-            asteriodFields: [
-                { x: 4080, y: -100, range: 600, fallSpeed: 4, burstCount: 4, timeInterval: 3 }
-            ],
+            asteriodFields: [],
             swingingHammers: [
                 {
                     "pivotX": 2830,
@@ -1239,6 +1178,11 @@ async function loadLevel(levelIndex) {
             let checkpoint = new CheckPoint(checkpointData.x, checkpointData.y, ball);
             levelObjects.checkpoints.push(checkpoint);
         }
+
+        levelObjects.checkpoints.forEach(checkpoint => {
+            checkpoint.setAllCheckpoints(levelObjects.checkpoints);
+        });
+
         if (level.backtrackTrigger) {
             levelObjects.backtrackTrigger = new BacktrackTrigger(
                 level.backtrackTrigger.x,
@@ -1254,7 +1198,7 @@ async function loadLevel(levelIndex) {
         levelObjects.enemies = [];
         for (let enemyData of level.enemies || []) {
             let enemy = new Sprite(enemyData.startX, enemyData.startY, 50);
-            enemy.color = 'gray';
+            enemy.img = enemyImage;
             enemy.collider = 'kinematic';
             enemy.posA = { x: enemyData.startX, y: enemyData.startY };
             enemy.posB = { x: enemyData.endX, y: enemyData.endY };
