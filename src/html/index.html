@@ -197,12 +197,11 @@
       <button onclick="showLevelSelect()">Level Select</button>
     </div>
     <div id="level-select" style="display: none;">
-    <button onclick="startGame(0)">Dev Room</button>
-    <button onclick="startGame(1)">Tutorial</button>
-    <button onclick="startGame(2)">Level 1</button>
-    <button onclick="startGame(3)">Level 2</button>
-    <button onclick="startGame(4)">Level 3</button>
-    <button onclick="startGame(5)">Level 4</button>
+    <button onclick="startGame(0)">Tutorial</button>
+    <button onclick="startGame(1)">Level 1</button>
+    <button onclick="startGame(2)">Level 2</button>
+    <button onclick="startGame(3)">Level 3</button>
+    <button onclick="startGame(4)">Level 4</button>
     <button onclick="backToMain()">Back</button>
     </div>
       <div id="options-btn">
@@ -290,7 +289,7 @@
     
     function updateLevelButtons() {
       const levelButtons = document.querySelectorAll('#level-select button');
-      const levelNames = ["Dev Room", "Tutorial", "Level 1", "Level 2", "Level 3", "Level 4"];
+      const levelNames = ["Tutorial", "Level 1", "Level 2", "Level 3", "Level 4"];
       
       levelButtons.forEach((btn, index) => {
         

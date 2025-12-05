@@ -23,14 +23,26 @@ class CheckPoint {
 
     reset () {
         this.claimed = false;
+        this.allCheckpoints = null;
         this.sprite.img = unclaimedFlagImage;
     }
 
+    setAllCheckpoints(allCheckpoints) {
+        this.allCheckpoints = allCheckpoints;
+    }
+    
     // check if the player has collided into the checkpoint and change states
     update() {
         if (!this.claimed && this.sprite.overlapping(this.player)) {
             //console.log("CLAIMED!");
-
+            if (this.allCheckpoints) {
+                this.allCheckpoints.forEach(other => {
+                    if (other !== this && other.claimed) {
+                        other.reset();
+                    }
+                });
+            }
+            
             //Checkpoint sound
             if(checkSound && checkSound.isLoaded()) {
                 checkSound.play(0, 1, globalVolume * 0.3, 0.5, 0.7);
