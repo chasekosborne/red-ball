@@ -256,8 +256,7 @@ const LEVELS = [
         ],
         
         blackhole: [
-            { x: 1950, y: 250, w: 20, h: 20 },
-            { x: 3685, y: 250, w: 80, h: 20 }
+             { x: 2050, y: 250, w: 20, h: 20 }
         ],
         
         goalPosition: { x: 7000, y: 1140 },
@@ -597,14 +596,14 @@ function initializeLevels() {
         platforms: [],
 
         disappearingPlatforms: [
-            { x: 1180, y: 530, w: 160, h: 20, color: "orange", moving: false },
-            { x: 1510, y: 530, w: 140, h: 20, color: "orange", moving: false }
+            { x: 1180, y: 530, w: 160, h: 20},
+            { x: 1510, y: 530, w: 140, h: 20}
         ],
 
         ground: [],
 
         springs: [
-            { x: 1840, y: 510, w: 120, h: 20 }
+            { x: 1870, y: 510, w: 120, h: 20 }
         ],
 
         spikes: [
@@ -651,8 +650,8 @@ function initializeLevels() {
         ],
         
         blackhole: [
-            { x: 1950, y: 250, w: 20, h: 20 },
-            { x: 3685, y: 250, w: 80, h: 20 }
+            { x: 2050, y: 250, w: 20, h: 20 }
+           
         ],
         
         goalPosition: { x: 7000, y: 1140 },
